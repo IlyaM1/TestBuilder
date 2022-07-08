@@ -40,7 +40,7 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
         return values_str
 
     def search_max_int_field(self, search_name="id"):  # поиск максимального инт значения в дб
-        cursor_obj.execute(f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max{search_name} from {self.table_name})")
+        cursor_obj.execute(f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max({search_name}) from {self.table_name})")
         max_id = cursor_obj.fetchall()
         return max_id[0][0]
 
@@ -55,7 +55,7 @@ s = SQLInteract()
 db_con = s.sql_connect(filename_Db=user_db_address)
 cursor_obj = sqlite3.Cursor(db_con)
 
-new_user = [1, "Ilya", "negr", "Junior", "[]"]
+new_user = [1, "Ilya", "555", "Junior", "[]"]
 print(s.generating_values())
 s.sql_add_new_user(user_obj=new_user)
 s.print_full_table()
