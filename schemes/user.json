@@ -1,0 +1,16 @@
+{
+    "id": 123,
+    "name": "Egor Rusnov",
+    "password": "QwEwQ7",
+    "post": "Junior",
+    "tests": 
+    [
+        {
+            "name": "EGE RUSS",
+            "rezult": 71
+        }, {
+            "name": "EGE MATH",
+            "rezult": 80
+        }
+    ]
+}
