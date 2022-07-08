@@ -61,4 +61,3 @@ s.sql_add_new_user(user_obj=new_user)
 s.print_full_table()
 
 db_con.commit()
-
