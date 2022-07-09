@@ -162,11 +162,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.sqlite" />
-      <item itemvalue="Python.sqlite (1)" />
-      <item itemvalue="Python.testjj" />
       <item itemvalue="Python.authorization" />
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.sqlite (1)" />
+      <item itemvalue="Python.sqlite" />
+      <item itemvalue="Python.testjj" />
     </list>
     <recent_temporary>
       <list>
