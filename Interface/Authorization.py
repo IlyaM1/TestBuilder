@@ -7,6 +7,7 @@ class Authorization(QWidget):
         self.init_UI()
 
     def init_UI(self):
+        self.setMinimumSize(400, 300)
         self.vertical_layout = QVBoxLayout()
 
         input_label_login = QLineEdit()
