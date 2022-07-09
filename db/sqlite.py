@@ -10,6 +10,10 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
         self.filename_db = filename_db
         self.table_name = table_name
         self.values_of_this_table = values_of_this_table
+        self.values = self.generating_values()
+        self.db_connection = self.sql_connect(self.filename_db)
+        self.cursor_obj = sqlite3.Cursor(self.db_connection)
+
 
     @staticmethod
     def sql_connect(filename_Db):
@@ -21,18 +25,21 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
 
     def sql_add_new_user(self, user_obj):
         user_obj[0] = self.search_max_int_field() + 1
-        cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.values_of_this_table}")
-        cursor_obj.execute(
-            f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.generating_values()}''', user_obj)
+        self.cursor_obj.execute(
+            f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_obj)
 
-    def print_full_table(self, name_of_table=0):
+    def sql_create_new_table(self):
+        self.cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.values_of_this_table}")
+
+    # def sql_delete_value(self):
+
+    def return_full_table(self, name_of_table=0):
         if name_of_table == 0:  # если ничего юзер не указал, то выводим всю таблицу указанную при инициализации класса
             name_of_table = self.table_name
-        with db_con:
-            cursor_obj.execute(f"SELECT * FROM {name_of_table}")
-            rows = cursor_obj.fetchall()
-            for row in rows:
-                print(row)
+        with self.db_connection:
+            self.cursor_obj.execute(f"SELECT * FROM {name_of_table}")
+            rows = self.cursor_obj.fetchall()
+            return rows
 
     def generating_values(self):  # это в sql такой запар с этим, нужно вельюсы генерить вот так, а потом подставлять
         # в инсерт
@@ -41,25 +48,21 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
         return values_str
 
     def search_max_int_field(self, search_name="id"):  # поиск максимального инт значения в дб
-        cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.values_of_this_table}")
-        cursor_obj.execute(f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max({search_name}) from {self.table_name})")
-        max_id = cursor_obj.fetchall()
+        self.cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.values_of_this_table}")
+        self.cursor_obj.execute(
+            f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max({search_name}) from {self.table_name})")
+        max_id = self.cursor_obj.fetchall()
         if len(max_id) == 0:
             return 0
         else:
             return max_id[0][0]
 
 
-
 if __name__ == '__main__':
-    user_db_address = 'users.db'
     s = SQLInteract()
-    db_con = s.sql_connect(filename_Db=user_db_address)
-    cursor_obj = sqlite3.Cursor(db_con)
 
     new_user = [1, "Ilya", "555", "Junior", "[]"]
     # print(s.generating_values())
-    s.sql_add_new_user(user_obj=new_user)
-    s.print_full_table()
+    # s.sql_add_new_user(user_obj=new_user)
+    print(s.return_full_table())
 
-    db_con.commit()
