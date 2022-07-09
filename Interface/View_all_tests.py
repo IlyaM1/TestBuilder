@@ -19,7 +19,8 @@ class View_all_tests(QWidget):
             self.setStyleSheet(f.read())
 
         for test in self.tests:
-            test_row = QLabel(f'{test["name"]}: {len(test["questions"])} вопрос(а)(ов)')
+            test_row = Item(f'{test["name"]}: {len(test["questions"])} вопрос(а)(ов)', test["id"])
+            test_row.clicked.connect(lambda: print("it works!"))
             self.vertical_layout.addWidget(test_row)
 
         self.setLayout(self.vertical_layout)

@@ -1,9 +1,13 @@
-from PyQt5.QtWidgets import QListWidgetItem
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import  QLabel
+from PyQt5.Qt import pyqtSignal
 
+class Item(QLabel):
+    clicked = pyqtSignal()
 
-class Item(QListWidgetItem):
     def __init__(self, text, id):
         super(Item, self).__init__(text)
         self.id = id
+
+    def mouseReleaseEvent(self, e):
+        super().mouseReleaseEvent(e)
+        self.clicked.emit()
