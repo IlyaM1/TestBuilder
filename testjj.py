@@ -20,5 +20,3 @@ newUser = open("schemes/userRdyTest.json", "r", encoding="utf-8").read()  # на
 
 newestUser = open("schemes/user.json", "r", encoding="utf-8").read()
 foo(newestUser)
-
-
