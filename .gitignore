@@ -133,3 +133,4 @@ dmypy.json
 .idea/
 /db/users.db
 
+/unittests/users.db

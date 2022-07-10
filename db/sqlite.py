@@ -41,6 +41,9 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
         """if type update_value == str: update_value must be quotes in quotes "'some text'" """
         self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = {update_value} WHERE {search_by} = {search_value}''')
 
+    def sql_free_command(self, command):
+        self.cursor_obj.execute(command)
+
     def return_full_table(self, name_of_table="0"):
         """with no arguments just return table list"""
         if name_of_table == "0":  # если ничего юзер не указал, то выводим всю таблицу указанную при инициализации класса
@@ -66,13 +69,13 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
             return max_id[0][0]
 
 
-if __name__ == '__main__':
-    s = SQLInteract()
-    print(s.return_full_table())
-    s.sql_update_one("name", "'Jim'", 1)
-    new_user = [0, "Ilya", "555", "Junior", "[]"]
-    # print(s.generating_values())
+# if __name__ == '__main__':
+    # s = SQLInteract()
+    # print(s.return_full_table())
+    # s.sql_update_one("name", "'Jim'", 2)
+    # new_user = [0, "Ilya", "555", "Junior", "[]"]
+    # # print(s.generating_values())
     # s.sql_add_new_user(user_obj=new_user)
-    # s.sql_delete_one(need_value_of_name=8)
-    print(s.return_full_table())
+    # # s.sql_delete_one(need_value_of_name=8)
+    # print(s.return_full_table())
 
