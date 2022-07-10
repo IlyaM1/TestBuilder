@@ -129,9 +129,17 @@ dmypy.json
 .pyre/
 
 .gitconfig
+<<<<<<< HEAD
+/.idea
+.idea/
+/db/users.db
+
+/unittests/users.db
+=======
 .idea/codestream.xml
 /.idea
 .idea
 .idea/
 /db/users.db
 .idea
+>>>>>>> c401053163942ad26f9169230095f48f18f57746
