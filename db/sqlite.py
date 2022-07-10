@@ -75,4 +75,5 @@ if __name__ == '__main__':
     # s.sql_add_new_user(user_obj=new_user)
     # s.sql_delete_one(need_value_of_name=8)
     print(s.return_full_table())
+    
 
