@@ -1,0 +1,18 @@
+QWidget{
+    background-color: white;
+}
+QLineEdit{
+    height: 35px;
+    font: 15pt "MS Shell Dlg 2";
+    color: #454e4f;
+    border: 1px solid black;
+    background-color: #dadfe5;
+    border-radius: 10px;
+}
+QPushButton{
+    height: 40px;
+    font: 15pt "MS Shell Dlg 2";
+    color: white;
+    background-color: #43e87a;
+    border-radius: 15px;
+}

@@ -15,7 +15,7 @@ class View_all_tests(QWidget):
 
         self.vertical_layout = QVBoxLayout()
 
-        with open('View_all_tests.css') as f:
+        with open('Interface/View_all_tests.css') as f:
             self.setStyleSheet(f.read())
 
         for test in self.tests:
