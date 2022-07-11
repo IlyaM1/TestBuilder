@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="0a62f2b1-3d1d-4019-9a94-ec5221d59f92" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/Authorization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Authorization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/Item.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Item.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/View_all_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/View_all_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schemes/test.json" beforeDir="false" afterPath="$PROJECT_DIR$/schemes/test.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,8 +203,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.View_all_tests" />
-        <item itemvalue="Python.Item" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.Item" />
         <item itemvalue="Python.Authorization" />
         <item itemvalue="Python.sqlite (1)" />
       </list>

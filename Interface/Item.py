@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import  QLabel
+from PyQt5.QtWidgets import QLabel
 from PyQt5.Qt import pyqtSignal
 
 class Item(QLabel):
