@@ -16,6 +16,7 @@ class Authorization(QWidget):
 
         self.input_label_login = QLineEdit()
         self.input_label_login.setPlaceholderText("Фамилия")
+        self.input_label_login.setObjectName("input_label_login")
         vertical_layout.addWidget(self.input_label_login)
 
         self.input_label_password = QLineEdit()

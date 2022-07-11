@@ -2,7 +2,7 @@ QWidget{
     background-color: white;
 }
 QLineEdit{
-    height: 35px;
+    height: 38px;
     font: 15pt "MS Shell Dlg 2";
     color: #454e4f;
     border: 1px solid black;
@@ -10,9 +10,12 @@ QLineEdit{
     border-radius: 10px;
 }
 QPushButton{
-    height: 40px;
+    height: 45px;
     font: 15pt "MS Shell Dlg 2";
     color: white;
     background-color: #43e87a;
     border-radius: 15px;
+}
+#input_label_login{
+    margin-top: 0px;
 }
