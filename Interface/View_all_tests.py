@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, QListWidget, QMainWindow
 from PyQt5.QtCore import QSize
 from Interface.Item import Item
-
+from time import sleep
 class View_all_tests(QWidget):
 
     def __init__(self, tests, user):
@@ -24,6 +24,7 @@ class View_all_tests(QWidget):
             self.vertical_layout.addWidget(test_row)
 
         self.setLayout(self.vertical_layout)
+
         self.show()
 
     def label_test_pushed(self):
@@ -35,26 +36,4 @@ class View_all_tests(QWidget):
 
 if __name__ == '__main__':
     app = QApplication([])
-    dictionary = {
-  "name": "Тест по анатомии",
-  "id": 1,
-  "theme": "theme",
-  "questions": [
-    {
-      "question": "question",
-      "type": 1,
-      "variants_of_answer": ["1", "2", "3", "4"],
-      "answer": "2",
-      "balls": 1
-    },
-    {
-      "question": "question2",
-      "type": 1,
-      "variants_of_answer": ["1", "2", "3", "4"],
-      "answer": "3",
-      "balls": 1
-    }
-  ]
-}
-    testss = View_all_tests([dictionary for i in range(5)], [])
     app.exec_()

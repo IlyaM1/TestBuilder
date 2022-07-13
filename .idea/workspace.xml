@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a62f2b1-3d1d-4019-9a94-ec5221d59f92" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/get_all_tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interface/Authorization.css" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Authorization.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Interface/Authorization.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/Authorization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interface/View_all_tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/Interface/View_all_tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,6 +78,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
