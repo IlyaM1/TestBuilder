@@ -36,6 +36,7 @@ class SQLInteract:  # в идеале, чтобы вообще все проис
         if need_value_of_name == "DEfault VaLue123Qwcsa":
             need_value_of_name = f"(SELECT MAX(id) FROM {self.table_name})"
         self.cursor_obj.execute(f"DELETE FROM {self.table_name} WHERE {search_name}={need_value_of_name}")
+        self.db_connection.commit()
 
     def sql_update_one(self, update_field, update_value,  search_value, search_by='id'):
         """if type update_value == str: update_value must be quotes in quotes "'some text'" """
