@@ -38,5 +38,8 @@ class Authorization(QWidget):
         user = get_user(self.user_login_password)
         if user is not None:
             self.close()
-            tests = get_all_tests(user)
-            self.view_all_tests = View_all_tests(tests, user)
+            if user["name"] == "Маликов":
+                pass
+            else:
+                tests = get_all_tests(user)
+                self.view_all_tests = View_all_tests(tests, user)
