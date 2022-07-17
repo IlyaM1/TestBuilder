@@ -1,5 +1,5 @@
 def get_all_tests(user):
-    print("some_magic")
+    # getting all tests of user(completed and not) and returning list of tests
     dictionary = {
         "name": "Тест по анатомии",
         "id": 1,
@@ -21,5 +21,5 @@ def get_all_tests(user):
             }
         ]
     }
-    testss = [dictionary for i in range(5)]
+    testss = [dictionary for i in range(4)]
     return testss

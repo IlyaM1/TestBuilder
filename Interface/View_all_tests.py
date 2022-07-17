@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
 from PyQt5.QtCore import QSize
 from Interface.Item import Item
 from time import sleep
+
 class View_all_tests(QWidget):
 
     def __init__(self, tests, user):
@@ -28,12 +29,8 @@ class View_all_tests(QWidget):
         self.show()
 
     def label_test_pushed(self):
-        self.close()
+        pass
+        # self.close()
 
     def button_login_pushed(self):
         pass
-
-
-if __name__ == '__main__':
-    app = QApplication([])
-    app.exec_()

@@ -1,13 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
 from Interface.View_all_tests import View_all_tests
-# from View_all_tests import View_all_tests
 from get_all_tests import get_all_tests
-
+from get_user import get_user
 class Authorization(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.tup = ()
+        self.user_login_password = ()
         self.init_UI()
 
     def init_UI(self):
@@ -35,12 +34,9 @@ class Authorization(QWidget):
         self.show()
 
     def button_login_pushed(self):
-        self.tup = (self.input_label_login.text(), self.input_label_password.text())
-        self.close()
-        tests = get_all_tests([])
-        start_view_all_tests(tests, self.tup)
-
-
-
-def start_view_all_tests(tests, user):
-    view_all_tests = View_all_tests(tests, user)
+        self.user_login_password = (self.input_label_login.text(), self.input_label_password.text())
+        user = get_user(self.user_login_password)
+        if user is not None:
+            self.close()
+            tests = get_all_tests(user)
+            self.view_all_tests = View_all_tests(tests, user)
