@@ -8,3 +8,4 @@ class Admin_view_tests_and_users(QWidget):
 
     def init_UI(self):
         pass
+
