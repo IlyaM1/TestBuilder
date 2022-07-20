@@ -3,12 +3,14 @@ from sqlite3 import Error
 
 
 class SQLInteract:
-    """в values_of_this_table можно использовать только ключевые слова PRIMARY, KEY, UNIQUE."""
+    """в values_of_this_table можно использовать только ключевые слова PRIMARY, KEY, UNIQUE.
+    заметка на завтра в values_of_this_table указывать что хочешь, а нужную часть для generate_dict() обозначать особыми символами"""
+
     # в идеале, чтобы вообще все происходило внутри класса (даже коннект и задача курсора),
     # а внизу чисто аргументы писал и все, как проснусь - доделаю, но пока мне нравится
     # по моей задумке для каждой таблицы ты создаешь новый объект класса, и взаимодействуешь с ним в рамках класса
-    def __init__(self, filename_db="users.db", table_name="employees", values_of_this_table="(id, name, password, "
-                                                                                            "post, tests)"):
+    def __init__(self, filename_db="../db/users.db", table_name="employees", values_of_this_table="(id, name, password, "
+                                                                                               "post, tests)"):
         self.filename_db = filename_db
         self.table_name = table_name
         self.values_of_this_table = values_of_this_table
@@ -45,16 +47,23 @@ class SQLInteract:
 
     def sql_update_one_by_id(self, update_field, update_value, search_id):
         """if type update_value == str: update_value must be quotes in quotes "'some text'" """
-        self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = {update_value}'''
+        self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
                                 f'''WHERE id = {search_id}''')
         self.db_connection.commit()
 
     def sql_free_command(self, command):
         self.cursor_obj.execute(command)
+        self.db_connection.commit()
 
     def sql_get_user_with_namePass(self, name, password):
         self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                 f''' AND password = "{password}"''')
+        row = self.cursor_obj.fetchone()
+        dict_row = self.generate_dict(row)
+        return dict_row
+
+    def sql_get_user_with_id(self, input_id):
+        self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
         row = self.cursor_obj.fetchone()
         dict_row = self.generate_dict(row)
         return dict_row
@@ -98,7 +107,7 @@ if __name__ == '__main__':
     s = SQLInteract()
     s.sql_create_new_table()
     user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
-    print(user1)
+    print(s.sql_get_user_with_id(3))
     # s.sql_delete_one()
     print(s.return_full_table())
     new_user = [0, "Rel", "123123", "Junior", "[]"]
