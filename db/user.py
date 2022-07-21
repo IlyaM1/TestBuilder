@@ -30,10 +30,10 @@ def get_all_tests(user_id) -> list:
     return json.loads(got_user["tests"].replace("'", '"'))
 
 
-if __name__ == '__main__':
-    db = SQLInteract()
-    aaa = '[{"name":"EGE RUSS","rezult":71},{"name":"EGE MATH","rezult":80}]'
-    # db.sql_update_one_by_id(update_field="tests", update_value=aaa.replace('"', "'"), search_id=3)
-    print(db.return_full_table())
-    print(from_str_to_dict(from_dict_to_str(new_user(0))))
-    print((get_all_tests(3)))
+# if __name__ == '__main__':
+#     db = SQLInteract()
+#     aaa = '[{"name":"EGE RUSS","rezult":999},{"name":"EGE MATH","rezult":80}]'
+#     db.sql_update_one_by_id(update_field="tests", update_value=aaa, search_id=3)
+    # print(db.return_full_table())
+    # print(from_str_to_dict(from_dict_to_str(new_user(0))))
+    # print((get_all_tests(3)))

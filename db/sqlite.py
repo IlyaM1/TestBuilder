@@ -47,8 +47,13 @@ class SQLInteract:
 
     def sql_update_one_by_id(self, update_field, update_value, search_id):
         """if type update_value == str: update_value must be quotes in quotes "'some text'" """
-        self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
-                                f'''WHERE id = {search_id}''')
+        if type(update_value) == str:
+            update_value = update_value.replace('"', "'")
+            self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
+                                    f'''WHERE id = {search_id}''')
+        else:
+            self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = {update_value}''' # разница в кавычках
+                                    f'''WHERE id = {search_id}''')
         self.db_connection.commit()
 
     def sql_free_command(self, command):
@@ -103,14 +108,15 @@ class SQLInteract:
         return dict_of_user
 
 
-if __name__ == '__main__':
-    s = SQLInteract()
-    s.sql_create_new_table()
-    user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
-    print(s.sql_get_user_with_id(3))
-    # s.sql_delete_one()
-    print(s.return_full_table())
-    new_user = [0, "Rel", "123123", "Junior", "[]"]
+# if __name__ == '__main__':
+#     s = SQLInteract()
+#     s.sql_create_new_table()
+#     user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
+#     print(s.sql_get_user_with_id(3))
+#     # s.sql_delete_one()
+#     print(s.return_full_table())
+#     print(type('s') == str)
+#     new_user = [0, "Rel", "123123", "Junior", "[]"]
     # user_dict = s.generate_dict(s.sql_get_user_with_namePass('Jim', '123123'))
     # print(user_dict)
 
