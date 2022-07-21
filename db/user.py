@@ -24,14 +24,11 @@ def from_str_to_dict(input_str: str) -> dict:
     return json.loads(input_str)
 
 
-def get_all_tests(user_id) -> list:
-    """возвращает массив тестов юзера по его id"""
-    got_user = db.sql_get_user_with_id(user_id)
-    return json.loads(got_user["tests"].replace("'", '"'))
 
 
-# if __name__ == '__main__':
-#     db = SQLInteract()
+
+if __name__ == '__main__':
+    db = SQLInteract()
 #     aaa = '[{"name":"EGE RUSS","rezult":999},{"name":"EGE MATH","rezult":80}]'
 #     db.sql_update_one_by_id(update_field="tests", update_value=aaa, search_id=3)
     # print(db.return_full_table())
