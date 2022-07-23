@@ -129,9 +129,11 @@ dmypy.json
 .pyre/
 
 .gitconfig
-.idea/codestream.xml
+
 /.idea
 .idea
 .idea/
+
 /db/users.db
-.idea
+/test/users.db
+/.vscode/
