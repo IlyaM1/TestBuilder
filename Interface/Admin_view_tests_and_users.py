@@ -45,7 +45,7 @@ class Admin_view_tests_and_users(QWidget):
     def init_tests_page(self):
         return QWidget()
 
-        def label_user_pushed(self, pushed_label):
+    def label_user_pushed(self, pushed_label):
         print(f"{pushed_label.id}")
 
 if __name__ == '__main__':
