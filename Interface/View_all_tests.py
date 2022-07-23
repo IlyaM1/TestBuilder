@@ -30,7 +30,6 @@ class View_all_tests(QWidget):
 
     def label_test_pushed(self):
         pass
-        # self.close()
 
     def button_login_pushed(self):
         pass
