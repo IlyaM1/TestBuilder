@@ -1,10 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout
-
-
+from Interface.Item import Item
+from test_data_funcs import get_all_tests, get_users
+from functools import partial
 class Admin_view_tests_and_users(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, tests = [], users = []):
         super(QWidget, self).__init__(parent)
+        self.tests = tests
+        self.users = users
         self.init_UI()
 
     def init_UI(self):
@@ -26,13 +29,29 @@ class Admin_view_tests_and_users(QWidget):
 
 
     def init_users_page(self):
-        return QWidget()
+        self.user_page_widget = QWidget()
+        self.users_labels_layout = QVBoxLayout()
+
+        i = 0 # test
+        for user in self.users:
+            user_row = Item(f'{user["name"]}', i)
+            user_row.clicked.connect(partial(self.label_user_pushed, user_row))
+            self.users_labels_layout.addWidget(user_row)
+            i += 1 # test
+
+        self.user_page_widget.setLayout(self.users_labels_layout)
+        return self.user_page_widget
 
     def init_tests_page(self):
         return QWidget()
 
+        def label_user_pushed(self, pushed_label):
+        print(f"{pushed_label.id}")
 
 if __name__ == '__main__':
     app = QApplication([])
-    auth_obj = Admin_view_tests_and_users()
+    tests = get_all_tests()
+    users = get_users()
+    auth_obj = Admin_view_tests_and_users(tests=tests, users=users)
+
     app.exec_()

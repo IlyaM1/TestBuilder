@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
 from Interface.View_all_tests import View_all_tests
-from get_all_tests import get_all_tests
-from get_user import get_user
+from test_data_funcs import get_all_tests, get_users
 class Authorization(QWidget):
 
     def __init__(self):
