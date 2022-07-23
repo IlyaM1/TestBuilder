@@ -1,13 +1,14 @@
 import random
 def get_users(user_login_password=""):
-    user = {"name": "Sanya", "id": random.randint(1, 10000)}
-    return [user for i in range(5)]
+    users = [{"name": "Sanya", "id": random.randint(1, 10000)} for i in range(5)]
+
+    return users
 
 def get_all_tests(user={}):
     # getting all tests of user(completed and not) and returning list of tests
-    dictionary = {
+    testss = [{
         "name": "Тест по анатомии",
-        "id": 1,
+        "id": random.randint(1, 10000),
         "theme": "theme",
         "questions": [
             {
@@ -25,6 +26,5 @@ def get_all_tests(user={}):
                 "balls": 1
             }
         ]
-    }
-    testss = [dictionary for i in range(4)]
+    } for i in range(4)]
     return testss
