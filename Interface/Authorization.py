@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
 from Interface.View_all_tests import View_all_tests
 from test_data_funcs import get_all_tests, get_users
+
 class Authorization(QWidget):
 
     def __init__(self):
@@ -34,7 +35,8 @@ class Authorization(QWidget):
 
     def button_login_pushed(self):
         self.user_login_password = (self.input_label_login.text(), self.input_label_password.text())
-        user = get_user(self.user_login_password)
+        # user = get_user(self.user_login_password)
+        user = {"name": "Vlad"}
         if user is not None:
             self.close()
             if user["name"] == "Маликов":
