@@ -1,5 +1,6 @@
+import random
 def get_users(user_login_password=""):
-    user = {"name": "Sanya"}
+    user = {"name": "Sanya", "id": random.randint(1, 10000)}
     return [user for i in range(5)]
 
 def get_all_tests(user={}):

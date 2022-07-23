@@ -33,7 +33,7 @@ class Admin_view_tests_and_users(QWidget):
         self.users_labels_layout = QVBoxLayout()
 
         for user in self.users:
-            user_row = Item(f'{user["name"]}', i)
+            user_row = Item(f'{user["name"]}', user["id"])
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
