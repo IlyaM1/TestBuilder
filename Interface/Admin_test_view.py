@@ -28,6 +28,9 @@ class Admin_test_view(QWidget):
         self.theme_input_label = QLineEdit(self.test["theme"])
         self.container.addWidget(self.theme_input_label)
 
+        self.question_label = QLabel("Вопросы: ")
+        self.container.addWidget(self.question_label)
+
         for i in self.test["questions"]:
             self.container.addWidget(self.init_layout_of_question(i))
 
@@ -36,19 +39,24 @@ class Admin_test_view(QWidget):
         self.show()
 
     def init_layout_of_question(self, question):
+        self.question_widget = QWidget()
+
         self.question_layout =  QVBoxLayout()
 
         self.question_label = QLineEdit(question["question"])
         self.question_layout.addWidget(self.question_label)
 
+        self.variants_of_answer_widget = QWidget()
         self.variants_of_answer_layout = QVBoxLayout()
         for variant in question["variants_of_answer"]:
             variant_of_answer_label = QLineEdit(variant)
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
+        self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
 
-        self.question_layout.addWidget(self.variants_of_answer_layout)
+        self.question_layout.addWidget(self.variants_of_answer_widget)
 
-        return self.question_layout
+        self.question_widget.setLayout(self.question_layout)
+        return self.question_widget
 
 
 
