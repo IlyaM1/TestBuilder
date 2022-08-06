@@ -7,7 +7,6 @@
     "test": [
         {
             "queston": "who",
-            "body_of_question": "1. me",
             "answer": "me",
             "key": "me (правильный ответ)",
             "balls": 1 

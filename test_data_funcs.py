@@ -1,6 +1,58 @@
 import random
 def get_users(user_login_password=""):
-    users = [{"name": "Sanya", "id": random.randint(1, 10000)} for i in range(5)]
+    user = {
+    "id": 123,
+    "name": "Egor Rusnov",
+    "password": "QwEwQ7",
+    "post": "Junior",
+    "tests":
+    [
+        {
+    "name": "eee",
+    "theme": "rock",
+    "result": 50,
+    "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
+    "date": 15153135,
+    "test": [
+        {
+            "queston": "who",
+            "answer": "me",
+            "key": "me (правильный ответ)",
+            "balls": 1
+        }, {
+            "queston": "кто такой gir",
+            "answer": "ya",
+            "key": "notme (правильный ответ)",
+            "balls": 0
+        }
+    ]
+},
+        {
+    "name": "eee",
+    "theme": "rock",
+    "result": 50,
+    "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
+    "date": 15153135,
+    "test": [
+        {
+            "queston": "who",
+            "answer": "me",
+            "key": "me (правильный ответ)",
+            "balls": 1
+        }, {
+            "queston": "кто такой gir",
+            "answer": "ya",
+            "key": "notme (правильный ответ)",
+            "balls": 0
+        }
+    ]
+}
+    ]
+}
+    users = []
+    for i in range(5):
+        users.append(user)
+        users[i]["id"] = random.randint(1, 10000)
 
     return users
 
