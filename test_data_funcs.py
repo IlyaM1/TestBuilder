@@ -16,12 +16,12 @@ def get_users(user_login_password=""):
     "date": 15153135,
     "test": [
         {
-            "queston": "who",
+            "question": "who",
             "answer": "me",
             "key": "me (правильный ответ)",
             "balls": 1
         }, {
-            "queston": "кто такой gir",
+            "question": "кто такой gir",
             "answer": "ya",
             "key": "notme (правильный ответ)",
             "balls": 0
@@ -37,12 +37,12 @@ def get_users(user_login_password=""):
     "date": 15153135,
     "test": [
         {
-            "queston": "who",
+            "question": "who",
             "answer": "me",
             "key": "me (правильный ответ)",
             "balls": 1
         }, {
-            "queston": "кто такой gir",
+            "question": "кто такой gir",
             "answer": "ya",
             "key": "notme (правильный ответ)",
             "balls": 0

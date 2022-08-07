@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit
 from test_data_funcs import get_users
-
+from PyQt5.QtCore import Qt
+from Custom_Widgets.CollapsibleBox import CollapsibleBox
 class Admin_user_view(QWidget):
 
     def __init__(self, user={}, parent=None):
@@ -56,6 +57,15 @@ class Admin_user_view(QWidget):
         self.result_label = QLabel(f'Результат теста: {test["result"]}/{test["max_result"]}')
         self.test_widget_layout.addWidget(self.result_label)
 
+        self.box_for_wrong_questions = CollapsibleBox(title="Вопросы: ")
+        self.box_for_wrong_questions_layout = QVBoxLayout()
+        for i in test["test"]:
+            self.box_for_wrong_questions_layout.addWidget(self.init_question_widget(i))
+        self.box_for_wrong_questions_layout.setAlignment(Qt.AlignTop)
+        self.box_for_wrong_questions.setContentLayout(self.box_for_wrong_questions_layout)
+        self.test_widget_layout.addWidget(self.box_for_wrong_questions)
+
+
         # self.variants_of_answer_widget = QWidget()
         # self.variants_of_answer_layout = QVBoxLayout()
         # for variant in question["variants_of_answer"]:
@@ -68,7 +78,16 @@ class Admin_user_view(QWidget):
         self.test_widget.setLayout(self.test_widget_layout)
         return self.test_widget
 
+    def init_question_widget(self, question):
+        self.solved_test_question_widget = QWidget()
+        self.solved_test_question_widget_layout = QVBoxLayout()
 
+        self.solved_test_question_label = QLabel(question["question"])
+        self.solved_test_question_widget_layout.addWidget(self.solved_test_question_label)
+
+        self.solved_test_question_widget.setLayout(self.solved_test_question_widget_layout)
+
+        return self.solved_test_question_widget
 
 
 if __name__ == '__main__':

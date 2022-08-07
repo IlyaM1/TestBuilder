@@ -1,4 +1,22 @@
 from PyQt5 import QtWidgets,QtCore
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLabel
+
+class Container(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.expanded = False
+        self.setFixedHeight(0)
+
+    def setExpand(self, expanded = False):
+        self.expanded = expanded
+        if expanded:
+            self.setMinimumHeight(0)
+            self.setMaximumHeight(0)
+        else:
+            self.setMinimumHeight(self.sizeHint().height())
+            self.setMaximumHeight(16777215)
+
 
 class CollapsibleBox(QtWidgets.QWidget):
     def __init__(self, title="", parent=None):
@@ -10,17 +28,20 @@ class CollapsibleBox(QtWidgets.QWidget):
         self.toggle_button.setArrowType(QtCore.Qt.ArrowType.RightArrow)
         self.toggle_button.pressed.connect(self.on_pressed)
 
+        self.content_area = Container()
+
         self.toggle_animation = QtCore.QParallelAnimationGroup(self)
 
-        self.content_area = QtWidgets.QScrollArea(maximumHeight=0, minimumHeight=0)
-        self.content_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-        self.content_area.setFrameShape(QtWidgets.QFrame.NoFrame)
+        # # self.content_area = QtWidgets.QScrollArea(maximumHeight=0, minimumHeight=0)
+        # self.content_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        # self.content_area.setFrameShape(QtWidgets.QFrame.NoFrame)
 
         lay = QtWidgets.QVBoxLayout(self)
         lay.setSpacing(0)
         lay.setContentsMargins(0, 0, 0, 0)
         lay.addWidget(self.toggle_button)
         lay.addWidget(self.content_area)
+        lay.setAlignment(Qt.AlignTop)
 
         self.toggle_animation.addAnimation(QtCore.QPropertyAnimation(self, b"minimumHeight"))
         self.toggle_animation.addAnimation(QtCore.QPropertyAnimation(self, b"maximumHeight"))
@@ -31,6 +52,8 @@ class CollapsibleBox(QtWidgets.QWidget):
         checked = self.toggle_button.isChecked()
         self.toggle_button.setArrowType(QtCore.Qt.ArrowType.DownArrow if not checked else QtCore.Qt.ArrowType.RightArrow)
         self.toggle_animation.setDirection(QtCore.QAbstractAnimation.Forward if not checked else QtCore.QAbstractAnimation.Backward)
+        self.adjustSize()
+        self.content_area.setExpand(checked)
         self.toggle_animation.start()
 
     def setContentLayout(self, layout):
@@ -49,3 +72,16 @@ class CollapsibleBox(QtWidgets.QWidget):
         content_animation.setDuration(500)
         content_animation.setStartValue(0)
         content_animation.setEndValue(content_height)
+
+if __name__ == '__main__':
+    app = QApplication([])
+    w = QMainWindow()
+    box_for_wrong_questions = CollapsibleBox(title="Вопросы: ", parent=w)
+    box_for_wrong_questions_layout = QVBoxLayout()
+    box_for_wrong_questions_layout.addWidget(QLabel("123"))
+    box_for_wrong_questions_layout.addWidget(QLabel("1234"))
+    box_for_wrong_questions_layout.addWidget(QLabel("1235"))
+    box_for_wrong_questions_layout.setAlignment(Qt.AlignTop)
+    box_for_wrong_questions.setContentLayout(box_for_wrong_questions_layout)
+    w.show()
+    app.exec_()
