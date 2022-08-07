@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton
 from PyQt5.QtCore import QSize
-from Interface.Item import Item
+from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
 class Admin_view_tests_and_users(QWidget):
