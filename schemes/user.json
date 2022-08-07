@@ -9,6 +9,7 @@
     "name": "eee",
     "theme": "rock",
     "result": 50,
+    "max_result": 100,
     "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
     "date": 15153135,
     "test": [

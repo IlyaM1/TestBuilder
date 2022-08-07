@@ -47,13 +47,13 @@ class Admin_user_view(QWidget):
 
         self.test_widget_layout =  QVBoxLayout()
 
-        self.name_label = QLabel(test["name"])
+        self.name_label = QLabel(f'Имя теста: {test["name"]}')
         self.test_widget_layout.addWidget(self.name_label)
 
-        self.theme_label = QLabel(test["theme"])
+        self.theme_label = QLabel(f'Тема теста: {test["theme"]}')
         self.test_widget_layout.addWidget(self.theme_label)
 
-        self.result_label = QLabel(f'{test["theme"]}')
+        self.result_label = QLabel(f'Результат теста: {test["result"]}/{test["max_result"]}')
         self.test_widget_layout.addWidget(self.result_label)
 
         # self.variants_of_answer_widget = QWidget()

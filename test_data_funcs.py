@@ -11,6 +11,7 @@ def get_users(user_login_password=""):
     "name": "eee",
     "theme": "rock",
     "result": 50,
+    "max_result": 100,
     "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
     "date": 15153135,
     "test": [
@@ -31,6 +32,7 @@ def get_users(user_login_password=""):
     "name": "eee",
     "theme": "rock",
     "result": 50,
+    "max_result": 100,
     "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
     "date": 15153135,
     "test": [
@@ -62,6 +64,7 @@ def get_all_tests(user={}):
         "name": "Тест по анатомии",
         "id": random.randint(1, 10000),
         "theme": "theme",
+        "max_result": 100,
         "questions": [
             {
                 "question": "question",
