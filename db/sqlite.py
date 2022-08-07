@@ -41,7 +41,9 @@ class SQLInteract:
         self.db_connection.commit()
 
     def sql_delete_one(self, search_name="id", need_value_of_name="DEfault VaLue123Qwcsa"):
-        """real need_value_of_name = f'(SELECT MAX(id) FROM {self.table_name})'"""
+        """ with no args delete max(id)
+         real default need_value_of_name = f'(SELECT MAX(id) FROM {self.table_name})'"""
+
         if need_value_of_name == "DEfault VaLue123Qwcsa":
             need_value_of_name = f"(SELECT MAX(id) FROM {self.table_name})"
         self.cursor_obj.execute(f"DELETE FROM {self.table_name} WHERE {search_name}={need_value_of_name}")
@@ -125,14 +127,20 @@ class SQLInteract:
         got_user = self.sql_get_user_with_id(user_id)
         return json.loads(got_user["tests"].replace("'", '"'))
 
+    def drop_table(self):
+        self.cursor_obj.execute(f"DROP TABLE {self.table_name}")
+
 
 if __name__ == '__main__':
     s = SQLInteract()
-    #     s.sql_create_new_table()
-    #     user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
-    #     print(s.sql_get_user_with_id(3))
-    #     # s.sql_delete_one()
-    print(s.return_full_table(to_dict=True, revert=True))
+    # s.sql_create_new_table()
+    # s.drop_table()
+    # user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
+    # print(s.sql_get_user_with_id(3))
+    # s.sql_delete_one()
+    # print(s.return_full_table(to_dict=True, revert=True))
+# u = subprocess.run('ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
+# print(u.stdout, u.stderr, u.returncode)
 #     print(type('s') == str)
 #     new_user = [0, "Rel", "123123", "Junior", "[]"]
 # user_dict = s.generate_dict(s.sql_get_user_with_namePass('Jim', '123123'))
