@@ -18,12 +18,12 @@ def get_users(user_login_password=""):
         {
             "question": "who",
             "answer": "me",
-            "key": "me (правильный ответ)",
+            "key": "me",
             "balls": 1
         }, {
             "question": "кто такой gir",
             "answer": "ya",
-            "key": "notme (правильный ответ)",
+            "key": "notme",
             "balls": 0
         }
     ]
@@ -39,12 +39,12 @@ def get_users(user_login_password=""):
         {
             "question": "who",
             "answer": "me",
-            "key": "me (правильный ответ)",
+            "key": "me",
             "balls": 1
         }, {
             "question": "кто такой gir",
             "answer": "ya",
-            "key": "notme (правильный ответ)",
+            "key": "notme",
             "balls": 0
         }
     ]

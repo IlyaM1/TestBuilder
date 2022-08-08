@@ -60,20 +60,11 @@ class Admin_user_view(QWidget):
         self.box_for_wrong_questions = CollapsibleBox(title="Вопросы: ")
         self.box_for_wrong_questions_layout = QVBoxLayout()
         for i in test["test"]:
-            self.box_for_wrong_questions_layout.addWidget(self.init_question_widget(i))
+            if i["answer"] != i["key"] or True:
+                self.box_for_wrong_questions_layout.addWidget(self.init_question_widget(i))
         self.box_for_wrong_questions_layout.setAlignment(Qt.AlignTop)
         self.box_for_wrong_questions.setContentLayout(self.box_for_wrong_questions_layout)
         self.test_widget_layout.addWidget(self.box_for_wrong_questions)
-
-
-        # self.variants_of_answer_widget = QWidget()
-        # self.variants_of_answer_layout = QVBoxLayout()
-        # for variant in question["variants_of_answer"]:
-        #     variant_of_answer_label = QLineEdit(variant)
-        #     self.variants_of_answer_layout.addWidget(variant_of_answer_label)
-        # self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
-        #
-        # self.test_widget_layout.addWidget(self.variants_of_answer_widget)
 
         self.test_widget.setLayout(self.test_widget_layout)
         return self.test_widget
@@ -82,8 +73,11 @@ class Admin_user_view(QWidget):
         self.solved_test_question_widget = QWidget()
         self.solved_test_question_widget_layout = QVBoxLayout()
 
-        self.solved_test_question_label = QLabel(question["question"])
+        self.solved_test_question_label = QLabel(f'Вопрос: {question["question"]}')
         self.solved_test_question_widget_layout.addWidget(self.solved_test_question_label)
+
+        self.solved_test_answer_label = QLabel(f'Ответ/Правильный ответ: {question["answer"]}/{question["key"]}')
+        self.solved_test_question_widget_layout.addWidget(self.solved_test_answer_label)
 
         self.solved_test_question_widget.setLayout(self.solved_test_question_widget_layout)
 
