@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, QListWidget, QMainWindow
 from PyQt5.QtCore import QSize
-from Interface.Item import Item
+from Custom_Widgets.Item import Item
 from time import sleep
 
 class View_all_tests(QWidget):

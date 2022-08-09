@@ -3,7 +3,6 @@ from Interface.Authorization import Authorization
 from db.sqlite import SQLInteract
 from auth_reg import Signing
 
-
 def main():
     app = QApplication([])
     auth_obj = Authorization()

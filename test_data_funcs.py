@@ -1,6 +1,60 @@
 import random
 def get_users(user_login_password=""):
-    users = [{"name": "Sanya", "id": random.randint(1, 10000)} for i in range(5)]
+    user = {
+    "id": 123,
+    "name": "Egor Rusnov",
+    "password": "QwEwQ7",
+    "post": "Junior",
+    "tests":
+    [
+        {
+    "name": "eee",
+    "theme": "rock",
+    "result": 50,
+    "max_result": 100,
+    "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
+    "date": 15153135,
+    "test": [
+        {
+            "question": "who",
+            "answer": "me",
+            "key": "me",
+            "balls": 1
+        }, {
+            "question": "кто такой gir",
+            "answer": "ya",
+            "key": "notme",
+            "balls": 0
+        }
+    ]
+},
+        {
+    "name": "eee",
+    "theme": "rock",
+    "result": 50,
+    "max_result": 100,
+    "typeOfTest": "0 - без записи (учебка) | 1 - запись (зачет)",
+    "date": 15153135,
+    "test": [
+        {
+            "question": "who",
+            "answer": "me",
+            "key": "me",
+            "balls": 1
+        }, {
+            "question": "кто такой gir",
+            "answer": "ya",
+            "key": "notme",
+            "balls": 0
+        }
+    ]
+}
+    ]
+}
+    users = []
+    for i in range(5):
+        users.append(user)
+        users[i]["id"] = random.randint(1, 10000)
 
     return users
 
@@ -10,6 +64,7 @@ def get_all_tests(user={}):
         "name": "Тест по анатомии",
         "id": random.randint(1, 10000),
         "theme": "theme",
+        "max_result": 100,
         "questions": [
             {
                 "question": "question",

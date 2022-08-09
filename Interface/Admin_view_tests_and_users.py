@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout
-from Interface.Item import Item
+from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton
+from PyQt5.QtCore import QSize
+from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
 class Admin_view_tests_and_users(QWidget):
@@ -37,6 +38,8 @@ class Admin_view_tests_and_users(QWidget):
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
+        self.new_user_button = QPushButton("Добавить сотрудника")
+        self.users_labels_layout.addWidget(self.new_user_button)
         self.user_page_widget.setLayout(self.users_labels_layout)
         return self.user_page_widget
 
@@ -48,6 +51,9 @@ class Admin_view_tests_and_users(QWidget):
             test_row = Item(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
             test_row.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
+
+        self.new_test_button = QPushButton("Добавить тест")
+        self.tests_labels_layout.addWidget(self.new_test_button)
 
         self.test_page_widget.setLayout(self.tests_labels_layout)
         return self.test_page_widget
