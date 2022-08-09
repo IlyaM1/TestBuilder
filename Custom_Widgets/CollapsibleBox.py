@@ -26,7 +26,7 @@ class CollapsibleBox(QtWidgets.QWidget):
         self.toggle_button.setStyleSheet("QToolButton {background-color:#dadada;}")
         self.toggle_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toggle_button.setArrowType(QtCore.Qt.ArrowType.RightArrow)
-        self.toggle_button.pressed.connect(self.on_pressed)
+        self.toggle_button.released.connect(self.on_pressed)
 
         self.content_area = Container()
 

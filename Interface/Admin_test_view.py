@@ -37,6 +37,10 @@ class Admin_test_view(QWidget):
         for i in self.test["questions"]:
             self.container.addWidget(self.init_layout_of_question(i))
 
+        self.new_question_button = QPushButton("Добавить вопрос")
+        self.new_question_button.released.connect(self.new_question_button_released)
+        self.container.addWidget(self.new_question_button)
+
         self.container.addWidget(self)
         self.setLayout(self.container) # test thing
         self.show()
@@ -60,6 +64,9 @@ class Admin_test_view(QWidget):
 
         self.question_widget.setLayout(self.question_layout)
         return self.question_widget
+
+    def new_question_button_released(self):
+        print("new question")
 
 
 

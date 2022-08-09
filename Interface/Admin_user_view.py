@@ -7,6 +7,8 @@ class Admin_user_view(QWidget):
     def __init__(self, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.user = user
+        if self.user == {}:
+            self.user = {"name": '', "password": '', "post": '', "tests": []}
         self.init_UI()
 
     def init_UI(self):
@@ -26,6 +28,7 @@ class Admin_user_view(QWidget):
         self.password_label = QLabel("Пароль сотрудника: ")
         self.container.addWidget(self.password_label)
         self.password_input_label = QLineEdit(self.user["password"])
+        self.password_input_label.setEchoMode(QLineEdit.Password)
         self.container.addWidget(self.password_input_label)
 
         self.post_label = QLabel("Должность сотрудника: ")
@@ -38,6 +41,10 @@ class Admin_user_view(QWidget):
 
         for i in self.user["tests"]:
             self.container.addWidget(self.init_layout_of_solved_test(i))
+
+        self.save_user_button = QPushButton("Сохранить")
+        self.save_user_button.clicked.connect(self.save_user_button_pushed)
+        self.container.addWidget(self.save_user_button)
 
         self.container.addWidget(self)
         self.setLayout(self.container) # test thing
@@ -83,6 +90,8 @@ class Admin_user_view(QWidget):
 
         return self.solved_test_question_widget
 
+    def save_user_button_pushed(self):
+        print('Yay')
 
 if __name__ == '__main__':
     app = QApplication([])
