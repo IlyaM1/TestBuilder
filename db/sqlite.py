@@ -25,14 +25,19 @@ class SQLInteract:
         try:
             con = sqlite3.connect(filename_Db)
             return con
-        except:
-            print(Error)
+        except sqlite3.Error as err:
+            print(err)
 
     def sql_add_new_user(self, user_obj):
-        user_obj[0] = self.search_max_int_field() + 1
-        self.cursor_obj.execute(
-            f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_obj)
-        self.db_connection.commit()
+        try:
+            user_obj[0] = self.search_max_int_field() + 1
+            self.cursor_obj.execute(
+                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_obj)
+            self.db_connection.commit()
+            return True
+        except sqlite3.Error as err:
+            print(err)
+            return False
 
     def sql_create_new_table(self):
         """После инициализации нужно один раз ручками создать таблицу, ну вот надо так.
@@ -66,11 +71,20 @@ class SQLInteract:
         self.db_connection.commit()
 
     def sql_get_user_with_namePass(self, name, password):
-        self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
-                                f''' AND password = "{password}"''')
-        row = self.cursor_obj.fetchone()
-        dict_row = self.generate_dict(row)
-        return dict_row
+        try:
+            if str(type(password)) == "<class 'str'>":
+                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
+                                        f''' AND password = "{password}"''')
+            else:
+                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
+                                        f''' AND password = {password}''')
+            row = self.cursor_obj.fetchone()
+            dict_row = self.generate_dict(row)
+            return dict_row
+        except sqlite3.Error as e:
+            print(e)
+            return False
+
 
     def sql_get_user_with_id(self, input_id):
         self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
@@ -139,16 +153,19 @@ if __name__ == '__main__':
     # print(s.sql_get_user_with_id(3))
     # s.sql_delete_one()
     # print(s.return_full_table(to_dict=True, revert=True))
-# u = subprocess.run('ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
-# print(u.stdout, u.stderr, u.returncode)
-#     print(type('s') == str)
-#     new_user = [0, "Rel", "123123", "Junior", "[]"]
-# user_dict = s.generate_dict(s.sql_get_user_with_namePass('Jim', '123123'))
-# print(user_dict)
+    # u = subprocess.run('ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
+    # print(u.stdout, u.stderr, u.returncode)
+    #     print(type('s') == str)
+    new_user = [0, "Rel", "123123", "Junior", "[]"]
+    new = {"sad": 1, "sasd": "123"}
+    # for i in new:
+    #     print(i)
+    # user_dict = s.generate_dict(s.sql_get_user_with_namePass('Jim', '123123'))
+    # print(user_dict)
 
-# s.sql_add_new_user(user_obj=new_user)
+    # s.sql_add_new_user(user_obj=new_user)
 
 # s.sql_update_one_by_id("name", "'Jim'", 3)
 
 # s.sql_delete_one(need_value_of_name=2)
-# print(s.return_full_table())
+    print(s.return_full_table())
