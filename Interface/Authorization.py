@@ -39,5 +39,6 @@ class Authorization(QWidget):
         user = {"name": "Vlad"}
         if user is not None:
             self.close()
-            tests = get_all_tests(user)
+            test = get_all_tests(user)[0]
+            tests = [test for i in range(20)]
             self.view_all_tests = View_all_tests(tests, user)
