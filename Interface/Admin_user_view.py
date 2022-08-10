@@ -1,8 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
 from test_data_funcs import get_users
 from PyQt5.QtCore import Qt
 from Custom_Widgets.CollapsibleBox import CollapsibleBox
-class Admin_user_view(QWidget):
+class Admin_user_view(QMainWindow):
 
     def __init__(self, user={}, parent=None):
         super(QWidget, self).__init__(parent)
@@ -16,6 +16,9 @@ class Admin_user_view(QWidget):
 
         with open("css/Admin_user_view.css") as css:
             self.setStyleSheet(css.read())
+
+        self.scroll_widget = QScrollArea()
+        self.central_widget = QWidget()
 
         self.container = QVBoxLayout(self)
 
@@ -46,8 +49,14 @@ class Admin_user_view(QWidget):
         self.save_user_button.clicked.connect(self.save_user_button_pushed)
         self.container.addWidget(self.save_user_button)
 
-        self.container.addWidget(self)
-        self.setLayout(self.container) # test thing
+        self.central_widget.setLayout(self.container)
+
+        self.scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_widget.setWidgetResizable(True)
+        self.scroll_widget.setWidget(self.central_widget)
+
+        self.setCentralWidget(self.scroll_widget)
         self.show()
 
     def init_layout_of_solved_test(self, test):
@@ -96,6 +105,8 @@ class Admin_user_view(QWidget):
 if __name__ == '__main__':
     app = QApplication([])
     user = get_users()[0]
+    for i in range(20):
+        user["tests"].append(user["tests"][0])
     auth_obj = Admin_user_view(user)
     # auth_obj = Admin_test_view()
 
