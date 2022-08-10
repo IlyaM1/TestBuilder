@@ -25,4 +25,5 @@ class Signing:
     def authentication(self):
         """если возвратила False, значит такого юзера нету, данные введены неверно"""
         user = self.s.sql_get_user_with_namePass(name=self.name, password=self.password)
+        # print(user)
         return user
