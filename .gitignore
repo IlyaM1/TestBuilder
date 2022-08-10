@@ -137,3 +137,4 @@ dmypy.json
 /db/users.db
 /test/users.db
 /.vscode/
+/config.json
