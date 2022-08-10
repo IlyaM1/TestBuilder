@@ -23,7 +23,7 @@ class View_all_tests(QMainWindow):
 
         for test in self.tests:
             test_row = Item(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
-            test_row.setFixedSize(self.width()-40, 150)
+            test_row.setFixedSize(self.width()-40, 120)
             test_row.clicked.connect(self.label_test_pushed)
             self.vertical_layout.addWidget(test_row)
 
