@@ -13,7 +13,7 @@ class Authorization(QWidget):
         self.setMinimumSize(400, 300)
         vertical_layout = QVBoxLayout()
 
-        with open('Interface/Authorization.css') as f:
+        with open('Interface/css/Authorization.css') as f:
             self.setStyleSheet(f.read())
 
         self.input_label_login = QLineEdit()

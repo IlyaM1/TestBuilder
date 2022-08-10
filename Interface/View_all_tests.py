@@ -18,7 +18,7 @@ class View_all_tests(QMainWindow):
         self.vertical_layout = QVBoxLayout()
         self.vertical_layout.addSpacing(10)
 
-        with open('Interface/View_all_tests.css') as f:
+        with open('Interface/css/View_all_tests.css') as f:
             self.setStyleSheet(f.read())
 
         for test in self.tests:

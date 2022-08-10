@@ -13,7 +13,7 @@ class Admin_test_view(QWidget):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open("Admin_test_view.css") as css:
+        with open("css/Admin_test_view.css") as css:
             self.setStyleSheet(css.read())
 
         self.container = QVBoxLayout(self)
