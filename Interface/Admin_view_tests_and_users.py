@@ -14,6 +14,9 @@ class Admin_view_tests_and_users(QWidget):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
+        with open('css/Admin_view_tests_and_users.css') as css:
+            self.setStyleSheet(css.read())
+
         self.container = QVBoxLayout(self)
 
         self.tab_widget = QTabWidget()
@@ -36,7 +39,7 @@ class Admin_view_tests_and_users(QWidget):
 
         for user in self.users:
             user_row = Item(f'{user["name"]}', user["id"])
-            user_row.setFixedSize(self.width()-40, 150)
+            user_row.setFixedSize(self.width()-40, 120)
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
