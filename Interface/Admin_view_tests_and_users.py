@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton
-from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea
+from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
@@ -13,6 +13,9 @@ class Admin_view_tests_and_users(QWidget):
 
     def init_UI(self):
         self.setMinimumSize(1280, 720)
+
+        with open('css/Admin_view_tests_and_users.css') as css:
+            self.setStyleSheet(css.read())
 
         self.container = QVBoxLayout(self)
 
@@ -30,33 +33,48 @@ class Admin_view_tests_and_users(QWidget):
 
 
     def init_users_page(self):
+        self.user_page_scroll_widget = QScrollArea()
         self.user_page_widget = QWidget()
         self.users_labels_layout = QVBoxLayout()
 
         for user in self.users:
             user_row = Item(f'{user["name"]}', user["id"])
+            user_row.setFixedSize(self.width()-40, 120)
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
         self.new_user_button = QPushButton("Добавить сотрудника")
         self.users_labels_layout.addWidget(self.new_user_button)
         self.user_page_widget.setLayout(self.users_labels_layout)
-        return self.user_page_widget
+
+        self.user_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.user_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.user_page_scroll_widget.setWidgetResizable(True)
+        self.user_page_scroll_widget.setWidget(self.user_page_widget)
+
+        return self.user_page_scroll_widget
 
     def init_tests_page(self):
+        self.test_page_scroll_widget = QScrollArea()
         self.test_page_widget = QWidget()
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
             test_row = Item(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
+            test_row.setFixedSize(self.width() - 40, 120)
             test_row.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
 
         self.new_test_button = QPushButton("Добавить тест")
         self.tests_labels_layout.addWidget(self.new_test_button)
-
         self.test_page_widget.setLayout(self.tests_labels_layout)
-        return self.test_page_widget
+
+        self.test_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.test_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.test_page_scroll_widget.setWidgetResizable(True)
+        self.test_page_scroll_widget.setWidget(self.test_page_widget)
+
+        return self.test_page_scroll_widget
 
     def label_user_pushed(self, pushed_label):
         print(f"{pushed_label.id}")
@@ -67,8 +85,10 @@ class Admin_view_tests_and_users(QWidget):
 
 if __name__ == '__main__':
     app = QApplication([])
-    tests = get_all_tests()
-    users = get_users()
+    test = get_all_tests()[0]
+    tests = [test for i in range(50)]
+    user = get_users()[0]
+    users = [user for i in range(20)]
     auth_obj = Admin_view_tests_and_users(tests=tests, users=users)
 
     app.exec_()

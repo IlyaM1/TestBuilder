@@ -13,7 +13,7 @@ class Authorization(QWidget):
         self.setMinimumSize(400, 300)
         vertical_layout = QVBoxLayout()
 
-        with open('Interface/Authorization.css') as f:
+        with open('Interface/css/Authorization.css') as f:
             self.setStyleSheet(f.read())
 
         self.input_label_login = QLineEdit()
@@ -39,5 +39,6 @@ class Authorization(QWidget):
         user = {"name": "Vlad"}
         if user is not None:
             self.close()
-            tests = get_all_tests(user)
+            test = get_all_tests(user)[0]
+            tests = [test for i in range(20)]
             self.view_all_tests = View_all_tests(tests, user)

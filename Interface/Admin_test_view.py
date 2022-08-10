@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
+from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
 
-class Admin_test_view(QWidget):
+class Admin_test_view(QMainWindow):
 
     def __init__(self, test={}, parent=None):
         super(QWidget, self).__init__(parent)
@@ -13,9 +14,10 @@ class Admin_test_view(QWidget):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open("Admin_test_view.css") as css:
+        with open("css/Admin_test_view.css") as css:
             self.setStyleSheet(css.read())
-
+        self.scroll_widget = QScrollArea()
+        self.container_widget = QWidget()
         self.container = QVBoxLayout(self)
 
         self.name_label = QLabel("Имя теста: ")
@@ -41,8 +43,19 @@ class Admin_test_view(QWidget):
         self.new_question_button.released.connect(self.new_question_button_released)
         self.container.addWidget(self.new_question_button)
 
-        self.container.addWidget(self)
-        self.setLayout(self.container) # test thing
+        self.save_test_button = QPushButton("Сохранить тест")
+        self.save_test_button.released.connect(self.save_button_released)
+        self.container.addWidget(self.save_test_button)
+
+        # self.container.addWidget(self)
+        self.container_widget.setLayout(self.container)
+
+        self.scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_widget.setWidgetResizable(True)
+        self.scroll_widget.setWidget(self.container_widget)
+
+        self.setCentralWidget(self.scroll_widget)
         self.show()
 
     def init_layout_of_question(self, question):
@@ -68,12 +81,16 @@ class Admin_test_view(QWidget):
     def new_question_button_released(self):
         print("new question")
 
+    def save_button_released(self):
+        print("saved")
 
 
 
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
+    for i in range(20):
+        test["questions"].append(test["questions"][0])
     auth_obj = Admin_test_view(test)
     # auth_obj = Admin_test_view()
 
