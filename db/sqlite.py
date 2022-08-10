@@ -79,8 +79,11 @@ class SQLInteract:
                 self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                         f''' AND password = {password}''')
             row = self.cursor_obj.fetchone()
-            dict_row = self.generate_dict(row)
-            return dict_row
+            if row != None and row != False:
+                dict_row = self.generate_dict(row)
+                return dict_row
+            else:
+                return False
         except sqlite3.Error as e:
             print(e)
             return False
