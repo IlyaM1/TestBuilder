@@ -9,6 +9,7 @@ class Solving_test_widget(QMainWindow):
         self.test = test
         self.current_question = 1 # 1st question of test is №1
         self.number_of_all_questions = len(self.test["questions"])
+        self.answers_to_all_questions = [""] * self.number_of_all_questions
         self.init_UI()
 
     def init_UI(self):
@@ -24,15 +25,20 @@ class Solving_test_widget(QMainWindow):
         self.main_vertical_layout.addWidget(self.question_counter)
 
         question = self.test["questions"][self.current_question-1]
-        self.current_question_widget = self.generate_question_layout(question)
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question-1])
         self.main_vertical_layout.addWidget(self.current_question_widget)
 
         self.buttons_horizontal_layout_widget = QWidget() # wrapper for buttons_horizontal_layout
         self.buttons_horizontal_layout = QHBoxLayout()
+
         self.backward_button = QPushButton("Назад")
+        self.backward_button.released.connect(self.backward_button_pushed)
         self.buttons_horizontal_layout.addWidget(self.backward_button)
+
         self.next_button = QPushButton("Сохранить ответ и перейти к следующему вопросу")
+        self.next_button.released.connect(self.next_button_pushed)
         self.buttons_horizontal_layout.addWidget(self.next_button)
+
         self.buttons_horizontal_layout_widget.setLayout(self.buttons_horizontal_layout)
         self.main_vertical_layout.addWidget(self.buttons_horizontal_layout_widget)
 
@@ -41,7 +47,7 @@ class Solving_test_widget(QMainWindow):
 
         self.show()
 
-    def generate_question_layout(self, question):
+    def generate_question_layout(self, question, answer):
         self.question_widget = QWidget()
         self.question_widget_layout = QVBoxLayout()
 
@@ -49,7 +55,7 @@ class Solving_test_widget(QMainWindow):
         self.question_widget_layout.addWidget(self.question_text_label)
 
         if len(question["variants_of_answer"]) == 0:
-            self.answer_input_label = QLineEdit()
+            self.answer_input_label = QLineEdit(answer)
             self.question_widget_layout.addWidget(self.answer_input_label)
         else:
             self.variants_of_answer_widget = QWidget()
@@ -62,12 +68,25 @@ class Solving_test_widget(QMainWindow):
             self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
             self.question_widget_layout.addWidget(self.variants_of_answer_widget)
 
-            self.answer_input_label = QLineEdit()
+            self.answer_input_label = QLineEdit(answer)
             self.question_widget_layout.addWidget(self.answer_input_label)
 
         self.question_widget.setLayout(self.question_widget_layout)
         return self.question_widget
 
+    def backward_button_pushed(self):
+        self.current_question -= 1
+        self.main_vertical_layout.removeWidget(self.current_question_widget)
+        question = self.test["questions"][self.current_question - 1]
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.main_vertical_layout.insertWidget(1, self.current_question_widget)
+
+    def next_button_pushed(self):
+        self.current_question += 1
+        self.main_vertical_layout.removeWidget(self.current_question_widget)
+        question = self.test["questions"][self.current_question - 1]
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.main_vertical_layout.insertWidget(1, self.current_question_widget)
 
 if __name__ == '__main__':
     app = QApplication([])
