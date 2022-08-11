@@ -77,20 +77,32 @@ class Solving_test_widget(QMainWindow):
     def backward_button_pushed(self):
         if self.current_question == 1:
             return -1
-        self.current_question -= 1 # limit if this is the first question
+        self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
+        self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
 
     def next_button_pushed(self):
-        self.current_question += 1 # limit if this is the last question
+        if self.current_question == self.number_of_all_questions:
+            self.finish_and_save_test()
+            return
+        self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
+        if self.current_question == self.number_of_all_questions:
+            self.next_button.setText("Завершить и сохранить тест")
+        else:
+            self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
+
+    def finish_and_save_test(self):
+        print("finish_and_save_test")
+
 
 if __name__ == '__main__':
     app = QApplication([])
