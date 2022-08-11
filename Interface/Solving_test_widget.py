@@ -21,7 +21,7 @@ class Solving_test_widget(QMainWindow):
         self.main_widget = QWidget()
         self.main_vertical_layout = QVBoxLayout()
 
-        self.question_counter = QLabel(f"1/{self.number_of_all_questions} вопрос")
+        self.question_counter = QLabel(f"{self.current_question}/{self.number_of_all_questions} вопрос")
         self.main_vertical_layout.addWidget(self.question_counter)
 
         question = self.test["questions"][self.current_question-1]
@@ -75,18 +75,22 @@ class Solving_test_widget(QMainWindow):
         return self.question_widget
 
     def backward_button_pushed(self):
-        self.current_question -= 1
+        if self.current_question == 1:
+            return -1
+        self.current_question -= 1 # limit if this is the first question
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
+        self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
 
     def next_button_pushed(self):
-        self.current_question += 1
+        self.current_question += 1 # limit if this is the last question
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
+        self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
 
 if __name__ == '__main__':
     app = QApplication([])
