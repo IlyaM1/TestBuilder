@@ -1,0 +1,32 @@
+QWidget{
+    background-color: white;
+}
+QWidget#variants_of_answer_widget{
+    background-color: #f2f3f7;
+}
+QLabel{
+    font-size: 12px;
+}
+QVBoxLayout{
+}
+QPushButton{
+    min-height: 70px;
+    height: 10%;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    position:absolute;
+}
+QWidget#current_question_widget{
+    height: 85%;
+    min-height: 500px;
+    position: absolute;
+}
+QLabel#question_counter{
+    height: 5%;
+    min-height: 50px;
+    max-height: 100px;
+    position:absolute;
+    border-bottom: 3px solid black;
+    color: blue;
+}
