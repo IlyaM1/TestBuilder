@@ -16,16 +16,21 @@ class Solving_test_widget(QMainWindow):
         self.setMinimumSize(1280, 720)
 
         with open('css/Solving_test_widget.css') as css:
-            self.setStyleSheet(css.read())
+            self.css_file = css.read()
+            self.setStyleSheet(self.css_file)
 
         self.main_widget = QWidget()
         self.main_vertical_layout = QVBoxLayout()
 
         self.question_counter = QLabel(f"{self.current_question}/{self.number_of_all_questions} вопрос")
+        self.question_counter.setObjectName("question_counter")
         self.main_vertical_layout.addWidget(self.question_counter)
+
+        self.main_vertical_layout.addSpacing(50)
 
         question = self.test["questions"][self.current_question-1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question-1])
+        self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.addWidget(self.current_question_widget)
 
         self.buttons_horizontal_layout_widget = QWidget() # wrapper for buttons_horizontal_layout
@@ -52,6 +57,7 @@ class Solving_test_widget(QMainWindow):
         self.question_widget_layout = QVBoxLayout()
 
         self.question_text_label = QLabel(question["question"])
+        # self.question_text_label.setFixedHeight(100)
         self.question_widget_layout.addWidget(self.question_text_label)
 
         if len(question["variants_of_answer"]) == 0:
@@ -59,6 +65,7 @@ class Solving_test_widget(QMainWindow):
             self.question_widget_layout.addWidget(self.answer_input_label)
         else:
             self.variants_of_answer_widget = QWidget()
+            self.variants_of_answer_widget.setObjectName("variants_of_answer_widget")
             self.variants_of_answer_layout = QVBoxLayout()
 
             for variant in question["variants_of_answer"]:
@@ -81,9 +88,11 @@ class Solving_test_widget(QMainWindow):
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
         self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
+        self.setStyleSheet(self.css_file)
 
     def next_button_pushed(self):
         if self.current_question == self.number_of_all_questions:
@@ -93,13 +102,14 @@ class Solving_test_widget(QMainWindow):
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
         if self.current_question == self.number_of_all_questions:
             self.next_button.setText("Завершить и сохранить тест")
         else:
             self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
-
+        self.setStyleSheet(self.css_file)
     def finish_and_save_test(self):
         print("finish_and_save_test")
 
@@ -110,3 +120,5 @@ if __name__ == '__main__':
     solve_test = Solving_test_widget(test=test)
 
     app.exec_()
+
+#margin-bottom: 50px;
