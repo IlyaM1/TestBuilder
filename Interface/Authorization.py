@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox
 from Interface.View_all_tests import View_all_tests
 from test_data_funcs import get_all_tests, get_users
 from auth_reg import Signing
@@ -38,12 +38,20 @@ class Authorization(QWidget):
         self.show()
 
     def button_login_pushed(self):
-        self.user_login_password = (self.input_label_login.text(), self.input_label_password.text())
+        self.user_login_password = (self.input_label_login.text().strip(), self.input_label_password.text().strip())
+
+        if self.user_login_password[0] == '' or  self.user_login_password[1] == '':
+            error_window = QMessageBox()
+            error_window.setText("Вы ничего не ввели")
+            error_window.setWindowTitle("Ошибка")
+            error_window.exec()
+            return
+
         cfg = open("config.json").read()
         cfg = json.loads(cfg)
+
         if self.user_login_password[0] == cfg["name"] and self.user_login_password[1] == cfg["password"]:
-            pass  # TODO: next_window_for_admin view
-        # user = get_user(self.user_login_password)
+            self.next_window_for_admin() # TODO: next_window_for_admin func
         else:
             self.user = {"id": 0, "name": self.user_login_password[0], "password": self.user_login_password[1],
                          "post": "",
@@ -51,6 +59,11 @@ class Authorization(QWidget):
             self.user = self.authorization()
             if self.user is not False:
                 self.next_window_view_all_tests()
+            elif self.user is False:
+                error_window = QMessageBox()
+                error_window.setText("Неправильный пароль или имя пользователя")
+                error_window.setWindowTitle("Ошибка")
+                error_window.exec()
 
     def authorization(self):
         s = SQLInteract(table_name='testcase', filename_db='db/users.db')
@@ -63,3 +76,6 @@ class Authorization(QWidget):
             test = get_all_tests(self.user)[0]
             tests = [test for i in range(20)]
             self.view_all_tests = View_all_tests(tests, self.user)
+
+    def next_window_for_admin(self):
+        print("You entered as admin") # to do
