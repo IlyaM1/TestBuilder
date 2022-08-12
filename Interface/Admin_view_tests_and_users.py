@@ -3,9 +3,12 @@ from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
+from db.sqlite import SQLInteract
+
+
 class Admin_view_tests_and_users(QWidget):
 
-    def __init__(self, parent=None, tests = [], users = []):
+    def __init__(self, tests=[], users=[], parent=None):
         super(QWidget, self).__init__(parent)
         self.tests = tests
         self.users = users
@@ -30,8 +33,6 @@ class Admin_view_tests_and_users(QWidget):
         self.container.addWidget(self.tab_widget)
         self.show()
 
-
-
     def init_users_page(self):
         self.user_page_scroll_widget = QScrollArea()
         self.user_page_widget = QWidget()
@@ -39,7 +40,7 @@ class Admin_view_tests_and_users(QWidget):
 
         for user in self.users:
             user_row = Item(f'{user["name"]}', user["id"])
-            user_row.setFixedSize(self.width()-40, 120)
+            user_row.setFixedSize(self.width() - 40, 120)
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
@@ -88,7 +89,11 @@ if __name__ == '__main__':
     test = get_all_tests()[0]
     tests = [test for i in range(50)]
     user = get_users()[0]
-    users = [user for i in range(20)]
+    user_table = SQLInteract(table_name='testcase')
+    # user_table.sql_delete_one(need_value_of_name=1)
+    print(user_table.return_full_table())
+    users = user_table.return_full_table(to_dict=True)
+    # users = [user for i in range(20)]
     auth_obj = Admin_view_tests_and_users(tests=tests, users=users)
 
     app.exec_()
