@@ -3,13 +3,9 @@ from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
-from db.sqlite import SQLInteract
-
-
 from Interface.Admin_user_view import Admin_user_view
 from Interface.Admin_test_view import Admin_test_view
 from db.sqlite import SQLInteract
-
 
 class Admin_view_tests_and_users(QWidget):
 
