@@ -55,9 +55,9 @@ class SQLInteract:
         self.db_connection.commit()
 
     def sql_update_one_by_id(self, update_field, update_value, search_id):
-        """if type update_value == str: update_value must be quotes in quotes "'some text'" """
+        """if type update_value == str: update_value must be quotes in quotes new_text = "'some text'" """
         if type(update_value) == str:
-            update_value = update_value.replace('"', "'")
+            # update_value = update_value.replace('"', "'")
             self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
                                     f'''WHERE id = {search_id}''')
         else:
@@ -79,7 +79,7 @@ class SQLInteract:
                 self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                         f''' AND password = {password}''')
             row = self.cursor_obj.fetchone()
-            if row != None and row != False:
+            if (row is not None) and (row != False):
                 dict_row = self.generate_dict(row)
                 return dict_row
             else:
@@ -92,7 +92,11 @@ class SQLInteract:
         self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
         row = self.cursor_obj.fetchone()
         dict_row = self.generate_dict(row)
+        dict_row["tests"] = self.get_all_tests(user=dict_row)
         return dict_row
+
+    # def sql_rewrite_user(self, id, ):
+    #     pass
 
     def return_full_table(self, name_of_table="0", revert=False, to_dict=False) -> list:
         """with no arguments just return table list
@@ -135,11 +139,16 @@ class SQLInteract:
         dict_of_user = dict(dict_of_user)
         return dict_of_user
 
-    def get_all_tests(self, user_id) -> list:
+    def get_all_tests(self, user_id=None, user='') -> list:
         """возвращает массив тестов юзера по его id"""
         if 'tests' not in self.values_of_this_table:
             return None
-        got_user = self.sql_get_user_with_id(user_id)
+        if user != '':
+            got_user = user
+        # elif user_id is not None:
+        #     got_user = self.sql_get_user_with_id(user_id)
+        else:
+            return None
         return json.loads(got_user["tests"].replace("'", '"'))
 
     def all_tables_name(self):
@@ -151,10 +160,11 @@ class SQLInteract:
 
 
 if __name__ == '__main__':
-    s = SQLInteract()
+    s = SQLInteract(table_name="testcase")
     # s.sql_create_new_table()
     # s.drop_table()
-    # user1 = (s.sql_get_user_with_namePass('Jim', '123123'))
+    user1 = (s.sql_get_user_with_namePass('ILYA3224', '1234'))
+    print(user1)
     # print(s.sql_get_user_with_id(3))
     # s.sql_delete_one()
     # print(s.return_full_table(to_dict=True, revert=True))

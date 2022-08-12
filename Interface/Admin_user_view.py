@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLa
 from test_data_funcs import get_users
 from PyQt5.QtCore import Qt
 from Custom_Widgets.CollapsibleBox import CollapsibleBox
+from db.sqlite import SQLInteract
+from db.hash import hash_password
 
 
 class Admin_user_view(QMainWindow):
@@ -101,14 +103,34 @@ class Admin_user_view(QMainWindow):
         return self.solved_test_question_widget
 
     def save_user_button_pushed(self):
+        input_name = self.name_input_label.text().strip()
+        input_password = self.password_input_label.text()
+        input_post = self.post_input_label.text().strip()
+        input_password = str(hash_password(input_password))
+        print(input_password)
+
+
+        user_db = SQLInteract(table_name='testcase', filename_db='../db/users.db')
+        # TODO: путь может сломаться если запускать из main.py issue #45
+        user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
+        user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])
+        user_db.sql_update_one_by_id(update_field="post", update_value="" + input_post + "", search_id=self.user["id"])
+
+        # self.user
         print('Yay')
 
 
 if __name__ == '__main__':
+    test_db = SQLInteract(table_name='testcase', filename_db='../db/users.db')
     app = QApplication([])
     user = get_users()[0]
-    for i in range(20):
-        user["tests"].append(user["tests"][0])
+    print(test_db.return_full_table(to_dict=True))
+    user = test_db.sql_get_user_with_id(2)
+    # test_db.sql_update_one_by_id(update_field="password", update_value="ersg", search_id=2)
+    # print(test_db.return_full_table())
+    # print(user)
+    # for i in range(20):
+    #     user["tests"].append(user["tests"][0])
     auth_obj = Admin_user_view(user)
     # auth_obj = Admin_test_view()
 
