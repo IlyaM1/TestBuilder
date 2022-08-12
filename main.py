@@ -18,8 +18,9 @@ if __name__ == '__main__':
     # # s.sql_create_new_table()
     # info = {"id": 1, "name": "ILYA", "password": "1234", "post": "newbye", "tests": "[]"}
 
-    print(sign.authentication())
+    # print(sign.authentication())
     # print(s.return_full_table())
     # print(s.sql_get_user_with_id(2))
     # print(type(s.get_all_tests(2)))
     # print(s.all_tables_name())
+
