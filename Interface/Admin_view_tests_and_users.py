@@ -128,6 +128,7 @@ if __name__ == '__main__':
     print(user_table.return_full_table())
     users = user_table.return_full_table(to_dict=True)
     # users = [user for i in range(20)]
+    # TODO: продумать, инициализировать и привязать таблицу тестов
     auth_obj = Admin_view_tests_and_users(tests=tests, users=users)
 
     app.exec_()
