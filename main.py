@@ -10,7 +10,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
     s = SQLInteract(table_name='testcase', filename_db='db/users.db')
     sign = Signing({'id': 0, 'name': 'ILYA2', 'password': '1234', 'post': 'pop', 'test': '[]'}, s)
     print(sign.authentication())
@@ -20,3 +20,7 @@ if __name__ == '__main__':
     # sign = Signing(info, s)
     # sign.registration()
     print(s.return_full_table())
+    print(s.sql_get_user_with_id(2))
+    print(type(s.get_all_tests(2)))
+    print(s.all_tables_name())
+
