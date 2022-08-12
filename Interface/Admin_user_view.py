@@ -105,7 +105,7 @@ class Admin_user_view(QMainWindow):
     def save_user_button_pushed(self):
         input_name = self.name_input_label.text().strip()
         input_password = self.password_input_label.text()
-        input_post = self.post_input_label.text().strip()
+        input_post = self.post_input_label.text()
         input_password = str(hash_password(input_password))
         print(input_password)
 
@@ -114,7 +114,7 @@ class Admin_user_view(QMainWindow):
         # TODO: путь может сломаться если запускать из main.py issue #45
         user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
         user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])
-        user_db.sql_update_one_by_id(update_field="post", update_value="" + input_post + "", search_id=self.user["id"])
+        user_db.sql_update_one_by_id(update_field="post", update_value=input_post, search_id=self.user["id"])
 
         # self.user
         print('Yay')
