@@ -88,7 +88,6 @@ class SQLInteract:
             print(e)
             return False
 
-
     def sql_get_user_with_id(self, input_id):
         self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
         row = self.cursor_obj.fetchone()
@@ -144,6 +143,10 @@ class SQLInteract:
         got_user = self.sql_get_user_with_id(user_id)
         return json.loads(got_user["tests"].replace("'", '"'))
 
+    def all_tables_name(self):
+        self.cursor_obj.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        return self.cursor_obj.fetchall()
+
     def drop_table(self):
         self.cursor_obj.execute(f"DROP TABLE {self.table_name}")
 
@@ -168,7 +171,7 @@ if __name__ == '__main__':
 
     # s.sql_add_new_user(user_obj=new_user)
 
-# s.sql_update_one_by_id("name", "'Jim'", 3)
+    # s.sql_update_one_by_id("name", "'Jim'", 3)
 
-# s.sql_delete_one(need_value_of_name=2)
+    # s.sql_delete_one(need_value_of_name=2)
     print(s.return_full_table())
