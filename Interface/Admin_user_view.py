@@ -2,13 +2,15 @@ from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLa
 from test_data_funcs import get_users
 from PyQt5.QtCore import Qt
 from Custom_Widgets.CollapsibleBox import CollapsibleBox
+
+
 class Admin_user_view(QMainWindow):
 
     def __init__(self, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.user = user
         if self.user == {}:
-            self.user = {"name": '', "password": '', "post": '', "tests": []}
+            self.user = {"id": 0, "name": '', "password": '', "post": '', "tests": []}
         self.init_UI()
 
     def init_UI(self):
@@ -26,7 +28,6 @@ class Admin_user_view(QMainWindow):
         self.container.addWidget(self.name_label)
         self.name_input_label = QLineEdit(self.user["name"])
         self.container.addWidget(self.name_input_label)
-
 
         self.password_label = QLabel("Пароль сотрудника: ")
         self.container.addWidget(self.password_label)
@@ -62,7 +63,7 @@ class Admin_user_view(QMainWindow):
     def init_layout_of_solved_test(self, test):
         self.test_widget = QWidget()
 
-        self.test_widget_layout =  QVBoxLayout()
+        self.test_widget_layout = QVBoxLayout()
 
         self.name_label = QLabel(f'Имя теста: {test["name"]}')
         self.test_widget_layout.addWidget(self.name_label)
@@ -101,6 +102,7 @@ class Admin_user_view(QMainWindow):
 
     def save_user_button_pushed(self):
         print('Yay')
+
 
 if __name__ == '__main__':
     app = QApplication([])

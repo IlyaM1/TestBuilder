@@ -112,8 +112,7 @@ class SQLInteract:
             else:
                 return rows
 
-    def generating_values(self):  # это в sql такой запар паходу с этим, нужно вельюсы генерить вот так, а потом
-        # подставлять в инсерт
+    def generating_values(self):
         count_comma = self.values_of_this_table.count(",")
         values_str = "(?" + (", ?" * count_comma) + ")"
         return values_str
