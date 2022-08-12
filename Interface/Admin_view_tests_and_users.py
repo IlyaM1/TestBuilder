@@ -46,6 +46,7 @@ class Admin_view_tests_and_users(QWidget):
             self.users_labels_layout.addWidget(user_row)
 
         self.new_user_button = QPushButton("Добавить сотрудника")
+        self.new_user_button.released.connect(self.new_user_button_pushed)
         self.users_labels_layout.addWidget(self.new_user_button)
         self.user_page_widget.setLayout(self.users_labels_layout)
 
@@ -68,6 +69,7 @@ class Admin_view_tests_and_users(QWidget):
             self.tests_labels_layout.addWidget(test_row)
 
         self.new_test_button = QPushButton("Добавить тест")
+        self.new_test_button.released.connect(self.new_test_button_pushed)
         self.tests_labels_layout.addWidget(self.new_test_button)
         self.test_page_widget.setLayout(self.tests_labels_layout)
 
@@ -86,11 +88,29 @@ class Admin_view_tests_and_users(QWidget):
         self.user_view = Admin_user_view(user=user)
 
     def label_test_pushed(self, pushed_label):
+        self.close()
         # test = get_test_by_id(pushed_label.id) # @akrisfx
         test = self.tests[0]  # test thing
         print(test)
         self.test_view = Admin_test_view(test=test)
 
+    def new_user_button_pushed(self):
+        self.close()
+        self.create_new_user()
+        self.user_view = Admin_user_view()
+
+    def new_test_button_pushed(self):
+        self.close()
+        self.create_new_test()
+        self.test_view = Admin_test_view()
+
+    def create_new_test(self):
+        # this func creates new EMPTY test
+        pass
+
+    def create_new_user(self):
+        # this func creates new EMPTY user
+        pass
     def get_user_by_id(self, id):
         pass
 
