@@ -3,6 +3,8 @@ from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
+from Interface.Admin_user_view import Admin_user_view
+from Interface.Admin_test_view import Admin_test_view
 class Admin_view_tests_and_users(QWidget):
 
     def __init__(self, parent=None, tests = [], users = []):
@@ -77,11 +79,20 @@ class Admin_view_tests_and_users(QWidget):
         return self.test_page_scroll_widget
 
     def label_user_pushed(self, pushed_label):
-        print(f"{pushed_label.id}")
+        self.close()
+        # user = get_user_by_id(pushed_label.id) # @akrisfx
+        user = self.users[0] # test thing
+        print(user)
+        self.user_view = Admin_user_view(user=user)
 
     def label_test_pushed(self, pushed_label):
-        print(f"{pushed_label.id}")
+        # test = get_test_by_id(pushed_label.id) # @akrisfx
+        test = self.tests[0]  # test thing
+        print(test)
+        self.test_view = Admin_test_view(test=test)
 
+    def get_user_by_id(self, id):
+        pass
 
 if __name__ == '__main__':
     app = QApplication([])
