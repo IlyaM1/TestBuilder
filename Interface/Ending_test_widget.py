@@ -4,7 +4,9 @@ from test_data_funcs import get_all_tests, get_users
 
 
 class Ending_test_widget(QMainWindow):
-
+    """
+    Окно, которое вызывается после завершения теста
+    """
     def __init__(self, result = 0, wrong_answers = 0, max_result = 0, parent=None):
         super(QWidget, self).__init__(parent)
         self.result = result

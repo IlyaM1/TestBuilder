@@ -3,7 +3,9 @@ from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
 from test_data_funcs import get_all_tests, get_users
 class View_all_tests(QMainWindow):
-
+    """
+    Просмотр списка всех тестов за юзера
+    """
     def __init__(self, tests, user):
         super().__init__()
         self.tests = tests

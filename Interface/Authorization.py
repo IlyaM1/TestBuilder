@@ -7,7 +7,9 @@ import json
 
 
 class Authorization(QWidget):
-
+    """
+    Окошко авторизации
+    """
     def __init__(self):
         super().__init__()
         self.user_login_password = ()

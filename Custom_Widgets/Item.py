@@ -3,6 +3,9 @@ from PyQt5.Qt import pyqtSignal
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
 class Item(QLabel):
+    """
+    QLabel на который можно нажать, который хранит в себе id объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
+    """
     clicked = pyqtSignal()
 
     def __init__(self, text, id):

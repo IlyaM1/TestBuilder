@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import QLabel, QLineEdit, QHBoxLayout, QWidget
 
 
 class LineEdit_with_explanation(QWidget):
+    """
+    Виджет имеющий label и input, label нужен для пояснения input-а
+    """
     clicked = pyqtSignal()
 
     def __init__(self, text_of_label, text_of_input):
