@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, QListWidget, QMainWindow, QScrollArea
 from PyQt5.QtCore import QSize, Qt
 from Custom_Widgets.Item import Item
-
+from test_data_funcs import get_all_tests, get_users
 class View_all_tests(QMainWindow):
 
     def __init__(self, tests, user):
@@ -18,7 +18,7 @@ class View_all_tests(QMainWindow):
         self.vertical_layout = QVBoxLayout()
         self.vertical_layout.addSpacing(10)
 
-        with open('Interface/css/View_all_tests.css') as f:
+        with open('css/View_all_tests.css') as f:
             self.setStyleSheet(f.read())
 
         for test in self.tests:
@@ -45,3 +45,13 @@ class View_all_tests(QMainWindow):
 
     def button_login_pushed(self):
         pass
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    user = get_users()[0]
+    test = get_all_tests(user)[0]
+    tests = [test for i in range(20)]
+    view_all_tests = View_all_tests(tests, user)
+
+    app.exec_()

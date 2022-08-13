@@ -7,6 +7,7 @@ from Interface.Admin_user_view import Admin_user_view
 from Interface.Admin_test_view import Admin_test_view
 from db.sqlite import SQLInteract
 
+
 class Admin_view_tests_and_users(QWidget):
 
     def __init__(self, tests=[], users=[], parent=None):
@@ -83,7 +84,7 @@ class Admin_view_tests_and_users(QWidget):
     def label_user_pushed(self, pushed_label):
         self.close()
         # user = get_user_by_id(pushed_label.id) # @akrisfx
-        user = self.users[0] # test thing
+        user = self.users[0]  # test thing
         print(user)
         self.user_view = Admin_user_view(user=user)
 
@@ -105,14 +106,16 @@ class Admin_view_tests_and_users(QWidget):
         self.test_view = Admin_test_view()
 
     def create_new_test(self):
-        # this func creates new EMPTY test
+        # TODO: this func creates new EMPTY test
         pass
 
     def create_new_user(self):
-        # this func creates new EMPTY user
+        # TODO: this func creates new EMPTY user
         pass
+
     def get_user_by_id(self, id):
         pass
+
 
 if __name__ == '__main__':
     app = QApplication([])
