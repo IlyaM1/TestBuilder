@@ -1,3 +1,7 @@
 QWidget{
 
 }
+QLabel{
+    padding-left: 50%;
+    padding-right:50%;
+}
