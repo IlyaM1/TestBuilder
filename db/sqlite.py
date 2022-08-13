@@ -1,16 +1,17 @@
 import sqlite3
 from sqlite3 import Error
 import json
+from config import Config
 
 
 class SQLInteract:
-    """в values_of_this_table можно использовать только ключевые слова PRIMARY, KEY, UNIQUE.
-    заметка на завтра в values_of_this_table указывать что хочешь, а нужную часть для generate_dict() обозначать особыми символами"""
+    """в values_of_this_table можно использовать только ключевые слова PRIMARY KEY (помимо самих имен столбцов).
+    заметка на завтра в values_of_this_table указывать что хочешь, а нужную часть для generate_dict() обозначать особыми символами
+    filename_db=cfg.config["path"] + '/db/users.db' по стандарту ставь"""
 
-    # в идеале, чтобы вообще все происходило внутри класса (даже коннект и задача курсора),
-    # а внизу чисто аргументы писал и все, как проснусь - доделаю, но пока мне нравится
+    # внизу чисто аргументы пишешь и все,
     # по моей задумке для каждой таблицы ты создаешь новый объект класса, и взаимодействуешь с ним в рамках класса
-    def __init__(self, filename_db="../db/users.db", table_name="employees",
+    def __init__(self, filename_db, table_name="employees",
                  values_of_this_table="(id, name, password, "
                                       "post, tests)"):
         self.filename_db = filename_db
@@ -131,7 +132,7 @@ class SQLInteract:
             return max_id[0][0]
 
     def generate_dict(self, user):
-        values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace(', UNIQUE', '').replace('(', '') \
+        values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
             .replace(')', '').replace(' ', '').split(',')
         dict_of_user = []
         for i in range(len(values)):
@@ -160,11 +161,15 @@ class SQLInteract:
 
 
 if __name__ == '__main__':
-    s = SQLInteract(table_name="testcase")
+    cfg = Config()
+    s = SQLInteract(table_name="testcase", filename_db=cfg.config["path"] + "/db/users.db")
+
     # s.sql_create_new_table()
     # s.drop_table()
     user1 = (s.sql_get_user_with_namePass('ILYA3224', '1234'))
     print(user1)
+    print(s.all_tables_name())
+
     # print(s.sql_get_user_with_id(3))
     # s.sql_delete_one()
     # print(s.return_full_table(to_dict=True, revert=True))
