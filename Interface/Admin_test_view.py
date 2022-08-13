@@ -3,7 +3,9 @@ from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
 from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
 class Admin_test_view(QMainWindow):
-
+    """
+        Окошко для изменения и создания теста
+        """
     def __init__(self, test={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test

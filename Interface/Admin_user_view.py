@@ -7,7 +7,9 @@ from db.hash import hash_password
 
 
 class Admin_user_view(QMainWindow):
-
+    """
+    Окошко для изменения и создания юзера
+    """
     def __init__(self, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.user = user

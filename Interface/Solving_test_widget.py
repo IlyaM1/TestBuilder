@@ -3,7 +3,9 @@ from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 
 class Solving_test_widget(QMainWindow):
-
+    """
+    Окошко для выполнения теста
+    """
     def __init__(self, test = {}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test

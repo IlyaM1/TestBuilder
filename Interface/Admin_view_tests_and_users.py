@@ -9,7 +9,9 @@ from db.sqlite import SQLInteract
 
 
 class Admin_view_tests_and_users(QWidget):
-
+    """
+    Окошко для просмотра всех тестов и юзеров адмном
+    """
     def __init__(self, tests=[], users=[], parent=None):
         super(QWidget, self).__init__(parent)
         self.tests = tests

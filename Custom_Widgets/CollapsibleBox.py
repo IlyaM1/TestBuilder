@@ -19,6 +19,9 @@ class Container(QtWidgets.QWidget):
 
 
 class CollapsibleBox(QtWidgets.QWidget):
+    """
+    Раздвигающийся по нажатию виджет
+    """
     def __init__(self, title="", parent=None):
         super(CollapsibleBox, self).__init__(parent)
 
