@@ -156,8 +156,8 @@ if __name__ == '__main__':
     # print(test_db.return_full_table())
     # print(user)
     # user["tests"] = None
-    # for i in range(20):
-    #     user["tests"].append(user["tests"][0])
+    for i in range(20):
+        user["tests"].append(user["tests"][0])
     auth_obj = Admin_user_view(user=user)
 
     app.exec_()
