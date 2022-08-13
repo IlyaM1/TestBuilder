@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
 from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
-from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
+# from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
 class Admin_test_view(QMainWindow):
 
     def __init__(self, test={}, parent=None):

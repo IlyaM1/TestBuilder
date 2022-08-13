@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from Custom_Widgets.CollapsibleBox import CollapsibleBox
 from db.sqlite import SQLInteract
 from db.hash import hash_password
+from config import Config
 
 
 class Admin_user_view(QMainWindow):
@@ -109,9 +110,8 @@ class Admin_user_view(QMainWindow):
         input_password = str(hash_password(input_password))
         print(input_password)
 
-
-        user_db = SQLInteract(table_name='testcase', filename_db='../db/users.db')
-        # TODO: путь может сломаться если запускать из main.py issue #45
+        cfg = Config()
+        user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
         user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
         user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])
         user_db.sql_update_one_by_id(update_field="post", update_value=input_post, search_id=self.user["id"])
@@ -121,7 +121,8 @@ class Admin_user_view(QMainWindow):
 
 
 if __name__ == '__main__':
-    test_db = SQLInteract(table_name='testcase', filename_db='../db/users.db')
+    cfg = Config()
+    test_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     app = QApplication([])
     user = get_users()[0]
     print(test_db.return_full_table(to_dict=True))

@@ -6,6 +6,8 @@ from functools import partial
 from Interface.Admin_user_view import Admin_user_view
 from Interface.Admin_test_view import Admin_test_view
 from db.sqlite import SQLInteract
+from config import Config
+
 
 
 class Admin_view_tests_and_users(QWidget):
@@ -118,11 +120,12 @@ class Admin_view_tests_and_users(QWidget):
 
 
 if __name__ == '__main__':
+    cfg = Config()
     app = QApplication([])
     test = get_all_tests()[0]
     tests = [test for i in range(50)]
     user = get_users()[0]
-    user_table = SQLInteract(table_name='testcase')
+    user_table = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + "/db/users.db")
     # user_table.sql_delete_one(need_value_of_name=1)
     print(user_table.return_full_table())
     users = user_table.return_full_table(to_dict=True)

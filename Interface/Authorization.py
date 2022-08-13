@@ -3,6 +3,7 @@ from Interface.View_all_tests import View_all_tests
 from test_data_funcs import get_all_tests, get_users
 from auth_reg import Signing
 from db.sqlite import SQLInteract
+from config import Config
 import json
 
 
@@ -13,6 +14,8 @@ class Authorization(QWidget):
         self.user_login_password = ()
         self.user = False
         self.init_UI()
+        self.cfg = Config()
+        # print(self.cfg.config)
 
     def init_UI(self):
         self.setMinimumSize(400, 300)
@@ -47,11 +50,8 @@ class Authorization(QWidget):
             error_window.exec()
             return
 
-        cfg = open("config.json").read()
-        cfg = json.loads(cfg)
-
-        if self.user_login_password[0] == cfg["name"] and self.user_login_password[1] == cfg["password"]:
-            self.next_window_for_admin() # TODO: next_window_for_admin func
+        if self.user_login_password[0] == self.cfg["name"] and self.user_login_password[1] == self.cfg["password"]:
+            self.next_window_for_admin()  # TODO: next_window_for_admin func
         else:
             self.user = {"id": 0, "name": self.user_login_password[0], "password": self.user_login_password[1],
                          "post": "",
@@ -66,7 +66,7 @@ class Authorization(QWidget):
                 error_window.exec()
 
     def authorization(self):
-        s = SQLInteract(table_name='testcase', filename_db='../db/users.db')
+        s = SQLInteract(table_name='testcase', filename_db=self.cfg.config["path"] + '/db/users.db')
         sign_obj = Signing(self.user, s)
         return sign_obj.authentication()
 
