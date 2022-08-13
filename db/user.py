@@ -1,6 +1,6 @@
 import json
 from db.sqlite import SQLInteract
-
+from config import Config
 
 # print(db.return_full_table())
 
@@ -28,7 +28,8 @@ def from_str_to_dict(input_str: str) -> dict:
 
 
 if __name__ == '__main__':
-    db = SQLInteract()
+    cfg = Config()
+    db = SQLInteract(filename_db=cfg.config["path"] + "/db/users.db")
 #     aaa = '[{"name":"EGE RUSS","rezult":999},{"name":"EGE MATH","rezult":80}]'
 #     db.sql_update_one_by_id(update_field="tests", update_value=aaa, search_id=3)
     # print(db.return_full_table())
