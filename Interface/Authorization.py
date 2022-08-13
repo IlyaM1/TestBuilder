@@ -40,7 +40,7 @@ class Authorization(QWidget):
     def button_login_pushed(self):
         self.user_login_password = (self.input_label_login.text().strip(), self.input_label_password.text().strip())
 
-        if self.user_login_password[0] == '' or  self.user_login_password[1] == '':
+        if self.user_login_password[0] == '' or self.user_login_password[1] == '':
             error_window = QMessageBox()
             error_window.setText("Вы ничего не ввели")
             error_window.setWindowTitle("Ошибка")
@@ -66,7 +66,7 @@ class Authorization(QWidget):
                 error_window.exec()
 
     def authorization(self):
-        s = SQLInteract(table_name='testcase', filename_db='db/users.db')
+        s = SQLInteract(table_name='testcase', filename_db='../db/users.db')
         sign_obj = Signing(self.user, s)
         return sign_obj.authentication()
 
