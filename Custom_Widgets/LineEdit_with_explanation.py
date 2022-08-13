@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QLabel, QLineEdit, QHBoxLayout, QWidget
-
+from PyQt5.Qt import pyqtSignal
 
 class LineEdit_with_explanation(QWidget):
     """

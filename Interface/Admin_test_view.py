@@ -22,28 +22,42 @@ class Admin_test_view(QMainWindow):
         self.container_widget = QWidget()
         self.container = QVBoxLayout(self)
 
+        self.constant_widget = QWidget()
+        self.constant_layout = QVBoxLayout()
+
         self.name_label = QLabel("Имя теста: ")
-        self.container.addWidget(self.name_label)
+        self.constant_layout.addWidget(self.name_label)
 
         self.name_input_label = QLineEdit(self.test["name"])
-        self.container.addWidget(self.name_input_label)
+        self.constant_layout.addWidget(self.name_input_label)
 
 
         self.theme_label = QLabel("Тема теста: ")
-        self.container.addWidget(self.theme_label)
+        self.constant_layout.addWidget(self.theme_label)
 
         self.theme_input_label = QLineEdit(self.test["theme"])
-        self.container.addWidget(self.theme_input_label)
+        self.constant_layout.addWidget(self.theme_input_label)
+
+        self.constant_widget.setLayout(self.constant_layout)
+        self.container.addWidget(self.constant_widget)
+
+        self.question_container_widget = QWidget()
+        self.question_container_layout = QVBoxLayout()
 
         self.question_label = QLabel("Вопросы: ")
-        self.container.addWidget(self.question_label)
+        self.question_container_layout.addWidget(self.question_label)
+
+
 
         for i in self.test["questions"]:
-            self.container.addWidget(self.init_layout_of_question(i))
+            self.question_container_layout.addWidget(self.init_layout_of_question(i))
 
         self.new_question_button = QPushButton("Добавить вопрос")
         self.new_question_button.released.connect(self.new_question_button_released)
-        self.container.addWidget(self.new_question_button)
+        self.question_container_layout.addWidget(self.new_question_button)
+
+        self.question_container_widget.setLayout(self.question_container_layout)
+        self.container.addWidget(self.question_container_widget)
 
         self.save_test_button = QPushButton("Сохранить тест")
         self.save_test_button.released.connect(self.save_button_released)
@@ -91,6 +105,8 @@ class Admin_test_view(QMainWindow):
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
+    print(test)
+    # test["questions"] = []
     for i in range(20):
         test["questions"].append(test["questions"][0])
     auth_obj = Admin_test_view(test)
