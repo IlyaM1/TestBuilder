@@ -13,13 +13,14 @@ class SQLInteract:
     # по моей задумке для каждой таблицы ты создаешь новый объект класса, и взаимодействуешь с ним в рамках класса
     def __init__(self, filename_db, table_name="employees",
                  values_of_this_table="(id, name, password, "
-                                      "post, tests)"):
+                                      "post, tests)", init_values="()"):
         self.filename_db = filename_db
         self.table_name = table_name
         self.values_of_this_table = values_of_this_table
         self.values = self.generating_values()
         self.db_connection = self.sql_connect(self.filename_db)
         self.cursor_obj = sqlite3.Cursor(self.db_connection)
+        self.init_values = init_values
 
     @staticmethod
     def sql_connect(filename_Db):
@@ -43,7 +44,7 @@ class SQLInteract:
     def sql_create_new_table(self):
         """После инициализации нужно один раз ручками создать таблицу, ну вот надо так.
         Создается она на основании данных заполненных при инициализации класса"""
-        self.cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.values_of_this_table}")
+        self.cursor_obj.execute(f"CREATE TABLE IF NOT EXISTS {self.table_name} {self.init_values}")
         self.db_connection.commit()
 
     def sql_delete_one(self, search_name="id", need_value_of_name="DEfault VaLue123Qwcsa"):
@@ -102,7 +103,7 @@ class SQLInteract:
     # def sql_rewrite_user(self, id, ):
     #     pass
 
-    def return_full_table(self, name_of_table="0", revert=False, to_dict=False) -> list:
+    def return_full_table(self, name_of_table="0", revert=False, to_dict=False, element_for_transform="tests") -> list:
         """with no arguments just return table list
         revert will be True or False, if True return sorted on date"""
         if name_of_table == "0":  # если ничего юзер не указал, то выводим всю таблицу указанную при инициализации
@@ -114,7 +115,8 @@ class SQLInteract:
             if to_dict:
                 for i in range(len(rows)):
                     rows[i] = self.generate_dict(rows[i])
-                    rows[i]["tests"] = self.get_all_tests(rows[i]["id"])
+                    rows[i][element_for_transform] = self.get_all_tests(value=rows[i][element_for_transform],
+                                                                        need_value=element_for_transform)
             if revert:
                 return rows[::-1]
             else:
@@ -143,17 +145,16 @@ class SQLInteract:
         dict_of_user = dict(dict_of_user)
         return dict_of_user
 
-    def get_all_tests(self, user_id=None, user='') -> list:
-        """возвращает массив тестов юзера по его id"""
-        if 'tests' not in self.values_of_this_table:
-            return None
-        if user != '':
-            got_user = user
-        # elif user_id is not None:
-        #     got_user = self.sql_get_user_with_id(user_id)
-        else:
-            return None
-        return json.loads(got_user["tests"].replace("'", '"'))
+    @staticmethod
+    def get_all_tests(value='', need_value="tests", user_id=None) -> list:
+        """возвращает массив из его объекта"""
+        # if value != '':
+        #     got_user = value
+        # # elif user_id is not None:
+        # #     got_user = self.sql_get_user_with_id(user_id)
+        # else:
+        #     return None
+        return json.loads(value.replace("'", '"'))
 
     def all_tables_name(self):
         self.cursor_obj.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -191,4 +192,14 @@ if __name__ == '__main__':
     # s.sql_update_one_by_id("name", "'Jim'", 3)
 
     # s.sql_delete_one(need_value_of_name=2)
-    print(s.return_full_table())
+    # print(s.return_full_table())
+    test_db = SQLInteract(table_name="tests", filename_db=cfg.config["path"] + "/db/users.db",
+                          values_of_this_table="(id, name, theme, max_result, questions)",
+                          init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+    # test_db.sql_create_new_table()
+    new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
+    # test_db.sql_add_new_user(new_test)
+    print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
+    print(test_db.all_tables_name())
+    # print(test_db.get_all_tests(need_value="questions", user=test_db.sql_get_user_with_id(1)))
+    print("except is work")
