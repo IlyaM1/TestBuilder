@@ -1,16 +1,18 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
 from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
-# from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
+from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
 class Admin_test_view(QMainWindow):
     """
         Окошко для изменения и создания теста
         """
     def __init__(self, test={}, parent=None):
         super(QWidget, self).__init__(parent)
+        self.EMPTY_QUESTION = {"question": "", "type": 1, "variants_of_answer": [], "answer": "", "balls": 0}
         self.test = test
+        self.current_numb_of_questions = 1
         if self.test == {}:
-            self.test = {"name": "", "theme": ""}
+            self.test = {"id": 0, "name": "", "theme": ""}
         self.init_UI()
 
     def init_UI(self):
@@ -22,28 +24,48 @@ class Admin_test_view(QMainWindow):
         self.container_widget = QWidget()
         self.container = QVBoxLayout(self)
 
+        self.constant_widget = QWidget()
+        self.constant_layout = QVBoxLayout()
+
         self.name_label = QLabel("Имя теста: ")
-        self.container.addWidget(self.name_label)
+        self.constant_layout.addWidget(self.name_label)
 
         self.name_input_label = QLineEdit(self.test["name"])
-        self.container.addWidget(self.name_input_label)
+        self.constant_layout.addWidget(self.name_input_label)
 
 
         self.theme_label = QLabel("Тема теста: ")
-        self.container.addWidget(self.theme_label)
+        self.constant_layout.addWidget(self.theme_label)
 
         self.theme_input_label = QLineEdit(self.test["theme"])
-        self.container.addWidget(self.theme_input_label)
+        self.constant_layout.addWidget(self.theme_input_label)
+
+
+        self.constant_widget.setLayout(self.constant_layout)
+        self.container.addWidget(self.constant_widget)
+
+        self.question_widget = QWidget()
+        self.question_layout = QVBoxLayout()
 
         self.question_label = QLabel("Вопросы: ")
-        self.container.addWidget(self.question_label)
+        self.question_layout.addWidget(self.question_label)
+
+        self.question_widget_without_button = QWidget()
+        self.question_layout_without_button = QVBoxLayout()
 
         for i in self.test["questions"]:
-            self.container.addWidget(self.init_layout_of_question(i))
+            self.question_layout_without_button.addWidget(self.init_layout_of_question(i))
+            self.current_numb_of_questions += 1
+
+        self.question_widget_without_button.setLayout(self.question_layout_without_button)
+        self.question_layout.addWidget(self.question_widget_without_button)
 
         self.new_question_button = QPushButton("Добавить вопрос")
         self.new_question_button.released.connect(self.new_question_button_released)
-        self.container.addWidget(self.new_question_button)
+        self.question_layout.addWidget(self.new_question_button)
+
+        self.question_widget.setLayout(self.question_layout)
+        self.container.addWidget(self.question_widget)
 
         self.save_test_button = QPushButton("Сохранить тест")
         self.save_test_button.released.connect(self.save_button_released)
@@ -61,27 +83,38 @@ class Admin_test_view(QMainWindow):
         self.show()
 
     def init_layout_of_question(self, question):
-        self.question_widget = QWidget()
+        self.one_question_widget = QWidget()
 
-        self.question_layout =  QVBoxLayout()
+        self.one_question_layout =  QVBoxLayout()
 
-        self.question_label = QLineEdit(question["question"])
-        self.question_layout.addWidget(self.question_label)
+        self.one_question_label = LineEdit_with_explanation("Вопрос", question["question"])
+        self.one_question_layout.addWidget(self.one_question_label)
+
+        self.variants_of_answer_label = QLabel("Варианты ответа: ")
+        self.one_question_layout.addWidget(self.variants_of_answer_label)
 
         self.variants_of_answer_widget = QWidget()
         self.variants_of_answer_layout = QVBoxLayout()
         for variant in question["variants_of_answer"]:
             variant_of_answer_label = QLineEdit(variant)
+            variant_of_answer_label.setObjectName('variant_of_answer_label')
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
         self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
 
-        self.question_layout.addWidget(self.variants_of_answer_widget)
+        self.one_question_layout.addWidget(self.variants_of_answer_widget)
 
-        self.question_widget.setLayout(self.question_layout)
-        return self.question_widget
+        self.number_of_balls = LineEdit_with_explanation("Количество баллов", str(question["balls"]))
+        self.one_question_layout.addWidget(self.number_of_balls)
+
+        self.correct_answer = LineEdit_with_explanation("Правильный ответ", str(question["answer"]))
+        self.one_question_layout.addWidget(self.correct_answer)
+
+        self.one_question_widget.setLayout(self.one_question_layout)
+        return self.one_question_widget
 
     def new_question_button_released(self):
-        print("new question")
+        self.question_layout_without_button.insertWidget(-1, self.init_layout_of_question(self.EMPTY_QUESTION))
+        self.current_numb_of_questions += 1
 
     def save_button_released(self):
         print("saved")
@@ -91,8 +124,6 @@ class Admin_test_view(QMainWindow):
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
-    for i in range(20):
-        test["questions"].append(test["questions"][0])
     auth_obj = Admin_test_view(test)
     # auth_obj = Admin_test_view()
 
