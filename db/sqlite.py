@@ -170,9 +170,9 @@ if __name__ == '__main__':
 
     # s.sql_create_new_table()
     # s.drop_table()
-    user1 = (s.sql_get_user_with_namePass('ILYA3224', '1234'))
-    print(user1)
-    print(s.all_tables_name())
+    # user1 = (s.sql_get_user_with_namePass('ILYA3224', '1234'))
+    # print(user1)
+    # print(s.all_tables_name())
 
     # print(s.sql_get_user_with_id(3))
     # s.sql_delete_one()
@@ -180,8 +180,8 @@ if __name__ == '__main__':
     # u = subprocess.run('ls', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
     # print(u.stdout, u.stderr, u.returncode)
     #     print(type('s') == str)
-    new_user = [0, "Rel", "123123", "Junior", "[]"]
-    new = {"sad": 1, "sasd": "123"}
+    # new_user = [0, "Rel", "123123", "Junior", "[]"]
+    # new = {"sad": 1, "sasd": "123"}
     # for i in new:
     #     print(i)
     # user_dict = s.generate_dict(s.sql_get_user_with_namePass('Jim', '123123'))
