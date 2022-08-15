@@ -90,11 +90,14 @@ class SQLInteract:
             return False
 
     def sql_get_user_with_id(self, input_id):
-        self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
-        row = self.cursor_obj.fetchone()
-        dict_row = self.generate_dict(row)
-        dict_row["tests"] = self.get_all_tests(user=dict_row)
-        return dict_row
+        try:
+            self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
+            row = self.cursor_obj.fetchone()
+            dict_row = self.generate_dict(row)
+            dict_row["tests"] = self.get_all_tests(user=dict_row)
+            return dict_row
+        except sqlite3.Error as e:
+            print(e)
 
     # def sql_rewrite_user(self, id, ):
     #     pass
