@@ -3,7 +3,9 @@ from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
 from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
 from Custom_Widgets.Button_with_information import Button_with_information
-from functools import partial
+from Custom_Widgets.Deletable_TextInput import Deletable_TextInput
+from Custom_Widgets.Deletable_LineEdit_with_explanation import Deletable_LineEdit_with_explanation
+from config import Config
 class Admin_test_view(QMainWindow):
     """
         Окошко для изменения и создания теста
@@ -93,7 +95,7 @@ class Admin_test_view(QMainWindow):
 
         self.one_question_layout =  QVBoxLayout()
 
-        self.one_question_label = LineEdit_with_explanation("Вопрос", question["question"])
+        self.one_question_label = Deletable_LineEdit_with_explanation("Вопрос", question["question"], Config().config["path"] + "\\Interface\\Trash_Bin.png")
         self.one_question_layout.addWidget(self.one_question_label)
 
         self.variants_of_answer_label = QLabel("Варианты ответа: ")
@@ -102,7 +104,7 @@ class Admin_test_view(QMainWindow):
         self.variants_of_answer_widget = QWidget()
         self.variants_of_answer_layout = QVBoxLayout()
         for variant in question["variants_of_answer"]:
-            variant_of_answer_label = QLineEdit(variant)
+            variant_of_answer_label = Deletable_TextInput(variant, Config().config["path"] + "\\Interface\\red_cross_delete.png")
             variant_of_answer_label.setObjectName('variant_of_answer_label')
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
 
