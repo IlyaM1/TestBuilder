@@ -12,7 +12,7 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
     cfg = Config()
     s = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     sign = Signing({'id': 0, 'name': 'ILYA3224', 'password': '1234', 'post': 'pop', 'test': '[]'}, s)

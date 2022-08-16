@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLa
 from PyQt5.QtCore import Qt
 from test_data_funcs import get_all_tests
 from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
+from Custom_Widgets.Button_with_information import Button_with_information
+from functools import partial
 class Admin_test_view(QMainWindow):
     """
         Окошко для изменения и создания теста
@@ -13,6 +15,7 @@ class Admin_test_view(QMainWindow):
         self.current_numb_of_questions = 1
         if self.test == {}:
             self.test = {"id": 0, "name": "", "theme": ""}
+        self.all_widgets_questions = []
         self.init_UI()
 
     def init_UI(self):
@@ -53,9 +56,12 @@ class Admin_test_view(QMainWindow):
         self.question_widget_without_button = QWidget()
         self.question_layout_without_button = QVBoxLayout()
 
+        current_numb_of_questions = 1
         for i in self.test["questions"]:
-            self.question_layout_without_button.addWidget(self.init_layout_of_question(i))
-            self.current_numb_of_questions += 1
+            question_widget_generated = self.init_layout_of_question(i, current_numb_of_questions)
+            self.all_widgets_questions.append(question_widget_generated)
+            self.question_layout_without_button.addWidget(question_widget_generated)
+            current_numb_of_questions += 1
 
         self.question_widget_without_button.setLayout(self.question_layout_without_button)
         self.question_layout.addWidget(self.question_widget_without_button)
@@ -82,7 +88,7 @@ class Admin_test_view(QMainWindow):
         self.setCentralWidget(self.scroll_widget)
         self.show()
 
-    def init_layout_of_question(self, question):
+    def init_layout_of_question(self, question, number_of_question):
         self.one_question_widget = QWidget()
 
         self.one_question_layout =  QVBoxLayout()
@@ -99,6 +105,12 @@ class Admin_test_view(QMainWindow):
             variant_of_answer_label = QLineEdit(variant)
             variant_of_answer_label.setObjectName('variant_of_answer_label')
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
+
+        self.add_new_variant_button = Button_with_information("Добавить новый вариант ответа", "45")
+        self.add_new_variant_button.clicked.connect(lambda: self.add_new_variant_button_pushed(number_of_question))
+        self.variants_of_answer_layout.addWidget(self.add_new_variant_button)
+
+
         self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
 
         self.one_question_layout.addWidget(self.variants_of_answer_widget)
@@ -118,6 +130,10 @@ class Admin_test_view(QMainWindow):
 
     def save_button_released(self):
         print("saved")
+
+    def add_new_variant_button_pushed(self, number_of_question):
+        self.test["questions"][number_of_question-1]["variants_of_answer"].append("")
+        self.question_layout_without_button.insertWidget(number_of_question-1, self.init_layout_of_question(self.test["questions"][number_of_question-1], number_of_question))
 
 
 
