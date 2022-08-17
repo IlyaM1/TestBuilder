@@ -14,7 +14,6 @@ class Admin_test_view(QMainWindow):
         super(QWidget, self).__init__(parent)
         self.EMPTY_QUESTION = {"question": "", "type": 1, "variants_of_answer": [], "answer": "", "balls": 0}
         self.test = test
-        self.current_numb_of_questions = 1
         if self.test == {}:
             self.test = {"id": 0, "name": "", "theme": ""}
         self.all_widgets_questions = []
@@ -96,6 +95,7 @@ class Admin_test_view(QMainWindow):
         self.one_question_layout =  QVBoxLayout()
 
         self.one_question_label = Deletable_LineEdit_with_explanation("Вопрос", question["question"], Config().config["path"] + "\\Interface\\Trash_Bin.png")
+        self.one_question_label.delete_button.released.connect(lambda: self.one_question_label_delete_button_pushed(number_of_question))
         self.one_question_layout.addWidget(self.one_question_label)
 
         self.variants_of_answer_label = QLabel("Варианты ответа: ")
@@ -105,6 +105,7 @@ class Admin_test_view(QMainWindow):
         self.variants_of_answer_layout = QVBoxLayout()
         for variant in question["variants_of_answer"]:
             variant_of_answer_label = Deletable_TextInput(variant, Config().config["path"] + "\\Interface\\red_cross_delete.png")
+            variant_of_answer_label.delete_button.released.connect(lambda: self.variant_of_answer_label_delete_button_pushed(variant, number_of_question))
             variant_of_answer_label.setObjectName('variant_of_answer_label')
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
 
@@ -117,18 +118,22 @@ class Admin_test_view(QMainWindow):
 
         self.one_question_layout.addWidget(self.variants_of_answer_widget)
 
-        self.number_of_balls = LineEdit_with_explanation("Количество баллов", str(question["balls"]))
-        self.one_question_layout.addWidget(self.number_of_balls)
-
         self.correct_answer = LineEdit_with_explanation("Правильный ответ", str(question["answer"]))
         self.one_question_layout.addWidget(self.correct_answer)
+
+        self.number_of_balls = LineEdit_with_explanation("Количество баллов", str(question["balls"]))
+        self.one_question_layout.addWidget(self.number_of_balls)
 
         self.one_question_widget.setLayout(self.one_question_layout)
         return self.one_question_widget
 
     def new_question_button_released(self):
-        self.question_layout_without_button.insertWidget(-1, self.init_layout_of_question(self.EMPTY_QUESTION))
-        self.current_numb_of_questions += 1
+        print(self.test["questions"])
+        self.test["questions"].append(self.EMPTY_QUESTION)
+        current_number_of_questions = len(self.test["questions"])
+        question_widget_generated = self.init_layout_of_question(self.EMPTY_QUESTION, current_number_of_questions)
+        self.all_widgets_questions.append(question_widget_generated)
+        self.question_layout_without_button.insertWidget(current_number_of_questions - 1, question_widget_generated)
 
     def save_button_released(self):
         print("saved")
@@ -137,12 +142,25 @@ class Admin_test_view(QMainWindow):
         self.test["questions"][number_of_question-1]["variants_of_answer"].append("")
         self.question_layout_without_button.insertWidget(number_of_question-1, self.init_layout_of_question(self.test["questions"][number_of_question-1], number_of_question))
 
+    def variant_of_answer_label_delete_button_pushed(self, variant, number_of_question):
+        self.test["questions"][number_of_question-1]["variants_of_answer"].remove(variant)
+        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question-1])
+        question_widget_generated = self.init_layout_of_question(self.test["questions"][number_of_question-1], number_of_question)
+        self.all_widgets_questions[number_of_question-1] = question_widget_generated
+        self.question_layout_without_button.insertWidget(number_of_question - 1, question_widget_generated)
+
+    def one_question_label_delete_button_pushed(self, number_of_question):
+        self.test["questions"].pop(number_of_question-1)
+        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question-1])
+        self.all_widgets_questions.pop(number_of_question - 1)
+        self.all_widgets_questions = []
+        self.init_UI()
+
 
 
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
     auth_obj = Admin_test_view(test)
-    # auth_obj = Admin_test_view()
 
     app.exec_()
