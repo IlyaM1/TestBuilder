@@ -80,4 +80,10 @@ class Authorization(QWidget):
             self.view_all_tests = View_all_tests(tests, self.user)
 
     def next_window_for_admin(self):
-        print("You entered as admin") # to do
+        user_db = SQLInteract(table_name='testcase', filename_db=self.cfg.config["path"] + '/db/users.db')
+        test_db = SQLInteract(table_name='tests', filename_db=self.cfg.config["path"] + '/db/users.db',
+                              values_of_this_table="(id, name, theme, max_result, questions)")
+        user_arr = user_db.return_full_table(to_dict=True, element_for_transform="tests")
+        test_arr = test_db.return_full_table(to_dict=True, element_for_transform="questions")
+        print(user_arr, test_arr)
+        print("You entered as admin") # TODO: вызывать некст окно с передачей user_arr и test_arr

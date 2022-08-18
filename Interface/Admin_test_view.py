@@ -45,7 +45,6 @@ class Admin_test_view(QMainWindow):
         self.theme_input_label = QLineEdit(self.test["theme"])
         self.constant_layout.addWidget(self.theme_input_label)
 
-
         self.constant_widget.setLayout(self.constant_layout)
         self.container.addWidget(self.constant_widget)
 
@@ -60,6 +59,7 @@ class Admin_test_view(QMainWindow):
 
         current_numb_of_questions = 1
         for i in self.test["questions"]:
+
             question_widget_generated = self.init_layout_of_question(i, current_numb_of_questions)
             self.all_widgets_questions.append(question_widget_generated)
             self.question_layout_without_button.addWidget(question_widget_generated)
