@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea
 from PyQt5.QtCore import QSize, Qt
-from Custom_Widgets.Item import Item
+from Custom_Widgets.Clickable_label_with_delete_buttons import Clickable_label_with_delete_buttons
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
 from Interface.Admin_user_view import Admin_user_view
@@ -45,7 +45,7 @@ class Admin_view_tests_and_users(QWidget):
         self.users_labels_layout = QVBoxLayout()
 
         for user in self.users:
-            user_row = Item(f'{user["name"]}', user["id"])
+            user_row = Clickable_label_with_delete_buttons(f'{user["name"]}', user["id"])
             user_row.setFixedSize(self.width() - 40, 120)
             user_row.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
@@ -68,7 +68,7 @@ class Admin_view_tests_and_users(QWidget):
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
-            test_row = Item(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
+            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
             test_row.setFixedSize(self.width() - 40, 120)
             test_row.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
