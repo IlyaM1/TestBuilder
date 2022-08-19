@@ -4,6 +4,7 @@ from test_data_funcs import get_all_tests, get_users
 from auth_reg import Signing
 from db.sqlite import SQLInteract
 from config import Config
+from PyQt5 import QtCore
 import json
 
 
@@ -29,10 +30,13 @@ class Authorization(QWidget):
         self.input_label_login = QLineEdit()
         self.input_label_login.setPlaceholderText("Фамилия")
         self.input_label_login.setObjectName("input_label_login")
+        self.input_label_login.setAlignment(QtCore.Qt.AlignBaseline)
+        # self.input_label_login.textChanged.connect(self.on_text_changed)
         vertical_layout.addWidget(self.input_label_login)
 
         self.input_label_password = QLineEdit()
         self.input_label_password.setPlaceholderText("Пароль")
+        # self.input_label_password.setAlignment(QtCore.Qt.AlignCenter)
         vertical_layout.addWidget(self.input_label_password)
 
         button_login = QPushButton("Войти")
