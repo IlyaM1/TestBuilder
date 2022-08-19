@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, QListWidget, QMainWindow, QScrollArea
 from PyQt5.QtCore import QSize, Qt
-from Custom_Widgets.Item import Item
+from Custom_Widgets.Clickable_label import Clickable_label
 from test_data_funcs import get_all_tests, get_users
 class View_all_tests(QMainWindow):
     """
@@ -24,9 +24,9 @@ class View_all_tests(QMainWindow):
             self.setStyleSheet(f.read())
 
         for test in self.tests:
-            test_row = Item(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
+            test_row = Clickable_label(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
             test_row.setFixedSize(self.width()-40, 120)
-            test_row.clicked.connect(self.label_test_pushed)
+            test_row.clicked.connect(lambda: self.label_test_pushed(test_row))
             self.vertical_layout.addWidget(test_row)
 
         self.central_widget.setLayout(self.vertical_layout)
@@ -42,8 +42,8 @@ class View_all_tests(QMainWindow):
 
         self.show()
 
-    def label_test_pushed(self):
-        pass
+    def label_test_pushed(self, pushed_label):
+        print(pushed_label.id)
 
     def button_login_pushed(self):
         pass
