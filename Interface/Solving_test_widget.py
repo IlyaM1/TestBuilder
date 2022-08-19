@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
+from config import Config
+from db.sqlite import SQLInteract
 
 class Solving_test_widget(QMainWindow):
     """
