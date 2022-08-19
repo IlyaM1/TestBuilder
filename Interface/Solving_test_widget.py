@@ -14,6 +14,7 @@ class Solving_test_widget(QMainWindow):
         self.current_question = 1 # 1st question of test is №1
         self.number_of_all_questions = len(self.test["questions"])
         self.answers_to_all_questions = [""] * self.number_of_all_questions
+        self.all_inputs_widgets = [QLineEdit()] * self.number_of_all_questions
         self.init_UI()
 
     def init_UI(self):
@@ -66,6 +67,7 @@ class Solving_test_widget(QMainWindow):
 
         if len(question["variants_of_answer"]) == 0:
             self.answer_input_label = QLineEdit(answer)
+            self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
             self.question_widget_layout.addWidget(self.answer_input_label)
         else:
             self.variants_of_answer_widget = QWidget()
@@ -80,6 +82,7 @@ class Solving_test_widget(QMainWindow):
             self.question_widget_layout.addWidget(self.variants_of_answer_widget)
 
             self.answer_input_label = QLineEdit(answer)
+            self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
             self.question_widget_layout.addWidget(self.answer_input_label)
 
         self.question_widget.setLayout(self.question_widget_layout)
@@ -88,6 +91,7 @@ class Solving_test_widget(QMainWindow):
     def backward_button_pushed(self):
         if self.current_question == 1:
             return -1
+        self.check_input(self.current_question - 1)
         self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
@@ -102,6 +106,7 @@ class Solving_test_widget(QMainWindow):
         if self.current_question == self.number_of_all_questions:
             self.finish_and_save_test()
             return
+        self.check_input(self.current_question - 1)
         self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
@@ -114,6 +119,9 @@ class Solving_test_widget(QMainWindow):
         else:
             self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
         self.setStyleSheet(self.css_file)
+
+    def check_input(self, current_question):
+        self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
     def finish_and_save_test(self):
         print("finish_and_save_test")
 
