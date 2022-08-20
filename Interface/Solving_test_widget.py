@@ -1,19 +1,23 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, \
+    QMainWindow, QLabel, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 from Interface.Ending_test_widget import Ending_test_widget
 from config import Config
 from db.sqlite import SQLInteract
+import time
+
 
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
     """
-    def __init__(self, test = {}, user = {}, parent=None):
+
+    def __init__(self, test={}, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test
         self.user = user
-        self.current_question = 1 # 1st question of test is №1
+        self.current_question = 1  # 1st question of test is №1
         self.number_of_all_questions = len(self.test["questions"])
         self.answers_to_all_questions = [""] * self.number_of_all_questions
         self.all_inputs_widgets = [QLineEdit()] * self.number_of_all_questions
@@ -35,12 +39,13 @@ class Solving_test_widget(QMainWindow):
 
         self.main_vertical_layout.addSpacing(50)
 
-        question = self.test["questions"][self.current_question-1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question-1])
+        question = self.test["questions"][self.current_question - 1]
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.addWidget(self.current_question_widget)
 
-        self.buttons_horizontal_layout_widget = QWidget() # wrapper for buttons_horizontal_layout
+        self.buttons_horizontal_layout_widget = QWidget()  # wrapper for buttons_horizontal_layout
         self.buttons_horizontal_layout = QHBoxLayout()
 
         self.backward_button = QPushButton("Назад")
@@ -97,7 +102,8 @@ class Solving_test_widget(QMainWindow):
         self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
@@ -112,7 +118,8 @@ class Solving_test_widget(QMainWindow):
         self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
@@ -124,15 +131,18 @@ class Solving_test_widget(QMainWindow):
 
     def check_input(self, current_question):
         self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
-    def finish_and_save_test(self):
-         self.check_input(self.current_question - 1)
-         # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
-         number_of_wrong_answers = self.count_wrong_answers()
-         result = self.count_result()
-         # TODO: save results of test in db for self.user @akrisfx
-         self.close()
-         self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers, max_result=self.test["max_result"])
 
+    def finish_and_save_test(self):
+        self.check_input(self.current_question - 1)
+        # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
+        number_of_wrong_answers = self.count_wrong_answers()
+        result = self.count_result()
+        # TODO: save results of test in db for self.user @akrisfx
+        # print(number_of_wrong_answers, result, self.answers_to_all_questions, self.test)
+        self.generate_done_test(result)
+        self.close()
+        self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers,
+                                                  max_result=self.test["max_result"])
 
     def count_result(self):
         result = 0
@@ -148,6 +158,18 @@ class Solving_test_widget(QMainWindow):
                 number_of_wrong_answers += 1
         return number_of_wrong_answers
 
+    def generate_done_test(self, result):
+        rdy_test = self.test
+        rdy_test["result"] = result
+        rdy_test["time"] = time.asctime(time.localtime(time.time()))
+        # print(time.asctime(time.localtime(time.time())))
+        for i, x in enumerate(self.answers_to_all_questions):
+            rdy_test["questions"][i]["key"] = x
+            if x == rdy_test["questions"][i]["answer"]:
+                rdy_test["questions"][i]["points_awarded"] = rdy_test["questions"][i]["balls"]
+            else:
+                rdy_test["questions"][i]["points_awarded"] = 0
+        return rdy_test
 
 
 if __name__ == '__main__':
@@ -157,4 +179,4 @@ if __name__ == '__main__':
 
     app.exec_()
 
-#margin-bottom: 50px;
+# margin-bottom: 50px;
