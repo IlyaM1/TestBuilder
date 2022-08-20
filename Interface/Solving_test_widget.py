@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
+from Interface.Ending_test_widget import Ending_test_widget
 from config import Config
 from db.sqlite import SQLInteract
 
@@ -8,9 +9,10 @@ class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
     """
-    def __init__(self, test = {}, parent=None):
+    def __init__(self, test = {}, user = {}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test
+        self.user = user
         self.current_question = 1 # 1st question of test is №1
         self.number_of_all_questions = len(self.test["questions"])
         self.answers_to_all_questions = [""] * self.number_of_all_questions
@@ -123,7 +125,29 @@ class Solving_test_widget(QMainWindow):
     def check_input(self, current_question):
         self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
     def finish_and_save_test(self):
-        print("finish_and_save_test")
+         self.check_input(self.current_question - 1)
+         # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
+         number_of_wrong_answers = self.count_wrong_answers()
+         result = self.count_result()
+         # TODO: save results of test in db for self.user @akrisfx
+         self.close()
+         self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers, max_result=self.test["max_result"])
+
+
+    def count_result(self):
+        result = 0
+        for index_of_question in range(len(self.test["questions"])):
+            if self.answers_to_all_questions[index_of_question] == self.test["questions"][index_of_question]["answer"]:
+                result += self.test["questions"][index_of_question]["balls"]
+        return result
+
+    def count_wrong_answers(self):
+        number_of_wrong_answers = 0
+        for index_of_question in range(len(self.test["questions"])):
+            if self.answers_to_all_questions[index_of_question] != self.test["questions"][index_of_question]["answer"]:
+                number_of_wrong_answers += 1
+        return number_of_wrong_answers
+
 
 
 if __name__ == '__main__':
