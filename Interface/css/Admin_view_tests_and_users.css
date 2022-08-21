@@ -1,5 +1,9 @@
-Item{
+Clickable_label_with_delete_buttons{
     background-color: white;
-    border: wpx solid black;
     padding-left: 10px;
+    border-bottom: 2px solid;
+    border-color: rgb(171, 171, 171)
+}
+Clickable_label_with_delete_buttons:hover{
+    background-color: rgb(200, 200, 200);
 }

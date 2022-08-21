@@ -13,3 +13,6 @@ QPushButton{
 QScrollArea{
 
 }
+QLineEdit{
+    padding-left: 10px;
+}
