@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPus
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 from Interface.Ending_test_widget import Ending_test_widget
+from config import Config
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
@@ -19,7 +20,7 @@ class Solving_test_widget(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open('css/Solving_test_widget.css') as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Solving_test_widget.css') as css:
             self.css_file = css.read()
             self.setStyleSheet(self.css_file)
 

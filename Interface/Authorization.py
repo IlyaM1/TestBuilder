@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QMessageBox, QGroupBox, QHBoxLayout
 from Interface.View_all_tests import View_all_tests
+from Interface.Admin_view_tests_and_users import Admin_view_tests_and_users
 from test_data_funcs import get_all_tests, get_users
 from auth_reg import Signing
 from db.sqlite import SQLInteract
@@ -17,7 +18,6 @@ class Authorization(QWidget):
         self.user = False
         self.init_UI()
         self.cfg = Config()
-        # print(self.cfg.config)
 
     def init_UI(self):
         self.setMinimumSize(400, 300)
@@ -77,7 +77,7 @@ class Authorization(QWidget):
             error_window.exec()
             return
 
-        if self.user_login_password[0] == self.cfg["name"] and self.user_login_password[1] == self.cfg["password"]:
+        if self.user_login_password[0] == self.cfg.config["name"] and self.user_login_password[1] == self.cfg.config["password"]:
             self.next_window_for_admin()  # TODO: next_window_for_admin func
         else:
             self.user = {"id": 0, "name": self.user_login_password[0], "password": self.user_login_password[1],
@@ -110,5 +110,5 @@ class Authorization(QWidget):
                               values_of_this_table="(id, name, theme, max_result, questions)")
         user_arr = user_db.return_full_table(to_dict=True, element_for_transform="tests")
         test_arr = test_db.return_full_table(to_dict=True, element_for_transform="questions")
-        print(user_arr, test_arr)
-        print("You entered as admin") # TODO: вызывать некст окно с передачей user_arr и test_arr
+        self.close()
+        self.admin_window = Admin_view_tests_and_users(tests=test_arr, users=user_arr)

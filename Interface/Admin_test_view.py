@@ -7,6 +7,7 @@ from Custom_Widgets.Deletable_TextInput import Deletable_TextInput
 from Custom_Widgets.Deletable_LineEdit_with_explanation import Deletable_LineEdit_with_explanation
 from Custom_Widgets.Question_widget_with_array_of_labels import Question_widget_with_array_of_labels
 from config import Config
+from copy import deepcopy
 class Admin_test_view(QMainWindow):
     """
         Окошко для изменения и создания теста
@@ -23,7 +24,7 @@ class Admin_test_view(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open("css/Admin_test_view.css") as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Admin_test_view.css') as css:
             self.setStyleSheet(css.read())
         self.scroll_widget = QScrollArea()
         self.container_widget = QWidget()
@@ -134,14 +135,15 @@ class Admin_test_view(QMainWindow):
         return self.one_question_widget
 
     def new_question_button_released(self):
-        self.test["questions"].append(self.EMPTY_QUESTION)
+        self.test["questions"].append(deepcopy(self.EMPTY_QUESTION))
         current_number_of_questions = len(self.test["questions"])
-        question_widget_generated = self.init_layout_of_question(self.EMPTY_QUESTION, current_number_of_questions)
+        question_widget_generated = self.init_layout_of_question(deepcopy(self.EMPTY_QUESTION), current_number_of_questions)
         self.all_widgets_questions.append(question_widget_generated)
         self.question_layout_without_button.insertWidget(current_number_of_questions - 1, question_widget_generated)
 
     def save_button_released(self):
-        print("saved")
+        print("saved") # TODO: save test in Database
+        self.close()
 
     def add_new_variant_button_pushed(self, number_of_question):
         self.check_all_inputs_of_question(number_of_question)
