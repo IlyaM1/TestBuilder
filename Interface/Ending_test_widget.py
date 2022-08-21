@@ -7,7 +7,7 @@ class Ending_test_widget(QMainWindow):
     """
     Окно, которое вызывается после завершения теста
     """
-    def __init__(self, result = 0, wrong_answers = 0, max_result = 0, parent=None):
+    def __init__(self, result=0, wrong_answers=0, max_result=0, parent=None):
         super(QWidget, self).__init__(parent)
         self.result = result
         self.wrong_answers = wrong_answers
