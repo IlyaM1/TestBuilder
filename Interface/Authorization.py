@@ -4,7 +4,7 @@ from test_data_funcs import get_all_tests, get_users
 from auth_reg import Signing
 from db.sqlite import SQLInteract
 from config import Config
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 import json
 
 class Authorization(QWidget):
@@ -22,6 +22,7 @@ class Authorization(QWidget):
     def init_UI(self):
         self.setMinimumSize(400, 300)
         self.setWindowTitle("Авторизация")
+        self.setWindowIcon(QtGui.QIcon("Interface/authorization.png"))
         vertical_layout = QVBoxLayout()
 
         with open('Interface/css/Authorization.css') as f:
