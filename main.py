@@ -4,7 +4,6 @@ from db.sqlite import SQLInteract
 from auth_reg import Signing
 from config import Config
 
-
 def main():
     app = QApplication([])
     auth_obj = Authorization()
@@ -17,7 +16,7 @@ if __name__ == '__main__':
     s = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     sign = Signing({'id': 0, 'name': 'ILYA3224', 'password': '1234', 'post': 'pop', 'test': '[]'}, s)
     print(cfg.config)
-    print(s.return_full_table())
+    # print(s.return_full_table())
     # print(sign.authentication())
     # print(sign.authentication())
     # # s.sql_create_new_table()
