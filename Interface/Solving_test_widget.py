@@ -99,6 +99,7 @@ class Solving_test_widget(QMainWindow):
             for variant in question["variants_of_answer"]:
                 variant_of_answer_label = QLabel(variant)
                 variant_of_answer_label.setObjectName("answer_option_label")
+                variant_of_answer_label.setWordWrap(True)
                 self.variants_of_answer_layout.addWidget(variant_of_answer_label)
 
             self.question_widget_layout.addSpacing(20)
@@ -107,7 +108,6 @@ class Solving_test_widget(QMainWindow):
             scrollAreaAnswers.setWidget(self.variants_of_answer_widget)
             scrollAreaAnswers.setFixedHeight(150)
             scrollAreaAnswers.setWidgetResizable(True)
-
             self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
             self.question_widget_layout.addWidget(scrollAreaAnswers)
 
