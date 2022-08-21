@@ -22,8 +22,7 @@ class Admin_view_tests_and_users(QWidget):
 
     def init_UI(self):
         self.setMinimumSize(1280, 720)
-
-        with open('css/Admin_view_tests_and_users.css') as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Admin_view_tests_and_users.css') as css:
             self.setStyleSheet(css.read())
 
         self.container = QVBoxLayout(self)
@@ -40,82 +39,97 @@ class Admin_view_tests_and_users(QWidget):
         self.show()
 
     def init_users_page(self):
-        self.user_page_scroll_widget = QScrollArea()
         self.user_page_widget = QWidget()
+        self.user_page_widget_layout = QVBoxLayout()
+
+        self.user_page_scroll_widget = QScrollArea()
+        self.users_labels_layout_widget = QWidget()
         self.users_labels_layout = QVBoxLayout()
 
         for user in self.users:
-            user_row = Clickable_label_with_delete_buttons(f'{user["name"]}', user["id"])
-            user_row.setFixedSize(self.width() - 40, 120)
-            user_row.clicked.connect(partial(self.label_user_pushed, user_row))
+            user_row = Clickable_label_with_delete_buttons(f'{user["name"]}', user)
+            user_row.setFixedSize(self.width() - 60, 50)
+            user_row.label.clicked.connect(partial(self.label_user_pushed, user_row))
             self.users_labels_layout.addWidget(user_row)
 
-        self.new_user_button = QPushButton("Добавить сотрудника")
-        self.new_user_button.released.connect(self.new_user_button_pushed)
-        self.users_labels_layout.addWidget(self.new_user_button)
-        self.user_page_widget.setLayout(self.users_labels_layout)
-
+        self.users_labels_layout_widget.setLayout(self.users_labels_layout)
         self.user_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.user_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.user_page_scroll_widget.setWidgetResizable(True)
-        self.user_page_scroll_widget.setWidget(self.user_page_widget)
+        self.user_page_scroll_widget.setWidget(self.users_labels_layout_widget)
+        self.user_page_widget_layout.addWidget(self.user_page_scroll_widget)
 
-        return self.user_page_scroll_widget
+        self.new_user_button = QPushButton("Добавить сотрудника")
+        self.new_user_button.released.connect(self.new_user_button_pushed)
+        self.user_page_widget_layout.addWidget(self.new_user_button)
+
+        self.user_page_widget.setLayout(self.user_page_widget_layout)
+
+        return self.user_page_widget
 
     def init_tests_page(self):
-        self.test_page_scroll_widget = QScrollArea()
         self.test_page_widget = QWidget()
+        self.test_page_widget_layout = QVBoxLayout()
+
+        self.test_page_scroll_widget = QScrollArea()
+        self.tests_labels_layout_widget = QWidget()
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
-            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])
-            test_row.setFixedSize(self.width() - 40, 120)
-            test_row.clicked.connect(partial(self.label_test_pushed, test_row))
+            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {len(test["questions"])} вопроса', test)
+            test_row.setFixedSize(self.width() - 60, 50)
+            test_row.label.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
 
-        self.new_test_button = QPushButton("Добавить тест")
-        self.new_test_button.released.connect(self.new_test_button_pushed)
-        self.tests_labels_layout.addWidget(self.new_test_button)
-        self.test_page_widget.setLayout(self.tests_labels_layout)
-
+        self.tests_labels_layout_widget.setLayout(self.tests_labels_layout)
         self.test_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.test_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.test_page_scroll_widget.setWidgetResizable(True)
-        self.test_page_scroll_widget.setWidget(self.test_page_widget)
+        self.test_page_scroll_widget.setWidget(self.tests_labels_layout_widget)
+        self.test_page_widget_layout.addWidget(self.test_page_scroll_widget)
 
-        return self.test_page_scroll_widget
+        self.new_test_button = QPushButton("Добавить тест")
+        self.new_test_button.released.connect(self.new_test_button_pushed)
+        self.test_page_widget_layout.addWidget(self.new_test_button)
+        self.test_page_widget.setLayout(self.test_page_widget_layout)
+
+
+
+        return self.test_page_widget
 
     def label_user_pushed(self, pushed_label):
-        self.close()
-        # user = get_user_by_id(pushed_label.id) # @akrisfx
-        user = self.users[0]  # test thing
-        print(user)
-        self.user_view = Admin_user_view(user=user)
+        self.user_view = Admin_user_view(user=pushed_label.dictionary)
 
     def label_test_pushed(self, pushed_label):
-        self.close()
-        # test = get_test_by_id(pushed_label.id) # @akrisfx
-        test = self.tests[0]  # test thing
-        print(test)
-        self.test_view = Admin_test_view(test=test)
+        self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
     def new_user_button_pushed(self):
-        self.close()
-        self.create_new_user()
-        self.user_view = Admin_user_view()
+        user = self.create_new_user()
+        self.user_view = Admin_user_view(user=user)
 
     def new_test_button_pushed(self):
-        self.close()
-        self.create_new_test()
-        self.test_view = Admin_test_view()
+        test = self.create_new_test()
+        self.test_view = Admin_test_view(test=test)
 
     def create_new_test(self):
         # TODO: this func creates new EMPTY test
-        pass
+        EMPTY_TEST = {
+        "name": "",
+        "id": 100,
+        "theme": "",
+        "max_result": 0,
+        "questions": []} # Example
+        return EMPTY_TEST
 
     def create_new_user(self):
         # TODO: this func creates new EMPTY user
-        pass
+        EMPTY_USER = {
+            "id": 100,
+            "name": "",
+            "password": "",
+            "post": "", # Example
+            "tests": []}
+        return EMPTY_USER
 
     def get_user_by_id(self, id):
         pass

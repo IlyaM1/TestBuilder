@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests, get_users
-
+from config import Config
 
 class Ending_test_widget(QMainWindow):
     """
@@ -17,7 +17,7 @@ class Ending_test_widget(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open('css/Ending_test_widget.css') as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Ending_test_widget.css') as css:
             self.css_file = css.read()
             self.setStyleSheet(self.css_file)
 

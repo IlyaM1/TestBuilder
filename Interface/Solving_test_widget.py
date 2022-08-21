@@ -10,10 +10,12 @@ from copy import deepcopy
 import db.user
 
 
+
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
     """
+
 
     def __init__(self, test={}, user={}, parent=None):
         super(QWidget, self).__init__(parent)
@@ -21,6 +23,7 @@ class Solving_test_widget(QMainWindow):
         self.user = user
         self.config = Config()
         self.current_question = 1  # 1st question of test is №1
+
         self.number_of_all_questions = len(self.test["questions"])
         self.answers_to_all_questions = [""] * self.number_of_all_questions
         self.all_inputs_widgets = [QLineEdit()] * self.number_of_all_questions
@@ -29,7 +32,7 @@ class Solving_test_widget(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open('css/Solving_test_widget.css') as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Solving_test_widget.css') as css:
             self.css_file = css.read()
             self.setStyleSheet(self.css_file)
 
@@ -173,6 +176,7 @@ class Solving_test_widget(QMainWindow):
             if self.answers_to_all_questions[index_of_question] != self.test["questions"][index_of_question]["answer"]:
                 number_of_wrong_answers += 1
         return number_of_wrong_answers
+
 
     def generate_done_test(self, result):
         rdy_test = deepcopy(self.test)

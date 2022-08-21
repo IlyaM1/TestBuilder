@@ -1,41 +1,57 @@
-from PyQt5.QtWidgets import QLabel, QMenu, QAction
+from PyQt5.QtWidgets import QLabel, QMenu, QAction, QWidget, QHBoxLayout, QPushButton, QApplication
 from PyQt5.Qt import pyqtSignal
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QIcon
+from Custom_Widgets.Clickable_label import Clickable_label
+from config import Config
 class Clickable_label_with_delete_buttons(QLabel):
     """
-    QLabel на который можно нажать, который хранит в себе id объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
+    QLabel на который можно нажать, который хранит в себе dictionary объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
     """
-    clicked = pyqtSignal()
 
-    def __init__(self, text, id):
-        super(Clickable_label_with_delete_buttons, self).__init__(text)
-        # self.text = text
-        self.id = id
+    def __init__(self, text, dictionary, icon_see_path=Config().config["path"] + "\\Interface\\see_icon.png", icon_edit_path=Config().config["path"] + "\\Interface\\edit_icon.png", icon_delete_path=Config().config["path"] + "\\Interface\\Trash_Bin.png"):
+        super().__init__()
+        self.text = text
+        self.dictionary = dictionary
+        self.icon_see_path = icon_see_path
+        self.icon_edit_path = icon_edit_path
+        self.icon_delete_path = icon_delete_path
+        self.init_UI()
 
-    def contextMenuEvent(self, event):
-        menu = QMenu()
-        self.see_detail_information_action = menu.addAction(f'Посмотреть детальную информацию')
-        self.edit_action = menu.addAction('Редактировать')
-        self.delete_action = menu.addAction('Удалить')
+    def init_UI(self):
+        self.main_horizontal_layout = QHBoxLayout()
 
-        self.see_detail_information_action.triggered.connect(self.see_detail_information)
-        self.edit_action.triggered.connect(self.edit)
-        self.delete_action.triggered.connect(self.delete)
+        self.label = Clickable_label(self.text, self.dictionary["id"])
+        self.main_horizontal_layout.addWidget(self.label)
 
-        res = menu.exec_(event.globalPos())
+        self.widget_for_layout_for_buttons = QWidget()
+        self.layout_for_buttons = QHBoxLayout()
 
-    def mouseReleaseEvent(self, e):
-        if e.button() == Qt.LeftButton:
-            super().mouseReleaseEvent(e)
-            self.clicked.emit()
-        # self.context_menu.popup()
+        see_icon = QIcon(self.icon_see_path)
+        self.see_button = QPushButton(icon=see_icon, text="")
+        self.see_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.layout_for_buttons.addWidget(self.see_button)
 
-    def see_detail_information(self):
-        print("see_detail_information")
+        edit_icon = QIcon(self.icon_edit_path)
+        self.edit_button = QPushButton(icon=edit_icon, text="")
+        self.edit_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.layout_for_buttons.addWidget(self.edit_button)
 
-    def edit(self):
-        print("edit")
+        delete_icon = QIcon(self.icon_delete_path)
+        self.delete_button = QPushButton(icon=delete_icon, text="")
+        self.delete_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.layout_for_buttons.addWidget(self.delete_button)
 
-    def delete(self):
-        print("delete")
+        self.widget_for_layout_for_buttons.setLayout(self.layout_for_buttons)
+        self.widget_for_layout_for_buttons.setMaximumWidth(150)
+        # self.main_horizontal_layout.insertSpacing(1, 50)
+        self.main_horizontal_layout.addWidget(self.widget_for_layout_for_buttons)
+
+        self.setLayout(self.main_horizontal_layout)
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    auth_obj = Clickable_label_with_delete_buttons("123", "12")
+    auth_obj.show()
+    app.exec_()

@@ -21,7 +21,7 @@ class Admin_user_view(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open("css/Admin_user_view.css") as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Admin_user_view.css') as css:
             self.setStyleSheet(css.read())
 
         self.scroll_widget = QScrollArea()
