@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit, QSizePolicy
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 from Interface.Ending_test_widget import Ending_test_widget
@@ -18,19 +18,22 @@ class Solving_test_widget(QMainWindow):
 
     def init_UI(self):
         self.setMinimumSize(1280, 720)
+        self.setWindowTitle(self.test["name"])
 
         with open('css/Solving_test_widget.css') as css:
             self.css_file = css.read()
             self.setStyleSheet(self.css_file)
 
         self.main_widget = QWidget()
+        # self.main_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Ignored)
         self.main_vertical_layout = QVBoxLayout()
 
         self.question_counter = QLabel(f"{self.current_question}/{self.number_of_all_questions} вопрос")
         self.question_counter.setObjectName("question_counter")
+        self.question_counter.setMaximumHeight(10)
         self.main_vertical_layout.addWidget(self.question_counter)
 
-        self.main_vertical_layout.addSpacing(50)
+        self.main_vertical_layout.addSpacing(20)
 
         question = self.test["questions"][self.current_question-1]
         self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question-1])
@@ -41,10 +44,15 @@ class Solving_test_widget(QMainWindow):
         self.buttons_horizontal_layout = QHBoxLayout()
 
         self.backward_button = QPushButton("Назад")
+        self.backward_button.setMaximumWidth(200)
+        self.backward_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        # self.backward_button.contentsMargins().setRight()
         self.backward_button.released.connect(self.backward_button_pushed)
         self.buttons_horizontal_layout.addWidget(self.backward_button)
 
         self.next_button = QPushButton("Сохранить ответ и перейти к следующему вопросу")
+        self.next_button.setObjectName("next_button")
+        self.next_button.setFixedWidth(600)
         self.next_button.released.connect(self.next_button_pushed)
         self.buttons_horizontal_layout.addWidget(self.next_button)
 
@@ -56,16 +64,31 @@ class Solving_test_widget(QMainWindow):
 
         self.show()
 
+    def resizeEvent(self, e):
+        self.question_text_label.setMaximumWidth(self.width())
+
     def generate_question_layout(self, question, answer):
         self.question_widget = QWidget()
         self.question_widget_layout = QVBoxLayout()
+        self.question_widget.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
 
         self.question_text_label = QLabel(question["question"])
-        # self.question_text_label.setFixedHeight(100)
-        self.question_widget_layout.addWidget(self.question_text_label)
+        self.question_text_label.setObjectName("question_label")
+        self.question_text_label.setMaximumWidth(self.width())
+        self.question_text_label.setWordWrap(True)
+        # self.question_text_label.setFixedHeight(500)
+        scrollAreaQuestion = QScrollArea()
+        scrollAreaQuestion.setWidget(self.question_text_label)
+        scrollAreaQuestion.setObjectName("question_scrollarea")
+        scrollAreaQuestion.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scrollAreaQuestion.setFixedHeight(300)
+        scrollAreaQuestion.setWidgetResizable(True)
+
+        self.question_widget_layout.addWidget(scrollAreaQuestion)
 
         if len(question["variants_of_answer"]) == 0:
             self.answer_input_label = QLineEdit(answer)
+            self.answer_input_label.setPlaceholderText("Ваш ответ")
             self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
             self.question_widget_layout.addWidget(self.answer_input_label)
         else:
@@ -75,12 +98,22 @@ class Solving_test_widget(QMainWindow):
 
             for variant in question["variants_of_answer"]:
                 variant_of_answer_label = QLabel(variant)
+                variant_of_answer_label.setObjectName("answer_option_label")
                 self.variants_of_answer_layout.addWidget(variant_of_answer_label)
 
+            self.question_widget_layout.addSpacing(20)
+            scrollAreaAnswers = QScrollArea()
+            scrollAreaAnswers.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            scrollAreaAnswers.setWidget(self.variants_of_answer_widget)
+            scrollAreaAnswers.setFixedHeight(150)
+            scrollAreaAnswers.setWidgetResizable(True)
+
             self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
-            self.question_widget_layout.addWidget(self.variants_of_answer_widget)
+            self.question_widget_layout.addWidget(scrollAreaAnswers)
 
             self.answer_input_label = QLineEdit(answer)
+            self.answer_input_label.setPlaceholderText("Ваш ответ")
+            self.answer_input_label.setObjectName("answer_input_label")
             self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
             self.question_widget_layout.addWidget(self.answer_input_label)
 
