@@ -6,6 +6,7 @@ from Interface.Ending_test_widget import Ending_test_widget
 from config import Config
 from db.sqlite import SQLInteract
 import time
+from copy import deepcopy
 
 
 class Solving_test_widget(QMainWindow):
@@ -159,7 +160,7 @@ class Solving_test_widget(QMainWindow):
         return number_of_wrong_answers
 
     def generate_done_test(self, result):
-        rdy_test = self.test
+        rdy_test = deepcopy(self.test)
         rdy_test["result"] = result
         rdy_test["time"] = time.asctime(time.localtime(time.time()))
         # print(time.asctime(time.localtime(time.time())))
