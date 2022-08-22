@@ -8,8 +8,6 @@ import time
 from copy import deepcopy
 import db.user
 
-
-
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
