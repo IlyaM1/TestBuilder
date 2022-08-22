@@ -25,7 +25,7 @@ class CollapsibleBox(QtWidgets.QWidget):
     def __init__(self, title="", parent=None):
         super(CollapsibleBox, self).__init__(parent)
 
-        self.toggle_button = QtWidgets.QToolButton(text=title, checkable=True, checked=False)
+        self.toggle_button = QtWidgets.QToolButton(text=title, checkable=True, checked=True)
         self.toggle_button.setStyleSheet("QToolButton {background-color:#dadada;}")
         self.toggle_button.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
         self.toggle_button.setArrowType(QtCore.Qt.ArrowType.RightArrow)
