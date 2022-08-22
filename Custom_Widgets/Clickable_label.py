@@ -3,13 +3,13 @@ from PyQt5.Qt import pyqtSignal
 from PyQt5.QtCore import Qt
 class Clickable_label(QLabel):
     """
-    QLabel на который можно нажать, который хранит в себе id объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
+    QLabel на который можно нажать, который хранит в себе dictionary, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
     """
     clicked = pyqtSignal()
 
-    def __init__(self, text, id):
+    def __init__(self, text, dictionary):
         super(Clickable_label, self).__init__(text)
-        self.id = id
+        self.dictionary = dictionary
 
     def mouseReleaseEvent(self, e):
         if e.button() == Qt.LeftButton:
