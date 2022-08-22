@@ -21,7 +21,7 @@ class Clickable_label_with_delete_buttons(QLabel):
     def init_UI(self):
         self.main_horizontal_layout = QHBoxLayout()
 
-        self.label = Clickable_label(self.text, self.dictionary["id"])
+        self.label = Clickable_label(self.text, self.dictionary)
         self.main_horizontal_layout.addWidget(self.label)
 
         self.widget_for_layout_for_buttons = QWidget()
