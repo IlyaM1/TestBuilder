@@ -57,16 +57,21 @@ class SQLInteract:
         self.db_connection.commit()
 
     def sql_update_one_by_id(self, update_field, update_value, search_id):
-        """if type update_value == str: update_value must be quotes in quotes new_text = "'some text'" """
-        if type(update_value) == str:
-            # update_value = update_value.replace('"', "'")
-            self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
-                                    f'''WHERE id = {search_id}''')
-        else:
-            self.cursor_obj.execute(
-                f'''UPDATE {self.table_name} SET {update_field} = {update_value}'''  # разница в кавычках
-                f'''WHERE id = {search_id}''')
-        self.db_connection.commit()
+        try:
+            """if type update_value == str: update_value must be quotes in quotes new_text = "'some text'" """
+            if type(update_value) == str:
+                update_value = update_value.replace('"', "'")
+                self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
+                                        f'''WHERE id = {search_id}''')
+            else:
+                self.cursor_obj.execute(
+                    f'''UPDATE {self.table_name} SET {update_field} = {update_value}'''  # разница в кавычках
+                    f'''WHERE id = {search_id}''')
+            self.db_connection.commit()
+            return True
+        except sqlite3.Error as err:
+            print(err)
+            return False
 
     def sql_free_command(self, command):
         self.cursor_obj.execute(command)
@@ -147,7 +152,7 @@ class SQLInteract:
 
     @staticmethod
     def get_all_tests(value='', need_value="tests", user_id=None) -> list:
-        """возвращает массив из его объекта"""
+        """из строки(json) делает dict"""
         # if value != '':
         #     got_user = value
         # # elif user_id is not None:

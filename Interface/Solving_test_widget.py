@@ -1,17 +1,29 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, \
+    QMainWindow, QLabel, QLineEdit
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 from Interface.Ending_test_widget import Ending_test_widget
 from config import Config
+from db.sqlite import SQLInteract
+import time
+from copy import deepcopy
+import db.user
+
+
+
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
     """
-    def __init__(self, test = {}, user = {}, parent=None):
+
+
+    def __init__(self, test={}, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test
         self.user = user
-        self.current_question = 1 # 1st question of test is №1
+        self.config = Config()
+        self.current_question = 1  # 1st question of test is №1
+
         self.number_of_all_questions = len(self.test["questions"])
         self.answers_to_all_questions = [""] * self.number_of_all_questions
         self.all_inputs_widgets = [QLineEdit()] * self.number_of_all_questions
@@ -33,12 +45,13 @@ class Solving_test_widget(QMainWindow):
 
         self.main_vertical_layout.addSpacing(50)
 
-        question = self.test["questions"][self.current_question-1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question-1])
+        question = self.test["questions"][self.current_question - 1]
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.addWidget(self.current_question_widget)
 
-        self.buttons_horizontal_layout_widget = QWidget() # wrapper for buttons_horizontal_layout
+        self.buttons_horizontal_layout_widget = QWidget()  # wrapper for buttons_horizontal_layout
         self.buttons_horizontal_layout = QHBoxLayout()
 
         self.backward_button = QPushButton("Назад")
@@ -95,7 +108,8 @@ class Solving_test_widget(QMainWindow):
         self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
@@ -110,7 +124,8 @@ class Solving_test_widget(QMainWindow):
         self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[self.current_question - 1])
+        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
+            self.current_question - 1])
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
@@ -122,15 +137,31 @@ class Solving_test_widget(QMainWindow):
 
     def check_input(self, current_question):
         self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
-    def finish_and_save_test(self):
-         self.check_input(self.current_question - 1)
-         # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
-         number_of_wrong_answers = self.count_wrong_answers()
-         result = self.count_result()
-         # TODO: save results of test in db for self.user @akrisfx
-         self.close()
-         self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers, max_result=self.test["max_result"])
 
+    def finish_and_save_test(self):
+        self.check_input(self.current_question - 1)
+        # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
+        number_of_wrong_answers = self.count_wrong_answers()
+        result = self.count_result()
+        # print(number_of_wrong_answers, result, self.answers_to_all_questions, self.test)
+        ready_test = self.generate_done_test(result)
+        self.close()
+        user_db = SQLInteract(table_name="testcase", filename_db=self.config.config["path"] + "/db/users.db")
+        self.user["tests"].append(ready_test)
+        self.user["tests"] = db.user.from_dict_to_str(self.user["tests"])
+        # print(self.user)
+        update_status = user_db.sql_update_one_by_id(update_field="tests", update_value=self.user["tests"],
+                                                     search_id=self.user["id"])
+        if not update_status:
+            print('Чёта сломалось, обратитесь в службу поддержки E̷F̷T̷ TestBuilder`a')
+            self.end_test_widget = Ending_test_widget(result=result, wrong_answers='Чёта сломалось, обратитесь в '
+                                                                                   'службу поддержки E̷F̷T̷ '
+                                                                                   'TestBuilder`a',
+                                                      max_result=self.test["max_result"])
+        else:
+            self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers,
+                                                      max_result=self.test["max_result"])
+        # print(user_db.return_full_table(name_of_table="testcase", to_dict=True)[1])  # для дебага
 
     def count_result(self):
         result = 0
@@ -147,12 +178,37 @@ class Solving_test_widget(QMainWindow):
         return number_of_wrong_answers
 
 
+    def generate_done_test(self, result):
+        rdy_test = deepcopy(self.test)
+        rdy_test["result"] = result
+        rdy_test["time"] = time.asctime(time.localtime(time.time()))
+        # print(time.asctime(time.localtime(time.time())))
+        for i, x in enumerate(self.answers_to_all_questions):
+            rdy_test["questions"][i]["key"] = x
+            if x == rdy_test["questions"][i]["answer"]:
+                rdy_test["questions"][i]["points_awarded"] = rdy_test["questions"][i]["balls"]
+            else:
+                rdy_test["questions"][i]["points_awarded"] = 0
+        return rdy_test
+
 
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
-    solve_test = Solving_test_widget(test=test)
-
+    solve_test = Solving_test_widget(test=test, user={'id': 3, 'name': 'ILYA2', 'password': "b'b8~\\xac)\\xe3A\\xc7"
+                                                                                            "\\xe6\\xf6\\x8aI/P\\xee"
+                                                                                            "\\xf5\\xeb\\x90\\x8cO"
+                                                                                            "<\\xcb\\xbc\\xdd\\xc1"
+                                                                                            "=\\xad\\xc4S\\xcdJ\\x16"
+                                                                                            "\\xc07\\x8a("
+                                                                                            "\\xc4\\x0c_#\\x1ey\\xb9"
+                                                                                            "\\x82\\xcb\\x96\\xb1"
+                                                                                            "\\xb1\\xde\\xdf\\xe0"
+                                                                                            "\\xb2^\\xb4\\xcd\\xb2"
+                                                                                            "/\\xfc\\xd4\\xd8Nv5o'",
+                                                      'post': 'pop',
+                                                      'tests': []})  # пример юзера из DB который идет на вход в класс.
+                                                                     # на входе поле tests было пустым
     app.exec_()
 
-#margin-bottom: 50px;
+# margin-bottom: 50px;

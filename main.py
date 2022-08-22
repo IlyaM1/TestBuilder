@@ -13,10 +13,11 @@ def main():
 if __name__ == '__main__':
     main()
     # cfg = Config()
-    # s = SQLInteract(table_name='employees', filename_db=cfg.config["path"] + '/db/users.db')
-    # sign = Signing({'id': 0, 'name': 'ILYA3224', 'password': '1234', 'post': 'pop', 'test': '[]'}, s)
+    # s = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
+    # sign = Signing({'id': 0, 'name': '1', 'password': '123', 'post': 'pop', 'tests': '[]'}, s)
     # print(cfg.config)
-    # print(s.return_full_table())
+    # print(s.return_full_table(to_dict=True))
+
     # print(sign.authentication())
     # print(sign.authentication())
     # # s.sql_create_new_table()
