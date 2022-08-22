@@ -20,8 +20,8 @@ class View_all_tests(QMainWindow):
         self.vertical_layout = QVBoxLayout()
         self.vertical_layout.addSpacing(10)
 
-        with open('css/View_all_tests.css') as f:
-            self.setStyleSheet(f.read())
+        with open(Config().config["path"] + '\\Interface\\css\\View_all_tests.css') as css:
+            self.setStyleSheet(css.read())
 
         for test in self.tests:
             test_row = Clickable_label(f'{test["name"]}: {len(test["questions"])} вопроса', test["id"])

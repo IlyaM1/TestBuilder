@@ -3,7 +3,7 @@ import hashlib
 # from sqlite import SQLInteract
 
 
-def hash_password(password, enc_decode_fmt='utf-8', to_str=True):
+def hash_password(password, enc_decode_fmt='utf-8', to_str=True):  # функция хеширования строки
     salt = b'\x89g\xd0\xad\xa4~\x7f\xfc?\xe0\xd6\xb4n\xcd\x90\xc0Q\xdf3\x9bV\xa2(K\n\x03\xae\xf1\xfc\x01\xa9\xd3'
     key = hashlib.pbkdf2_hmac('sha512', password.encode(enc_decode_fmt), salt, iterations=150000)
     if to_str:
