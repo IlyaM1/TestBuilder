@@ -192,7 +192,7 @@ class Solving_test_widget(QMainWindow):
                                                       max_result=self.test["max_result"])
         else:
             self.end_test_widget = Ending_test_widget(result=result, wrong_answers=number_of_wrong_answers,
-                                                      max_result=self.test["max_result"])
+                                                      max_result=self.test["max_result"], user=self.user)
         # print(user_db.return_full_table(name_of_table="testcase", to_dict=True)[1])  # для дебага
 
     def count_result(self):

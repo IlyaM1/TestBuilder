@@ -55,7 +55,7 @@ if __name__ == "__main__":
     app = QApplication([])
     user = get_users()[0]
     test = get_all_tests(user)[0]
-    tests = [test for i in range(20)]
+    tests = [test for i in range(2)]
     view_all_tests = View_all_tests(tests, user)
 
     app.exec_()

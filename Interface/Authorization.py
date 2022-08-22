@@ -100,9 +100,10 @@ class Authorization(QWidget):
     def next_window_view_all_tests(self):
         if self.user is not None:
             self.close()
-            test = get_all_tests(self.user)[0]
-            tests = [test for i in range(20)]
-            self.view_all_tests = View_all_tests(tests, self.user)
+            test_db = SQLInteract(table_name='tests', filename_db=self.cfg.config["path"] + '/db/users.db',
+                                  values_of_this_table="(id, name, theme, max_result, questions)")
+            test_arr = test_db.return_full_table(to_dict=True, element_for_transform="questions")
+            self.view_all_tests = View_all_tests(tests=test_arr, user=self.user)
 
     def next_window_for_admin(self):
         user_db = SQLInteract(table_name='testcase', filename_db=self.cfg.config["path"] + '/db/users.db')
