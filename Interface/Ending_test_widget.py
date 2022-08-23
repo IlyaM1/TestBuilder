@@ -47,15 +47,15 @@ class Ending_test_widget(QMainWindow):
 
 
     def finish_test_button_pushed(self):
-        test_db = SQLInteract(table_name='tests', filename_db=Config().config["path"] + '/db/users.db',
-                              values_of_this_table="(id, name, theme, max_result, questions)")
-        print(1)
-        test_arr = test_db.return_full_table(to_dict=True, element_for_transform="questions")
-        print(test_arr)
-        print(self.user)
+        # test_db = SQLInteract(table_name='tests', filename_db=Config().config["path"] + '/db/users.db',
+        #                       values_of_this_table="(id, name, theme, max_result, questions)")
+        # print(1)
+        # test_arr = test_db.return_full_table(to_dict=True, element_for_transform="questions")
+        # print(test_arr)
+        # print(self.user)
         self.close()
-        from Interface.View_all_tests import View_all_tests
-        self.view_all_tests = View_all_tests(tests=test_arr, user=self.user)
+        # from Interface.View_all_tests import View_all_tests
+        # self.view_all_tests = View_all_tests(tests=test_arr, user=self.user)
 
 
 
