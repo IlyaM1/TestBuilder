@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea, QHBoxLayout, QMainWindow, QLabel, QLineEdit, QSizePolicy
+from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QSize, Qt
 from test_data_funcs import get_all_tests
 from Interface.Ending_test_widget import Ending_test_widget
@@ -8,22 +8,25 @@ import time
 from copy import deepcopy
 import db.user
 
+
 class Solving_test_widget(QMainWindow):
     """
     Окошко для выполнения теста
     """
-
 
     def __init__(self, test={}, user={}, parent=None):
         super(QWidget, self).__init__(parent)
         self.test = test
         self.user = user
         self.config = Config()
-        self.current_question = 1  # 1st question of test is №1
 
+        self.current_question = 1
         self.number_of_all_questions = len(self.test["questions"])
+
         self.answers_to_all_questions = [""] * self.number_of_all_questions
-        self.all_inputs_widgets = [QLineEdit()] * self.number_of_all_questions
+        self.all_types_of_questions = [0] * self.number_of_all_questions  # 1 - input_label, 2 - radiobox, 3 - checkbox
+        self.all_inputs_widgets = [0] * self.number_of_all_questions  # TODO:
+
         self.init_UI()
 
     def init_UI(self):
@@ -34,32 +37,40 @@ class Solving_test_widget(QMainWindow):
             self.css_file = css.read()
             self.setStyleSheet(self.css_file)
 
-        self.main_widget = QWidget()
-        # self.main_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Ignored)
         self.main_vertical_layout = QVBoxLayout()
 
-        self.question_counter = QLabel(f"{self.current_question}/{self.number_of_all_questions} вопрос")
-        self.question_counter.setObjectName("question_counter")
-        self.question_counter.setMaximumHeight(10)
+        self.question_counter = self.generate_question_counter()
         self.main_vertical_layout.addWidget(self.question_counter)
 
-        self.main_vertical_layout.addSpacing(20)
-
-        question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
-            self.current_question - 1])
+        self.current_question_widget = self.generate_question_widget()
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.addWidget(self.current_question_widget)
 
-        self.buttons_horizontal_layout_widget = QWidget()  # wrapper for buttons_horizontal_layout
+        self.buttons_widget = self.generate_buttons_widget()
+        self.main_vertical_layout.addWidget(self.buttons_widget)
+
+        self.main_widget = QWidget()
+        self.main_widget.setLayout(self.main_vertical_layout)
+        self.setCentralWidget(self.main_widget)
+
+        self.show()
+
+    def generate_question_counter(self):
+        question_counter = QLabel(f"{self.current_question}/{self.number_of_all_questions} вопрос")
+        question_counter.setObjectName("question_counter")
+        question_counter.setMaximumHeight(10)
+        return question_counter
+
+    def generate_buttons_widget(self):
+        self.buttons_widget = QWidget()  # wrapper for buttons_horizontal_layout
         self.buttons_horizontal_layout = QHBoxLayout()
 
-        self.backward_button = QPushButton("Назад")
-        self.backward_button.setMaximumWidth(200)
-        self.backward_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        backward_button = QPushButton("Назад")
+        backward_button.setMaximumWidth(200)
+        backward_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         # self.backward_button.contentsMargins().setRight()
-        self.backward_button.released.connect(self.backward_button_pushed)
-        self.buttons_horizontal_layout.addWidget(self.backward_button)
+        backward_button.released.connect(self.backward_button_pushed)
+        self.buttons_horizontal_layout.addWidget(backward_button)
 
         self.next_button = QPushButton("Сохранить ответ и перейти к следующему вопросу")
         self.next_button.setObjectName("next_button")
@@ -67,79 +78,119 @@ class Solving_test_widget(QMainWindow):
         self.next_button.released.connect(self.next_button_pushed)
         self.buttons_horizontal_layout.addWidget(self.next_button)
 
-        self.buttons_horizontal_layout_widget.setLayout(self.buttons_horizontal_layout)
-        self.main_vertical_layout.addWidget(self.buttons_horizontal_layout_widget)
+        self.buttons_widget.setLayout(self.buttons_horizontal_layout)
 
-        self.main_widget.setLayout(self.main_vertical_layout)
-        self.setCentralWidget(self.main_widget)
+        return self.buttons_widget
 
-        self.show()
+    def generate_question_widget(self):
+        question_widget_layout = QVBoxLayout()
 
-    def resizeEvent(self, e):
-        self.question_text_label.setMaximumWidth(self.width())
+        scroll_area_question = self.generate_question_text_scroll_area()
+        question_widget_layout.addWidget(scroll_area_question)
 
-    def generate_question_layout(self, question, answer):
-        self.question_widget = QWidget()
-        self.question_widget_layout = QVBoxLayout()
-        self.question_widget.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        question_widget_layout.addSpacing(20)
+        variants_of_answer_widget = self.generate_variants_of_answer_widget()
+        question_widget_layout.addWidget(variants_of_answer_widget)
 
-        self.question_text_label = QLabel(question["question"])
-        self.question_text_label.setObjectName("question_label")
-        self.question_text_label.setMaximumWidth(self.width())
-        self.question_text_label.setWordWrap(True)
-        # self.question_text_label.setFixedHeight(500)
-        scrollAreaQuestion = QScrollArea()
-        scrollAreaQuestion.setWidget(self.question_text_label)
-        scrollAreaQuestion.setObjectName("question_scrollarea")
-        scrollAreaQuestion.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scrollAreaQuestion.setFixedHeight(300)
-        scrollAreaQuestion.setWidgetResizable(True)
+        question_widget = QWidget()
+        question_widget.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Fixed)
+        question_widget.setLayout(question_widget_layout)
 
-        self.question_widget_layout.addWidget(scrollAreaQuestion)
+        return question_widget
 
-        if len(question["variants_of_answer"]) == 0:
-            self.answer_input_label = QLineEdit(answer)
-            self.answer_input_label.setPlaceholderText("Ваш ответ")
-            self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
-            self.question_widget_layout.addWidget(self.answer_input_label)
-        else:
-            self.variants_of_answer_widget = QWidget()
-            self.variants_of_answer_widget.setObjectName("variants_of_answer_widget")
-            self.variants_of_answer_layout = QVBoxLayout()
+    def generate_question_text_scroll_area(self):
+        question_text_label = QLabel(self.test["questions"][self.current_question - 1]["question"])
+        question_text_label.setObjectName("question_label")
+        question_text_label.setMaximumWidth(self.width())
+        question_text_label.setWordWrap(True)
 
-            for variant in question["variants_of_answer"]:
-                variant_of_answer_label = QLabel(variant)
-                variant_of_answer_label.setObjectName("answer_option_label")
-                variant_of_answer_label.setWordWrap(True)
-                self.variants_of_answer_layout.addWidget(variant_of_answer_label)
+        scroll_area_question = QScrollArea()
+        scroll_area_question.setWidget(question_text_label)
+        scroll_area_question.setObjectName("question_scrollarea")
+        scroll_area_question.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area_question.setFixedHeight(300)
+        scroll_area_question.setWidgetResizable(True)
 
-            self.question_widget_layout.addSpacing(20)
-            scrollAreaAnswers = QScrollArea()
-            scrollAreaAnswers.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            scrollAreaAnswers.setWidget(self.variants_of_answer_widget)
-            scrollAreaAnswers.setFixedHeight(150)
-            scrollAreaAnswers.setWidgetResizable(True)
-            self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
-            self.question_widget_layout.addWidget(scrollAreaAnswers)
+        return scroll_area_question
 
-            self.answer_input_label = QLineEdit(answer)
-            self.answer_input_label.setPlaceholderText("Ваш ответ")
-            self.answer_input_label.setObjectName("answer_input_label")
-            self.all_inputs_widgets[self.test["questions"].index(question)] = self.answer_input_label
-            self.question_widget_layout.addWidget(self.answer_input_label)
+    def generate_variants_of_answer_widget(self):
+        variants_of_answer_widget = QWidget()
+        variants_of_answer_widget.setObjectName("variants_of_answer_widget")
+        variants_of_answer_layout = QVBoxLayout()
 
-        self.question_widget.setLayout(self.question_widget_layout)
-        return self.question_widget
+        if self.test["questions"][self.current_question - 1]["answer"] is None:
+            self.all_types_of_questions[self.current_question - 1] = 1
+
+            answer_input_label = QLineEdit()
+            answer_input_label.setPlaceholderText("Ваш ответ")
+
+            self.answers_to_all_questions[self.current_question - 1] = answer_input_label
+            self.variants_of_answer_layout.addWidget(answer_input_label)
+
+
+        elif isinstance(self.test["questions"][self.current_question - 1]["answer"], str) is True:
+            self.all_types_of_questions[self.current_question - 1] = 2
+
+            variants_of_answer_button_group = QButtonGroup()
+            variants_of_answer_button_group_layout = QVBoxLayout()
+
+            for variant in self.test["questions"][self.current_question - 1]["variants_of_answer"]:
+                variant_of_answer_radio_button = QRadioButton(variant)
+                variant_of_answer_radio_button.setObjectName("answer_option_label")
+                variants_of_answer_button_group_layout.addWidget(variant_of_answer_radio_button)
+                variants_of_answer_button_group.addButton(variant_of_answer_radio_button)
+
+            # variants_of_answer_button_group.buttonClicked.connect(self.on_radio_button_clicked)
+            self.all_inputs_widgets[self.current_question - 1] = variants_of_answer_button_group
+
+            variants_of_answer_button_group_widget = QWidget()
+            variants_of_answer_button_group_widget.setLayout(variants_of_answer_button_group_layout)
+
+            scroll_area_answers = self.generate_scroll_area_answers(variants_of_answer_button_group_widget)
+            variants_of_answer_layout.addWidget(scroll_area_answers)
+
+
+        elif isinstance(self.test["questions"][self.current_question - 1]["answer"], list) is True:
+            self.all_types_of_questions[self.current_question - 1] = 3
+            self.answers_to_all_questions[self.current_question - 1] = []
+
+            check_box_layout = QVBoxLayout()
+            all_check_boxes = []
+
+            for variant in self.test["questions"][self.current_question - 1]["variants_of_answer"]:
+                variants_of_answer_check_box = QCheckBox(variant)
+                variants_of_answer_check_box.setObjectName("answer_option_label")
+                check_box_layout.addWidget(variants_of_answer_check_box)
+                variants_of_answer_check_box.toggle()
+                # variants_of_answer_check_box.stateChanged.connect(self.clicked_check_box)
+                all_check_boxes.append(variants_of_answer_check_box)
+
+            self.all_inputs_widgets[self.current_question - 1] = all_check_boxes
+            check_box_widget = QWidget()
+            check_box_widget.setLayout(check_box_layout)
+
+            scroll_area_answers = self.generate_scroll_area_answers(check_box_widget)
+            variants_of_answer_layout.addWidget(scroll_area_answers)
+
+        variants_of_answer_widget.setLayout(variants_of_answer_layout)
+
+        return variants_of_answer_widget
+
+    def generate_scroll_area_answers(self, widget):
+        scroll_area_answers = QScrollArea()
+        scroll_area_answers.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area_answers.setWidget(widget)
+        scroll_area_answers.setFixedHeight(150)
+        scroll_area_answers.setWidgetResizable(True)
+        return scroll_area_answers
 
     def backward_button_pushed(self):
         if self.current_question == 1:
             return -1
-        self.check_input(self.current_question - 1)
+        self.check_input(self.current_question)
         self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
-        question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
-            self.current_question - 1])
+        self.current_question_widget = self.generate_question_layout()
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
@@ -150,23 +201,35 @@ class Solving_test_widget(QMainWindow):
         if self.current_question == self.number_of_all_questions:
             self.finish_and_save_test()
             return
-        self.check_input(self.current_question - 1)
+        self.check_input(self.current_question)
         self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
-        question = self.test["questions"][self.current_question - 1]
-        self.current_question_widget = self.generate_question_layout(question, self.answers_to_all_questions[
-            self.current_question - 1])
+        self.current_question_widget = self.generate_question_widget()
         self.current_question_widget.setObjectName("current_question_widget")
         self.main_vertical_layout.insertWidget(1, self.current_question_widget)
+
         self.question_counter.setText(f"{self.current_question}/{self.number_of_all_questions} вопрос")
+
         if self.current_question == self.number_of_all_questions:
             self.next_button.setText("Завершить и сохранить тест")
         else:
             self.next_button.setText("Сохранить ответ и перейти к следующему вопросу")
+
         self.setStyleSheet(self.css_file)
 
     def check_input(self, current_question):
-        self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
+        if self.all_types_of_questions[current_question - 1] == 1:
+            self.answers_to_all_questions[current_question - 1] = self.all_inputs_widgets[current_question - 1].text()
+        elif self.all_types_of_questions[current_question - 1] == 2:
+            self.answers_to_all_questions[current_question - 1] = self.all_inputs_widgets[current_question - 1].checkedButton().text()
+        elif self.all_types_of_questions[current_question - 1] == 3:
+            arr = []
+            for check_box in self.all_inputs_widgets[current_question - 1]:
+                if check_box.isChecked() is True:
+                    arr.append(check_box.text())
+            self.answers_to_all_questions[current_question - 1] = arr
+
+        # self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
 
     def finish_and_save_test(self):
         self.check_input(self.current_question - 1)
@@ -207,7 +270,6 @@ class Solving_test_widget(QMainWindow):
                 number_of_wrong_answers += 1
         return number_of_wrong_answers
 
-
     def generate_done_test(self, result):
         rdy_test = deepcopy(self.test)
         rdy_test["result"] = result
@@ -220,6 +282,10 @@ class Solving_test_widget(QMainWindow):
             else:
                 rdy_test["questions"][i]["points_awarded"] = 0
         return rdy_test
+
+    def _on_radio_button_clicked(self, button):
+        self.answers_to_all_questions[self.current_question - 1] = button.text()
+        # print(button.text())
 
 
 if __name__ == '__main__':
@@ -238,7 +304,5 @@ if __name__ == '__main__':
                                                                                             "/\\xfc\\xd4\\xd8Nv5o'",
                                                       'post': 'pop',
                                                       'tests': []})  # пример юзера из DB который идет на вход в класс.
-                                                                     # на входе поле tests было пустым
+    # на входе поле tests было пустым
     app.exec_()
-
-# margin-bottom: 50px;
