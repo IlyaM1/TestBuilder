@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMainWindow
 from Interface.Authorization import Authorization
 from db.sqlite import SQLInteract
 from auth_reg import Signing
@@ -6,7 +6,9 @@ from config import Config
 
 def main():
     app = QApplication([])
+    print("smt")
     auth_obj = Authorization()
+    print("smt2")
     app.exec_()
 
 
@@ -22,3 +24,5 @@ if __name__ == '__main__':
     # print(s.sql_get_user_with_id(2))
     # print(type(s.get_all_tests(2)))
     # print(s.all_tables_name())
+
+# venv\Scripts\activate
