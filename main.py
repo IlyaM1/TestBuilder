@@ -6,9 +6,7 @@ from config import Config
 
 def main():
     app = QApplication([])
-    print("smt")
     auth_obj = Authorization()
-    print("smt2")
     app.exec_()
 
 

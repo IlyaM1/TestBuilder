@@ -8,24 +8,27 @@ from config import Config
 from PyQt5 import QtCore, QtGui
 import json
 
+
 class Authorization(QWidget):
     """
     Окошко авторизации
     """
+
     def __init__(self):
         super().__init__()
         self.user_login_password = ()
         self.user = False
-        self.init_UI()
         self.cfg = Config()
+        self.init_UI()
 
     def init_UI(self):
         self.setMinimumSize(400, 300)
         self.setWindowTitle("Авторизация")
-        self.setWindowIcon(QtGui.QIcon("Interface/authorization.png"))
+        self.setWindowIcon(QtGui.QIcon(self.cfg.config["path"] + "/Interface/authorization.png"))
+
         vertical_layout = QVBoxLayout()
 
-        with open('Interface/css/Authorization.css') as f:
+        with open(self.cfg.config["path"] + '/Interface/css/Authorization.css') as f:
             self.setStyleSheet(f.read())
 
         self.groupbox = QGroupBox("", parent=self)
@@ -52,20 +55,20 @@ class Authorization(QWidget):
         vertical_layout.addWidget(self.button_login)
         vertical_layout.setAlignment(self.button_login, QtCore.Qt.AlignHCenter)
 
-
         # self.setLayout(vertical_layout)
         # self.show()
         self.groupbox.setLayout(vertical_layout)
         self.show()
 
-    def resizeEvent(self, e):
-        # if self.width() >= 1000:
-        #     self.input_label_login.setMaximumWidth(1000)
-        # else:
-        #     self.input_label_login.setMaximumWidth()
-        #     self.input_label_password.setStyleSheet("QLineEdit { width: 60% }")
-        self.groupbox.move(QtCore.QPoint((self.width()-400)/2, (self.height()-300)/2))
-        self.button_login.move(QtCore.QPoint((self.groupbox.width() - self.button_login.width()) / 2, self.button_login.y()))
+    # def resizeEvent(self, e):
+    #     # if self.width() >= 1000:
+    #     #     self.input_label_login.setMaximumWidth(1000)
+    #     # else:
+    #     #     self.input_label_login.setMaximumWidth()
+    #     #     self.input_label_password.setStyleSheet("QLineEdit { width: 60% }")
+    #     self.groupbox.move(QtCore.QPoint((self.width() - 400) / 2, (self.height() - 300) / 2))
+    #     self.button_login.move(
+    #         QtCore.QPoint((self.groupbox.width() - self.button_login.width()) / 2, self.button_login.y()))
 
     def button_login_pushed(self):
         self.user_login_password = (self.input_label_login.text().strip(), self.input_label_password.text().strip())
