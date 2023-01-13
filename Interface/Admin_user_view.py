@@ -21,7 +21,7 @@ class Admin_user_view(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open(Config().config["path"] + '\\Interface\\css\\Admin_user_view.css') as css:
+        with open(Config().config["path"] + '\Interface\css\Admin_user_view.css') as css:
             self.setStyleSheet(css.read())
 
         self.scroll_widget = QScrollArea()
@@ -105,7 +105,7 @@ class Admin_user_view(QMainWindow):
 
         self.box_for_wrong_questions = CollapsibleBox(title="Вопросы: ")
         self.box_for_wrong_questions_layout = QVBoxLayout()
-        for i in test["test"]:
+        for i in test["questions"]:
             if i["answer"] != i["key"] or True:
                 self.box_for_wrong_questions_layout.addWidget(self.init_question_widget(i))
         self.box_for_wrong_questions_layout.setAlignment(Qt.AlignTop)
@@ -133,7 +133,8 @@ class Admin_user_view(QMainWindow):
         input_name = self.name_input_label.text().strip()
         input_password = self.password_input_label.text()
         input_post = self.post_input_label.text()
-        input_password = str(hash_password(input_password))
+        # input_password = str(hash_password(input_password))
+        input_password = str(input_password)
         print(input_password)
 
         cfg = Config()
