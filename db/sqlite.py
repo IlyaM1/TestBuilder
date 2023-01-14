@@ -80,8 +80,8 @@ class SQLInteract:
     def sql_get_user_with_namePass(self, name, password):
         try:
             if str(type(password)) == "<class 'str'>":
-                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
-                                        f''' AND password = "{password}"''')
+                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = {name}'''
+                                        f''' AND password = {password}''')
             else:
                 self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                         f''' AND password = {password}''')
@@ -201,10 +201,12 @@ if __name__ == '__main__':
     test_db = SQLInteract(table_name="tests", filename_db=cfg.config["path"] + "/db/users.db",
                           values_of_this_table="(id, name, theme, max_result, questions)",
                           init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+    user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     # test_db.sql_create_new_table()
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     # test_db.sql_add_new_user(new_test)
     print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
+    print(user_db.return_full_table(to_dict=True, element_for_transform="questions"))
     print(test_db.all_tables_name())
     # print(test_db.get_all_tests(need_value="questions", user=test_db.sql_get_user_with_id(1)))
     print("except is work")
