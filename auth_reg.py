@@ -16,7 +16,7 @@ class Signing:
         self.password = auth_info["password"]
         # хэшируем пароль для безопасности
         # self.password = hash_password(self.password)
-        auth_info["password"] = self.password
+        # auth_info["password"] = self.password
         self.s = SQLInteract_obj
 
     def registration(self):
