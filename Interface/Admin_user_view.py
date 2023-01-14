@@ -21,29 +21,29 @@ class Admin_user_view(QMainWindow):
     def init_UI(self):
         self.setMinimumSize(1280, 720)
 
-        with open(Config().config["path"] + '\Interface\css\Admin_user_view.css') as css:
+        with open(Config().config["path"] + '\\Interface\\css\\Admin_user_view.css') as css:
             self.setStyleSheet(css.read())
 
-        self.scroll_widget = QScrollArea()
+
         self.central_widget = QWidget()
         self.container = QVBoxLayout(self)
 
         self.constant_widget = QWidget()
         self.constant_widget_layout = QVBoxLayout()
 
-        self.name_label = QLabel("Имя сотрудника: ")
-        self.constant_widget_layout.addWidget(self.name_label)
+        name_label = QLabel("Имя сотрудника: ")
+        self.constant_widget_layout.addWidget(name_label)
         self.name_input_label = QLineEdit(self.user["name"])
         self.constant_widget_layout.addWidget(self.name_input_label)
 
-        self.password_label = QLabel("Пароль сотрудника: ")
-        self.constant_widget_layout.addWidget(self.password_label)
+        password_label = QLabel("Пароль сотрудника: ")
+        self.constant_widget_layout.addWidget(password_label)
         self.password_input_label = QLineEdit(self.user["password"])
         self.password_input_label.setEchoMode(QLineEdit.Password)
         self.constant_widget_layout.addWidget(self.password_input_label)
 
-        self.post_label = QLabel("Должность сотрудника: ")
-        self.constant_widget_layout.addWidget(self.post_label)
+        post_label = QLabel("Должность сотрудника: ")
+        self.constant_widget_layout.addWidget(post_label)
         self.post_input_label = QLineEdit(self.user["post"])
         self.constant_widget_layout.addWidget(self.post_input_label)
 
@@ -81,13 +81,20 @@ class Admin_user_view(QMainWindow):
 
         self.central_widget.setLayout(self.container)
 
-        self.scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_widget.setWidgetResizable(True)
-        self.scroll_widget.setWidget(self.central_widget)
+        scroll_widget = self.generate_scroll_widget(self.central_widget)
 
-        self.setCentralWidget(self.scroll_widget)
+        self.setCentralWidget(scroll_widget)
         self.show()
+
+    @staticmethod
+    def generate_scroll_widget(widget_to_set):
+        scroll_widget = QScrollArea()
+        scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_widget.setWidgetResizable(True)
+        scroll_widget.setWidget(widget_to_set)
+
+        return scroll_widget
 
     def init_layout_of_solved_test(self, test):
         self.test_widget = QWidget()
