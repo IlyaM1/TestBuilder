@@ -12,6 +12,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # sd
     # cfg = Config()
     # print(sign.authentication())
     # print(sign.authentication())
