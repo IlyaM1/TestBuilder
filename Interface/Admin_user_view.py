@@ -31,23 +31,12 @@ class Admin_user_view(QMainWindow):
         self.constant_widget = QWidget()
         self.constant_widget_layout = QVBoxLayout()
 
-        name_label = QLabel("Имя сотрудника: ")
-        self.constant_widget_layout.addWidget(name_label)
-        self.name_input_label = QLineEdit(self.user["name"])
-        self.constant_widget_layout.addWidget(self.name_input_label)
+        self.name_input_label = self.generate_and_add_label_with_input("Имя сотрудника: ", self.user["name"], self.constant_widget_layout)
 
-        password_label = QLabel("Пароль сотрудника: ")
-        self.constant_widget_layout.addWidget(password_label)
-        self.password_input_label = QLineEdit(self.user["password"])
+        self.password_input_label = self.generate_and_add_label_with_input("Пароль сотрудника: ", self.user["password"], self.constant_widget_layout)
         self.password_input_label.setEchoMode(QLineEdit.Password)
-        self.constant_widget_layout.addWidget(self.password_input_label)
 
-        post_label = QLabel("Должность сотрудника: ")
-        self.constant_widget_layout.addWidget(post_label)
-        self.post_input_label = QLineEdit(self.user["post"])
-        self.constant_widget_layout.addWidget(self.post_input_label)
-
-
+        self.post_input_label = self.generate_and_add_label_with_input("Должность сотрудника: ", self.user["post"], self.constant_widget_layout)
 
         self.constant_widget.setLayout(self.constant_widget_layout)
         self.container.addWidget(self.constant_widget)
@@ -73,8 +62,6 @@ class Admin_user_view(QMainWindow):
             self.solved_test_widget.setLayout(self.solved_test_layout)
             self.container.addWidget(self.solved_test_widget)
 
-
-
         self.save_user_button = QPushButton("Сохранить")
         self.save_user_button.clicked.connect(self.save_user_button_pushed)
         self.container.addWidget(self.save_user_button)
@@ -85,6 +72,18 @@ class Admin_user_view(QMainWindow):
 
         self.setCentralWidget(scroll_widget)
         self.show()
+
+    @staticmethod
+    def generate_and_add_label_with_input(label_text, input_text, parent_widget):
+        """
+        Returns input widget
+        """
+        label = QLabel(label_text)
+        parent_widget.addWidget(label)
+        input = QLineEdit(input_text)
+        parent_widget.addWidget(input)
+
+        return input
 
     @staticmethod
     def generate_scroll_widget(widget_to_set):

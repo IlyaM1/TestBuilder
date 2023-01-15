@@ -186,8 +186,14 @@ class Solving_test_widget(QMainWindow):
 
     def backward_button_pushed(self):
         if self.current_question == 1:
+            self.call_error_window("Вы не можете вернуться на начальную страницу теста, не завершив его.")
             return -1
-        self.check_input(self.current_question)
+
+        check_success_of_input = self.check_input(self.current_question)
+        if check_success_of_input is None:
+            self.call_error_window("Вы ничего не ввели.")
+            return -1
+
         self.current_question -= 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         self.current_question_widget = self.generate_question_layout()
@@ -198,10 +204,15 @@ class Solving_test_widget(QMainWindow):
         self.setStyleSheet(self.css_file)
 
     def next_button_pushed(self):
+        check_success_of_input = self.check_input(self.current_question)
+        if check_success_of_input is None:
+            self.call_error_window("Вы ничего не ввели.")
+            return -1
+
         if self.current_question == self.number_of_all_questions:
             self.finish_and_save_test()
             return
-        self.check_input(self.current_question)
+
         self.current_question += 1
         self.main_vertical_layout.removeWidget(self.current_question_widget)
         self.current_question_widget = self.generate_question_widget()
@@ -219,20 +230,27 @@ class Solving_test_widget(QMainWindow):
 
     def check_input(self, current_question):
         if self.all_types_of_questions[current_question - 1] == 1:
+            if self.all_inputs_widgets[current_question - 1].text() == "":
+                return None
             self.answers_to_all_questions[current_question - 1] = self.all_inputs_widgets[current_question - 1].text()
         elif self.all_types_of_questions[current_question - 1] == 2:
+            if self.all_inputs_widgets[current_question - 1].checkedButton() is None:
+                return None
             self.answers_to_all_questions[current_question - 1] = self.all_inputs_widgets[current_question - 1].checkedButton().text()
         elif self.all_types_of_questions[current_question - 1] == 3:
             arr = []
             for check_box in self.all_inputs_widgets[current_question - 1]:
                 if check_box.isChecked() is True:
                     arr.append(check_box.text())
+            if len(arr) == 0:
+                return None
             self.answers_to_all_questions[current_question - 1] = arr
+
+        return 1
 
         # self.answers_to_all_questions[current_question] = self.all_inputs_widgets[current_question].text()
 
     def finish_and_save_test(self):
-        self.check_input(self.current_question - 1)
         # self.answers_to_all_questions - array that contains all answers(at 0 index - answer on 1st question of test etc)
         number_of_wrong_answers = self.count_wrong_answers()
         result = self.count_result()
@@ -286,6 +304,13 @@ class Solving_test_widget(QMainWindow):
     def _on_radio_button_clicked(self, button):
         self.answers_to_all_questions[self.current_question - 1] = button.text()
         # print(button.text())
+
+    @staticmethod
+    def call_error_window(text):
+        error_window = QMessageBox()
+        error_window.setText(text)
+        error_window.setWindowTitle("Ошибка")
+        error_window.exec()
 
 
 if __name__ == '__main__':
