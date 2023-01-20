@@ -8,12 +8,15 @@ from Custom_Widgets.Deletable_LineEdit_with_explanation import Deletable_LineEdi
 from Custom_Widgets.Question_widget_with_array_of_labels import Question_widget_with_array_of_labels
 from config import Config
 from copy import deepcopy
+
+
 class Admin_test_view(QMainWindow):
     """
-        Окошко для изменения и создания теста
-        """
+    Окошко для изменения и создания теста
+    """
+
     def __init__(self, test={}, parent=None):
-        super(QWidget, self).__init__(parent)
+        super().__init__(parent)
         self.EMPTY_QUESTION = {"question": "", "type": 1, "variants_of_answer": [], "answer": "", "balls": 0}
         self.test = test
         if self.test == {}:
@@ -23,32 +26,48 @@ class Admin_test_view(QMainWindow):
 
     def init_UI(self):
         self.setMinimumSize(1280, 720)
+        self.set_css()
 
-        with open(Config().config["path"] + '\\Interface\\css\\Admin_test_view.css') as css:
-            self.setStyleSheet(css.read())
-        self.scroll_widget = QScrollArea()
-        self.container_widget = QWidget()
         self.container = QVBoxLayout(self)
 
-        self.constant_widget = QWidget()
-        self.constant_layout = QVBoxLayout()
-
-        self.name_label = QLabel("Имя теста: ")
-        self.constant_layout.addWidget(self.name_label)
-
-        self.name_input_label = QLineEdit(self.test["name"])
-        self.constant_layout.addWidget(self.name_input_label)
-
-
-        self.theme_label = QLabel("Тема теста: ")
-        self.constant_layout.addWidget(self.theme_label)
-
-        self.theme_input_label = QLineEdit(self.test["theme"])
-        self.constant_layout.addWidget(self.theme_input_label)
-
-        self.constant_widget.setLayout(self.constant_layout)
+        self.constant_widget = self.generate_constant_widget(self.test["name"], self.test["theme"])
         self.container.addWidget(self.constant_widget)
 
+        self.question_scroll_area_widget = self.generate_question_scroll_area_widget()
+        self.container.addWidget(self.question_scroll_area_widget)
+
+        self.save_test_button = self.generate_button_with_slot("Сохранить", self.save_button_released)
+        self.container.addWidget(self.save_test_button)
+
+        self.container_widget = QWidget()
+        self.container_widget.setLayout(self.container)
+
+        self.scroll_widget = self.generate_scroll_widget(self.container_widget)
+        self.setCentralWidget(self.scroll_widget)
+        self.show()
+
+    def set_css(self):
+        with open(Config().config["path"] + '\\Interface\\css\\Admin_test_view.css') as css:
+            self.setStyleSheet(css.read())
+
+    @staticmethod
+    def generate_button_with_slot(text, connect_function):
+        button = QPushButton(text)
+        button.clicked.connect(connect_function)
+
+        return button
+
+    @staticmethod
+    def generate_scroll_widget(content_widget):
+        scroll_widget = QScrollArea()
+        scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_widget.setWidgetResizable(True)
+        scroll_widget.setWidget(content_widget)
+
+        return scroll_widget
+
+    def generate_question_scroll_area_widget(self):
         self.question_widget = QWidget()
         self.question_layout = QVBoxLayout()
 
@@ -60,7 +79,6 @@ class Admin_test_view(QMainWindow):
 
         current_numb_of_questions = 1
         for i in self.test["questions"]:
-
             question_widget_generated = self.init_layout_of_question(i, current_numb_of_questions)
             self.all_widgets_questions.append(question_widget_generated)
             self.question_layout_without_button.addWidget(question_widget_generated)
@@ -74,32 +92,39 @@ class Admin_test_view(QMainWindow):
         self.question_layout.addWidget(self.new_question_button)
 
         self.question_widget.setLayout(self.question_layout)
-        self.container.addWidget(self.question_widget)
+        self.question_scroll_area_widget = self.generate_scroll_widget(self.question_widget)
 
-        self.save_test_button = QPushButton("Сохранить тест")
-        self.save_test_button.released.connect(self.save_button_released)
-        self.container.addWidget(self.save_test_button)
+        return self.question_scroll_area_widget
 
-        # self.container.addWidget(self)
-        self.container_widget.setLayout(self.container)
+    @staticmethod
+    def generate_constant_widget(name, theme):
+        constant_layout = QVBoxLayout()
+        Admin_test_view.generate_and_add_label_with_input("Имя теста: ", name, constant_layout)
+        Admin_test_view.generate_and_add_label_with_input("Тема теста: ", theme, constant_layout)
 
-        self.scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_widget.setWidgetResizable(True)
-        self.scroll_widget.setWidget(self.container_widget)
+        constant_widget = QWidget()
+        constant_widget.setLayout(constant_layout)
+        return constant_widget
 
-        self.setCentralWidget(self.scroll_widget)
-        self.show()
+    @staticmethod
+    def generate_and_add_label_with_input(label_text, input_text, parent_widget):
+        label = QLabel(label_text)
+        parent_widget.addWidget(label)
+        input = QLineEdit(input_text)
+        parent_widget.addWidget(input)
+
+        return input
 
     def init_layout_of_question(self, question, number_of_question):
         self.one_question_widget = Question_widget_with_array_of_labels()
 
-        self.one_question_layout =  QVBoxLayout()
+        self.one_question_layout = QVBoxLayout()
 
-
-        self.one_question_label = Deletable_LineEdit_with_explanation("Вопрос", question["question"], Config().config["path"] + "\\Interface\\Trash_Bin.png")
+        self.one_question_label = Deletable_LineEdit_with_explanation("Вопрос", question["question"], Config().config[
+            "path"] + "\\Interface\\Trash_Bin.png")
         self.one_question_widget.question_input = self.one_question_label.line_edit
-        self.one_question_label.delete_button.released.connect(lambda: self.one_question_label_delete_button_pushed(number_of_question))
+        self.one_question_label.delete_button.released.connect(
+            lambda: self.one_question_label_delete_button_pushed(number_of_question))
         self.one_question_layout.addWidget(self.one_question_label)
 
         self.variants_of_answer_label = QLabel("Варианты ответа: ")
@@ -108,8 +133,10 @@ class Admin_test_view(QMainWindow):
         self.variants_of_answer_widget = QWidget()
         self.variants_of_answer_layout = QVBoxLayout()
         for variant in question["variants_of_answer"]:
-            variant_of_answer_label = Deletable_TextInput(variant, Config().config["path"] + "\\Interface\\red_cross_delete.png")
-            variant_of_answer_label.delete_button.released.connect(lambda: self.variant_of_answer_label_delete_button_pushed(variant, number_of_question))
+            variant_of_answer_label = Deletable_TextInput(variant,
+                                                          Config().config["path"] + "\\Interface\\red_cross_delete.png")
+            variant_of_answer_label.delete_button.released.connect(
+                lambda: self.variant_of_answer_label_delete_button_pushed(variant, number_of_question))
             variant_of_answer_label.setObjectName('variant_of_answer_label')
             self.one_question_widget.array_of_labels.append(variant_of_answer_label.text_input)
             self.variants_of_answer_layout.addWidget(variant_of_answer_label)
@@ -117,7 +144,6 @@ class Admin_test_view(QMainWindow):
         self.add_new_variant_button = Button_with_information("Добавить новый вариант ответа", "45")
         self.add_new_variant_button.clicked.connect(lambda: self.add_new_variant_button_pushed(number_of_question))
         self.variants_of_answer_layout.addWidget(self.add_new_variant_button)
-
 
         self.variants_of_answer_widget.setLayout(self.variants_of_answer_layout)
 
@@ -137,44 +163,50 @@ class Admin_test_view(QMainWindow):
     def new_question_button_released(self):
         self.test["questions"].append(deepcopy(self.EMPTY_QUESTION))
         current_number_of_questions = len(self.test["questions"])
-        question_widget_generated = self.init_layout_of_question(deepcopy(self.EMPTY_QUESTION), current_number_of_questions)
+        question_widget_generated = self.init_layout_of_question(deepcopy(self.EMPTY_QUESTION),
+                                                                 current_number_of_questions)
         self.all_widgets_questions.append(question_widget_generated)
         self.question_layout_without_button.insertWidget(current_number_of_questions - 1, question_widget_generated)
 
     def save_button_released(self):
-        print("saved") # TODO: save test in Database
+        print("saved")  # TODO: save test in Database
         self.close()
 
     def add_new_variant_button_pushed(self, number_of_question):
         self.check_all_inputs_of_question(number_of_question)
-        self.test["questions"][number_of_question-1]["variants_of_answer"].append("")
+        self.test["questions"][number_of_question - 1]["variants_of_answer"].append("")
         self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question - 1])
-        widget_generated = self.init_layout_of_question(self.test["questions"][number_of_question-1], number_of_question)
-        self.all_widgets_questions[number_of_question-1] = widget_generated
-        self.question_layout_without_button.insertWidget(number_of_question-1, widget_generated)
+        widget_generated = self.init_layout_of_question(self.test["questions"][number_of_question - 1],
+                                                        number_of_question)
+        self.all_widgets_questions[number_of_question - 1] = widget_generated
+        self.question_layout_without_button.insertWidget(number_of_question - 1, widget_generated)
 
     def variant_of_answer_label_delete_button_pushed(self, variant, number_of_question):
         self.check_all_inputs_of_question(number_of_question)
-        self.test["questions"][number_of_question-1]["variants_of_answer"].remove(variant)
-        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question-1])
-        question_widget_generated = self.init_layout_of_question(self.test["questions"][number_of_question-1], number_of_question)
-        self.all_widgets_questions[number_of_question-1] = question_widget_generated
+        self.test["questions"][number_of_question - 1]["variants_of_answer"].remove(variant)
+        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question - 1])
+        question_widget_generated = self.init_layout_of_question(self.test["questions"][number_of_question - 1],
+                                                                 number_of_question)
+        self.all_widgets_questions[number_of_question - 1] = question_widget_generated
         self.question_layout_without_button.insertWidget(number_of_question - 1, question_widget_generated)
 
     def one_question_label_delete_button_pushed(self, number_of_question):
         self.check_all_inputs_of_question(number_of_question)
-        self.test["questions"].pop(number_of_question-1)
-        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question-1])
+        self.test["questions"].pop(number_of_question - 1)
+        self.question_layout_without_button.removeWidget(self.all_widgets_questions[number_of_question - 1])
         self.all_widgets_questions = []
         self.init_UI()
 
     def check_all_inputs_of_question(self, number_of_question):
-        self.test["questions"][number_of_question-1]["question"] = self.all_widgets_questions[number_of_question-1].question_input.text()
-        self.test["questions"][number_of_question-1]["answer"] = self.all_widgets_questions[number_of_question-1].answer_input.text()
-        self.test["questions"][number_of_question-1]["balls"] = int(self.all_widgets_questions[number_of_question - 1].ball_input.text())
-        for i in range(len(self.test["questions"][number_of_question-1]["variants_of_answer"])):
-            self.test["questions"][number_of_question - 1]["variants_of_answer"][i] = self.all_widgets_questions[number_of_question - 1].array_of_labels[i].text()
-
+        self.test["questions"][number_of_question - 1]["question"] = self.all_widgets_questions[
+            number_of_question - 1].question_input.text()
+        self.test["questions"][number_of_question - 1]["answer"] = self.all_widgets_questions[
+            number_of_question - 1].answer_input.text()
+        self.test["questions"][number_of_question - 1]["balls"] = int(
+            self.all_widgets_questions[number_of_question - 1].ball_input.text())
+        for i in range(len(self.test["questions"][number_of_question - 1]["variants_of_answer"])):
+            self.test["questions"][number_of_question - 1]["variants_of_answer"][i] = \
+            self.all_widgets_questions[number_of_question - 1].array_of_labels[i].text()
 
 
 if __name__ == '__main__':
