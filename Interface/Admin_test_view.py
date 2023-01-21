@@ -33,7 +33,7 @@ class Admin_test_view(QMainWindow):
         self.constant_widget = self.generate_constant_widget(self.test["name"], self.test["theme"])
         self.container.addWidget(self.constant_widget)
 
-        self.question_scroll_area_widget = self.generate_question_scroll_area_widget()
+        self.question_scroll_area_widget = self.generate_question_widget()
         self.container.addWidget(self.question_scroll_area_widget)
 
         self.save_test_button = self.generate_button_with_slot("Сохранить", self.save_button_released)
@@ -67,7 +67,7 @@ class Admin_test_view(QMainWindow):
 
         return scroll_widget
 
-    def generate_question_scroll_area_widget(self):
+    def generate_question_widget(self):
         self.question_widget = QWidget()
         self.question_layout = QVBoxLayout()
 
@@ -78,8 +78,8 @@ class Admin_test_view(QMainWindow):
         self.question_layout_without_button = QVBoxLayout()
 
         current_numb_of_questions = 1
-        for i in self.test["questions"]:
-            question_widget_generated = self.init_layout_of_question(i, current_numb_of_questions)
+        for question in self.test["questions"]:
+            question_widget_generated = self.init_layout_of_question(question, current_numb_of_questions)
             self.all_widgets_questions.append(question_widget_generated)
             self.question_layout_without_button.addWidget(question_widget_generated)
             current_numb_of_questions += 1
