@@ -1,7 +1,30 @@
-QWidget{
-
+QLabel {
+    font-size: 16px;
+    color: #000000;
+    padding: 10px;
+    text-align: center;
 }
-QLabel{
-    padding-left: 50%;
-    padding-right:50%;
+
+QPushButton {
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #3e8e41;
+}
+
+QProgressBar {
+    border: 2px solid grey;
+    border-radius: 5px;
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    background-color: #4CAF50;
+    width: 10px;
 }
