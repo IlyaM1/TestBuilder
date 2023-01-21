@@ -1,61 +1,86 @@
 QWidget{
-    background-color: white;
+    background-color: #f2f3f7; /*set the background color for the entire widget*/
 }
-QWidget#variants_of_answer_widget{
-    background-color: #f2f3f7;
-}
+
 QLabel{
-    font-size: 16px;
+    font-size: 18px; /*increase the font size for all labels*/
+    color: #333333; /*set the color for all labels*/
 }
+
 QLabel#question_label {
-    font-size: 18px;
+    font-weight: bold; /*bold the font for the question label*/
 }
-QScrollArea#question_scrollarea {
-    border-left: none;
-    border-right: none;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    padding-top: 2px;
-    padding-bottom: 2px;
+
+QScrollArea#question_scrollarea::vertical { /* target the vertical scrollbar */
+    width: 12px; /* set the width of the scrollbar */
+    background-color: #B7B7B7; /* set the background color of the scrollbar */
+    margin: 0px; /* remove the margin */
+    border-radius: 6px; /* round the edges of the scrollbar */
+}
+
+QScrollArea#question_scrollarea::handle:vertical { /* target the handle of the scrollbar */
+    background-color: #2ECD70; /* set the background color of the handle */
+    min-height: 20px; /* set the minimum height of the handle */
+    border-radius: 6px; /* round the edges of the handle */
+}
+
+QScrollArea#question_scrollarea::sub-line:vertical { /* target the top and bottom buttons of the scrollbar */
+    background-color: #2ECD70; /* set the background color of the buttons */
+    width: 12px; /* set the width of the buttons */
+    height: 12px; /* set the height of the buttons */
+    subcontrol-position: top; /* position the buttons at the top */
+    border-radius: 6px; /* round the edges of the buttons */
 }
 
 QLabel#question_counter {
     font-size: 24px;
     padding: 10px;
-    background-color: #CCCCCC;
+    background-color: #cccccc;
+    border-radius: 10px; /*round the edges of the question counter*/
+    text-align: center; /*center the text in the question counter*/
 }
+
 QLabel#answer_option_label {
-    padding-left: 2px;
+    padding-left: 10px; /*increase the padding for the answer option labels*/
+    font-weight: normal; /*normalize the font for the answer option labels*/
 }
+
 QLineEdit#answer_input_label {
     font-size: 18px;
+    border: 1px solid #B7B7B7; /*add a border to the input label*/
+    padding: 10px; /*increase the padding for the input label*/
+    border-radius: 10px; /*round the edges of the input label*/
 }
+
 QVBoxLayout{
+    spacing: 20px; /*increase the spacing between elements in the vertical layout*/
 }
+
 QWidget#current_question_widget {
     height: 85%;
     min-height: 500px;
     position: absolute;
 }
+
 QLabel#question_counter {
     font-size: 20px;
     max-height: 20px;
     position: absolute;
     border-bottom: 3px solid #B7B7B7;
 }
+
 QPushButton{
-    background-color: qlineargradient( x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #2ECD70, stop: 1 #2ECD70);
-    border-radius: 38px;
+    background-color: #2ECD70; /*change the background color of the buttons*/
+    border-radius: 10px; /*round the edges of the buttons*/
     position: absolute;
     max-height: 70px;
-    padding: 32px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-    color: #ffffff;
-    font-size: 20px;
+    padding: 10px; /*decrease the padding for the buttons*/
+    color: #ffffff; /*change the color of the button text*/
+    font-size: 18px; /*decrease the font size for the button text*/
     font-weight: bold;
 }
+
 QPushButton#next_button {
-    align: right;
+    align: right; /*align the next button to the right*/
+    background-color: #009933; /*change the background color of the next button*/
 }
