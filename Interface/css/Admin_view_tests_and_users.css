@@ -1,76 +1,76 @@
 Admin_view_tests_and_users{
-background-color: #f2f3f7;
+    background-color: #f2f3f7;
 }
 
 QTabWidget{
-background-color: white;
-font-size: 18px;
-font-weight: bold;
+    background-color: white;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 QTabWidget::pane{
-border: none;
+    border: none;
 }
 
 QTabWidget::tab-bar{
-background-color: #f2f3f7;
+    background-color: #f2f3f7;
 }
 
 QTabWidget::tab{
-background-color: #f2f3f7;
-color: black;
-padding: 10px 20px;
-border-bottom: 2px solid black;
+    background-color: #f2f3f7;
+    color: black;
+    padding: 10px 20px;
+    border-bottom: 2px solid black;
 }
 
 QTabWidget::tab:selected{
-background-color: white;
-border-bottom: 2px solid #2ECD70;
-color: #2ECD70;
+    background-color: white;
+    border-bottom: 2px solid #2ECD70;
+    color: #2ECD70;
 }
 
 QScrollArea{
-border: 1px solid #B7B7B7;
-background-color: white;
+    border: 1px solid #B7B7B7;
+    background-color: white;
 }
 
 QPushButton{
-background-color: #2ECD70;
-color: white;
-font-size: 18px;
-font-weight: bold;
-padding: 10px 20px;
-border-radius: 5px;
-margin: 20px 0;
+    background-color: #2ECD70;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 20px 0;
 }
 
 QPushButton:hover{
-background-color: #4db874;
+    background-color: #4db874;
 }
 
 QLabel{
-font-size: 16px;
+    font-size: 16px;
 }
 
 QLineEdit{
-font-size: 16px;
-padding: 10px;
-border: 1px solid #B7B7B7;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #B7B7B7;
 }
 
 QLineEdit:focus{
-border: 2px solid #2ECD70;
+    border: 2px solid #2ECD70;
 }
 
 QLayout{
-padding: 20px;
+    padding: 20px;
 }
 
 QLabel#question_counter {
-font-size: 20px;
-max-height: 20px;
-position: absolute;
-border-bottom: 3px solid #B7B7B7;
+    font-size: 20px;
+    max-height: 20px;
+    position: absolute;
+    border-bottom: 3px solid #B7B7B7;
 }
 
 QPushButton#next_button {
@@ -95,6 +95,7 @@ QTabBar::tab:selected{
     background-color: white;
     border-bottom: none;
 }
+
 QPushButton#new_user_button{
     background-color: #2ECD70;
     color: white;
@@ -104,27 +105,34 @@ QPushButton#new_user_button{
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 QPushButton#new_user_button:hover{
     background-color: #24A148;
 }
+
 QLabel#user_label{
     font-size: 18px;
 }
+
 QLabel#user_label:hover{
     color: #2ECD70;
     cursor: pointer;
 }
+
 QLabel#user_label:active{
     color: #24A148;
 }
+
 QLabel#delete_button{
     font-size: 18px;
     color: #B7B7B7;
 }
+
 QLabel#delete_button:hover{
     color: #F44336;
     cursor: pointer;
 }
+
 QLabel#delete_button:active{
     color: #9C27B0;
 }
