@@ -88,7 +88,7 @@ class SQLInteract:
             row = self.cursor_obj.fetchone()
             if (row is not None) and (row != False):
                 dict_row = self.generate_dict(row)
-                dict_row = self.get_all_tests()
+                dict_row = self.get_all_tests(value=dict_row["tests"], need_value="tests")
                 return dict_row
             else:
                 return False
@@ -121,7 +121,6 @@ class SQLInteract:
             if to_dict:
                 for i in range(len(rows)):
                     rows[i] = self.generate_dict(rows[i])
-                    print(type(rows[i]))
                     rows[i][element_for_transform] = self.get_all_tests(value=rows[i][element_for_transform],
                                                                         need_value=element_for_transform)
             if revert:
@@ -146,10 +145,10 @@ class SQLInteract:
     def generate_dict(self, user, element_for_transform="tests"):
         values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
             .replace(')', '').replace(' ', '').split(',')
-        print(values)
         dict_of_user = []
         for i in range(len(values)):
             dict_of_user.append((values[i], user[i]))
+        dict_of_user = dict(dict_of_user)
         return dict_of_user
 
     @staticmethod
@@ -208,8 +207,10 @@ if __name__ == '__main__':
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     # test_db.sql_add_new_user(new_test)
     # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(user_db.return_full_table(to_dict=True))
+    # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
     get_user_test = user_db.sql_get_user_with_namePass(name="L2", password="qwerty228")
+    print(get_user_test)
+    # print(user_db.get_all_tests())
     # print((get_user_test[4]))
     # ttt = user_db.return_full_table(to_dict=True)
     # print(ttt)
