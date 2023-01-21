@@ -80,8 +80,8 @@ class SQLInteract:
     def sql_get_user_with_namePass(self, name, password):
         try:
             if str(type(password)) == "<class 'str'>":
-                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = {name}'''
-                                        f''' AND password = {password}''')
+                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
+                                        f''' AND password = "{password}"''')
             else:
                 self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                         f''' AND password = {password}''')
@@ -100,7 +100,7 @@ class SQLInteract:
             self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
             row = self.cursor_obj.fetchone()
             dict_row = self.generate_dict(row)
-            dict_row["tests"] = self.get_all_tests(user=dict_row)
+            # dict_row["tests"] = self.get_all_tests(user=dict_row)
             return dict_row
         except sqlite3.Error as e:
             print(e)
@@ -141,13 +141,12 @@ class SQLInteract:
         else:
             return max_id[0][0]
 
-    def generate_dict(self, user):
+    def generate_dict(self, user, element_for_transform="tests"):
         values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
             .replace(')', '').replace(' ', '').split(',')
         dict_of_user = []
         for i in range(len(values)):
             dict_of_user.append([values[i], user[i]])
-        dict_of_user = dict(dict_of_user)
         return dict_of_user
 
     @staticmethod
@@ -205,8 +204,11 @@ if __name__ == '__main__':
     # test_db.sql_create_new_table()
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     # test_db.sql_add_new_user(new_test)
-    print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(user_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(test_db.all_tables_name())
+    # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
+    # print(user_db.return_full_table(to_dict=True))
+    print(user_db.sql_get_user_with_namePass(name="L2", password="qwerty228"))
+    ttt = user_db.return_full_table(to_dict=True)
+    # print(ttt)
+    # user_db.sql_add_new_user([0, "Rel", "", "Junior", "[]"])
     # print(test_db.get_all_tests(need_value="questions", user=test_db.sql_get_user_with_id(1)))
     print("except is work")
