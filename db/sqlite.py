@@ -80,14 +80,15 @@ class SQLInteract:
     def sql_get_user_with_namePass(self, name, password):
         try:
             if str(type(password)) == "<class 'str'>":
-                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = {name}'''
-                                        f''' AND password = {password}''')
+                self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
+                                        f''' AND password = "{password}"''')
             else:
                 self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE name = "{name}"'''
                                         f''' AND password = {password}''')
             row = self.cursor_obj.fetchone()
             if (row is not None) and (row != False):
                 dict_row = self.generate_dict(row)
+                dict_row["tests"] = self.get_all_tests(value=dict_row["tests"], need_value="tests")
                 return dict_row
             else:
                 return False
@@ -141,12 +142,12 @@ class SQLInteract:
         else:
             return max_id[0][0]
 
-    def generate_dict(self, user):
+    def generate_dict(self, user, element_for_transform="tests"):
         values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
             .replace(')', '').replace(' ', '').split(',')
         dict_of_user = []
         for i in range(len(values)):
-            dict_of_user.append([values[i], user[i]])
+            dict_of_user.append((values[i], user[i]))
         dict_of_user = dict(dict_of_user)
         return dict_of_user
 
@@ -171,7 +172,7 @@ class SQLInteract:
 
 if __name__ == '__main__':
     cfg = Config()
-    s = SQLInteract(table_name="testcase", filename_db=cfg.config["path"] + "/db/users.db")
+    # s = SQLInteract(table_name="testcase", filename_db=cfg.config["path"] + "/db/users.db")
 
     # s.sql_create_new_table()
     # s.drop_table()
@@ -205,8 +206,11 @@ if __name__ == '__main__':
     # test_db.sql_create_new_table()
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     # test_db.sql_add_new_user(new_test)
-    print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(user_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(test_db.all_tables_name())
-    # print(test_db.get_all_tests(need_value="questions", user=test_db.sql_get_user_with_id(1)))
-    print("except is work")
+    # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
+    # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
+    get_user_test = user_db.sql_get_user_with_namePass(name="QQW", password="qqw")
+    print(get_user_test)
+    # print(user_db.get_all_tests())
+    # print((get_user_test[4]))
+    # ttt = user_db.return_full_table(to_dict=True)
+    # print(ttt)
