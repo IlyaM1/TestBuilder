@@ -101,7 +101,7 @@ class SQLInteract:
             self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
             row = self.cursor_obj.fetchone()
             dict_row = self.generate_dict(row)
-            # dict_row["tests"] = self.get_all_tests(user=dict_row)
+            dict_row["tests"] = self.get_all_tests(user=dict_row)
             return dict_row
         except sqlite3.Error as e:
             print(e)
