@@ -316,18 +316,6 @@ class Solving_test_widget(QMainWindow):
 if __name__ == '__main__':
     app = QApplication([])
     test = get_all_tests()[0]
-    solve_test = Solving_test_widget(test=test, user={'id': 3, 'name': 'ILYA2', 'password': "b'b8~\\xac)\\xe3A\\xc7"
-                                                                                            "\\xe6\\xf6\\x8aI/P\\xee"
-                                                                                            "\\xf5\\xeb\\x90\\x8cO"
-                                                                                            "<\\xcb\\xbc\\xdd\\xc1"
-                                                                                            "=\\xad\\xc4S\\xcdJ\\x16"
-                                                                                            "\\xc07\\x8a("
-                                                                                            "\\xc4\\x0c_#\\x1ey\\xb9"
-                                                                                            "\\x82\\xcb\\x96\\xb1"
-                                                                                            "\\xb1\\xde\\xdf\\xe0"
-                                                                                            "\\xb2^\\xb4\\xcd\\xb2"
-                                                                                            "/\\xfc\\xd4\\xd8Nv5o'",
-                                                      'post': 'pop',
-                                                      'tests': []})  # пример юзера из DB который идет на вход в класс.
+    solve_test = Solving_test_widget(test=test, user={'id': 8, 'name': 'QQW', 'password': 'qqw', 'post': 'pop', 'tests': []})  # пример юзера из DB который идет на вход в класс.
     # на входе поле tests было пустым
     app.exec_()

@@ -88,7 +88,7 @@ class SQLInteract:
             row = self.cursor_obj.fetchone()
             if (row is not None) and (row != False):
                 dict_row = self.generate_dict(row)
-                dict_row = self.get_all_tests(value=dict_row["tests"], need_value="tests")
+                dict_row["tests"] = self.get_all_tests(value=dict_row["tests"], need_value="tests")
                 return dict_row
             else:
                 return False
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     # test_db.sql_add_new_user(new_test)
     # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
     # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
-    get_user_test = user_db.sql_get_user_with_namePass(name="L2", password="qwerty228")
+    get_user_test = user_db.sql_get_user_with_namePass(name="QQW", password="qqw")
     print(get_user_test)
     # print(user_db.get_all_tests())
     # print((get_user_test[4]))
