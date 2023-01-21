@@ -27,4 +27,3 @@ Run main.py with `venv\Scripts\python.exe main.py`
 
 Front-end: https://github.com/IlyaM1    
 Back-end: https://github.com/akrisfx    
-Design: https://github.com/MrMondego    
