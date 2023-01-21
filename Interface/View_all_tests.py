@@ -1,13 +1,17 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, QListWidget, QMainWindow, QScrollArea
+from PyQt5.QtWidgets import QWidget, QPushButton, QVBoxLayout, QLabel, QLineEdit, QApplication, QSizePolicy, \
+    QListWidget, QMainWindow, QScrollArea
 from PyQt5.QtCore import QSize, Qt
 from Interface.Solving_test_widget import Solving_test_widget
 from Custom_Widgets.Clickable_label import Clickable_label
 from test_data_funcs import get_all_tests, get_users
 from config import Config
+
+
 class View_all_tests(QMainWindow):
     """
     Просмотр списка всех тестов за юзера
     """
+
     def __init__(self, tests, user):
         super().__init__()
         self.tests = tests
@@ -27,7 +31,7 @@ class View_all_tests(QMainWindow):
 
         for test in self.tests:
             test_row = Clickable_label(f'{test["name"]}: {len(test["questions"])} вопроса', test)
-            test_row.setFixedSize(self.width()-40, 120)
+            test_row.setFixedSize(self.width() - 40, 120)
             test_row.clicked.connect(lambda: self.label_test_pushed(test_row))
             self.vertical_layout.addWidget(test_row)
 
@@ -48,7 +52,6 @@ class View_all_tests(QMainWindow):
         self.close()
         self.solve = Solving_test_widget(test=pushed_label.dictionary, user=self.user)
         # print(pushed_label.dictionary)
-
 
 
 if __name__ == "__main__":
