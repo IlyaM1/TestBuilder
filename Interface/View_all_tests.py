@@ -30,7 +30,8 @@ class View_all_tests(QMainWindow):
             self.setStyleSheet(css.read())
 
         for test in self.tests:
-            test_row = Clickable_label(f'{test["name"]}: {len(test["questions"])} вопроса', test)
+            question_quantity = len(test["questions"])
+            test_row = Clickable_label(f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос",question_quantity)}', test)
             test_row.setFixedSize(self.width() - 40, 120)
             test_row.clicked.connect(lambda: self.label_test_pushed(test_row))
             self.vertical_layout.addWidget(test_row)
@@ -52,6 +53,15 @@ class View_all_tests(QMainWindow):
         self.close()
         self.solve = Solving_test_widget(test=pushed_label.dictionary, user=self.user)
         # print(pushed_label.dictionary)
+
+    @staticmethod
+    def generate_word_ending(word, number):
+        if number % 100 >= 10 and number % 100 < 20 or number % 10 > 4 or number % 10 == 0:
+            return word + 'ов'
+        elif number % 10 == 1:
+            return word + ''
+        else:
+            return word + 'a'
 
 
 if __name__ == "__main__":
