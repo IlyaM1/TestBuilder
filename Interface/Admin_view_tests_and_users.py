@@ -76,7 +76,8 @@ class Admin_view_tests_and_users(QWidget):
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
-            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {len(test["questions"])} вопроса', test)
+            question_quantity = len(test["questions"])
+            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос",question_quantity)}', test)
             test_row.setFixedSize(self.width() - 60, 50)
             test_row.label.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
@@ -133,6 +134,15 @@ class Admin_view_tests_and_users(QWidget):
 
     def get_user_by_id(self, id):
         pass
+
+    @staticmethod
+    def generate_word_ending(word, number):
+        if number % 100 >= 10 and number % 100 < 20 or number % 10 > 4 or number % 10 == 0:
+            return word + 'ов'
+        elif number % 10 == 1:
+            return word + ''
+        else:
+            return word + 'a'
 
 
 if __name__ == '__main__':
