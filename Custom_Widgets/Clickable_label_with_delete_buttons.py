@@ -4,12 +4,16 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from Custom_Widgets.Clickable_label import Clickable_label
 from config import Config
+
+
 class Clickable_label_with_delete_buttons(QLabel):
     """
     QLabel на который можно нажать, который хранит в себе dictionary объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
     """
 
-    def __init__(self, text, dictionary, icon_see_path=Config().config["path"] + "\\Interface\\see_icon.png", icon_edit_path=Config().config["path"] + "\\Interface\\edit_icon.png", icon_delete_path=Config().config["path"] + "\\Interface\\Trash_Bin.png"):
+    def __init__(self, text, dictionary, icon_see_path=Config().config["path"] + "\\Interface\\see_icon.png",
+                 icon_edit_path=Config().config["path"] + "\\Interface\\edit_icon.png",
+                 icon_delete_path=Config().config["path"] + "\\Interface\\Trash_Bin.png"):
         super().__init__()
         self.text = text
         self.dictionary = dictionary
@@ -28,18 +32,15 @@ class Clickable_label_with_delete_buttons(QLabel):
         self.layout_for_buttons = QHBoxLayout()
 
         see_icon = QIcon(self.icon_see_path)
-        self.see_button = QPushButton(icon=see_icon, text="")
-        self.see_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.see_button = self.generate_image_button(see_icon, self.see_button_pressed)
         self.layout_for_buttons.addWidget(self.see_button)
 
         edit_icon = QIcon(self.icon_edit_path)
-        self.edit_button = QPushButton(icon=edit_icon, text="")
-        self.edit_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.edit_button = self.generate_image_button(edit_icon, self.edit_button_pressed)
         self.layout_for_buttons.addWidget(self.edit_button)
 
         delete_icon = QIcon(self.icon_delete_path)
-        self.delete_button = QPushButton(icon=delete_icon, text="")
-        self.delete_button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        self.delete_button = self.generate_image_button(delete_icon, self.delete_button_pressed)
         self.layout_for_buttons.addWidget(self.delete_button)
 
         self.widget_for_layout_for_buttons.setLayout(self.layout_for_buttons)
@@ -48,6 +49,22 @@ class Clickable_label_with_delete_buttons(QLabel):
         self.main_horizontal_layout.addWidget(self.widget_for_layout_for_buttons)
 
         self.setLayout(self.main_horizontal_layout)
+
+    @staticmethod
+    def generate_image_button(icon, press_function):
+        button = QPushButton(icon=icon, text="")
+        button.setStyleSheet("QPushButton{border:none;background-color:rgba(255, 255, 255,0);}")
+        button.clicked.connect(press_function)
+        return button
+
+    def see_button_pressed(self):
+        return
+
+    def edit_button_pressed(self):
+        return
+
+    def delete_button_pressed(self):
+        return
 
 
 if __name__ == '__main__':
