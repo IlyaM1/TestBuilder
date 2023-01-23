@@ -30,7 +30,7 @@ class Admin_test_view(QMainWindow):
 
         self.container = QVBoxLayout(self)
 
-        self.constant_widget = self.generate_constant_widget(self.test["name"], self.test["theme"])
+        self.constant_widget, self.name_test_input, self.theme_test_input = self.generate_constant_widget(self.test["name"], self.test["theme"])
         self.container.addWidget(self.constant_widget)
 
         self.question_scroll_area_widget = self.generate_question_widget()
@@ -99,12 +99,12 @@ class Admin_test_view(QMainWindow):
     @staticmethod
     def generate_constant_widget(name, theme):
         constant_layout = QVBoxLayout()
-        Admin_test_view.generate_and_add_label_with_input("Имя теста: ", name, constant_layout)
-        Admin_test_view.generate_and_add_label_with_input("Тема теста: ", theme, constant_layout)
+        name_test_input = Admin_test_view.generate_and_add_label_with_input("Имя теста: ", name, constant_layout)
+        theme_test_input = Admin_test_view.generate_and_add_label_with_input("Тема теста: ", theme, constant_layout)
 
         constant_widget = QWidget()
         constant_widget.setLayout(constant_layout)
-        return constant_widget
+        return constant_widget, name_test_input, theme_test_input
 
     @staticmethod
     def generate_and_add_label_with_input(label_text, input_text, parent_widget):
@@ -169,8 +169,20 @@ class Admin_test_view(QMainWindow):
         self.question_layout_without_button.insertWidget(current_number_of_questions - 1, question_widget_generated)
 
     def save_button_released(self):
+        for number_of_question in range(len(self.all_widgets_questions)):
+            self.check_all_inputs_of_question(number_of_question)
+        self.test["name"] = self.name_test_input.text()
+        self.test["theme"] = self.theme_test_input.text()
+        self.test["max_result"] = self.count_max_result()
+        print(self.test)
         print("saved")  # TODO: save test in Database
         self.close()
+
+    def count_max_result(self):
+        summ = 0
+        for number_of_question in range(len(self.all_widgets_questions)):
+            summ += int(self.all_widgets_questions[number_of_question - 1].ball_input.text())
+        return summ
 
     def add_new_variant_button_pushed(self, number_of_question):
         self.check_all_inputs_of_question(number_of_question)
@@ -198,12 +210,9 @@ class Admin_test_view(QMainWindow):
         self.init_UI()
 
     def check_all_inputs_of_question(self, number_of_question):
-        self.test["questions"][number_of_question - 1]["question"] = self.all_widgets_questions[
-            number_of_question - 1].question_input.text()
-        self.test["questions"][number_of_question - 1]["answer"] = self.all_widgets_questions[
-            number_of_question - 1].answer_input.text()
-        self.test["questions"][number_of_question - 1]["balls"] = int(
-            self.all_widgets_questions[number_of_question - 1].ball_input.text())
+        self.test["questions"][number_of_question - 1]["question"] = self.all_widgets_questions[number_of_question - 1].question_input.text()
+        self.test["questions"][number_of_question - 1]["answer"] = self.all_widgets_questions[number_of_question - 1].answer_input.text()
+        self.test["questions"][number_of_question - 1]["balls"] = int(self.all_widgets_questions[number_of_question - 1].ball_input.text())
         for i in range(len(self.test["questions"][number_of_question - 1]["variants_of_answer"])):
             self.test["questions"][number_of_question - 1]["variants_of_answer"][i] = \
             self.all_widgets_questions[number_of_question - 1].array_of_labels[i].text()
