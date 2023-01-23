@@ -53,7 +53,6 @@ class Admin_user_view(QMainWindow):
                                                                        constant_widget_layout)
         self.password_input_label = self.generate_and_add_label_with_input("Пароль сотрудника: ", self.user["password"],
                                                                            constant_widget_layout)
-        self.password_input_label.setEchoMode(QLineEdit.Password)
         self.post_input_label = self.generate_and_add_label_with_input("Должность сотрудника: ", self.user["post"],
                                                                        constant_widget_layout)
 
@@ -168,6 +167,7 @@ class Admin_user_view(QMainWindow):
 
         # self.user
         print('Yay')
+        self.close()
 
 
 if __name__ == '__main__':
