@@ -143,7 +143,7 @@ if __name__ == '__main__':
     user = get_users()[0]
     user_table = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + "/db/users.db")
     # user_table.sql_delete_one(need_value_of_name=1)
-    print(user_table.return_full_table())
+    # print(user_table.return_full_table())
     users = user_table.return_full_table(to_dict=True)
     # users = [user for i in range(20)]
     # TODO: продумать, инициализировать и привязать таблицу тестов
