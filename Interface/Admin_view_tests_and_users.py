@@ -9,11 +9,11 @@ from db.sqlite import SQLInteract
 from config import Config
 
 
+
 class Admin_view_tests_and_users(QWidget):
     """
     Окошко для просмотра всех тестов и юзеров адмном
     """
-
     def __init__(self, tests=[], users=[], parent=None):
         super(QWidget, self).__init__(parent)
         self.tests = tests
@@ -76,7 +76,8 @@ class Admin_view_tests_and_users(QWidget):
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
-            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {len(test["questions"])} вопроса', test)
+            question_quantity = len(test["questions"])
+            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос",question_quantity)}', test)
             test_row.setFixedSize(self.width() - 60, 50)
             test_row.label.clicked.connect(partial(self.label_test_pushed, test_row))
             self.tests_labels_layout.addWidget(test_row)
@@ -93,6 +94,8 @@ class Admin_view_tests_and_users(QWidget):
         self.test_page_widget_layout.addWidget(self.new_test_button)
         self.test_page_widget.setLayout(self.test_page_widget_layout)
 
+
+
         return self.test_page_widget
 
     def label_user_pushed(self, pushed_label):
@@ -102,21 +105,21 @@ class Admin_view_tests_and_users(QWidget):
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
     def new_user_button_pushed(self):
-        new_user = self.create_new_user()
-        self.user_view = Admin_user_view(user=new_user)
+        user = self.create_new_user()
+        self.user_view = Admin_user_view(user=user)
 
     def new_test_button_pushed(self):
-        new_test = self.create_new_test()
-        self.test_view = Admin_test_view(test=new_test)
+        test = self.create_new_test()
+        self.test_view = Admin_test_view(test=test)
 
     def create_new_test(self):
         # TODO: this func creates new EMPTY test
         EMPTY_TEST = {
-            "id": 100,
-            "name": "",
-            "theme": "",  # не меняй это образцы, если придется то и меня проверку в admin_test_view
-            "max_result": -1,  # если тест новый, то max_result = -1, чтобы выставить new_test_flag
-            "questions": []}  # Example
+        "name": "",
+        "id": 100,
+        "theme": "",
+        "max_result": 0,
+        "questions": []} # Example
         return EMPTY_TEST
 
     def create_new_user(self):
@@ -125,12 +128,21 @@ class Admin_view_tests_and_users(QWidget):
             "id": 100,
             "name": "",
             "password": "",
-            "post": "",  # Example
-            "tests": []}  # не меняй это образцы, если придется то и меня проверку в admin_user_view
+            "post": "", # Example
+            "tests": []}
         return EMPTY_USER
 
     def get_user_by_id(self, id):
         pass
+
+    @staticmethod
+    def generate_word_ending(word, number):
+        if number % 100 >= 10 and number % 100 < 20 or number % 10 > 4 or number % 10 == 0:
+            return word + 'ов'
+        elif number % 10 == 1:
+            return word + ''
+        else:
+            return word + 'a'
 
 
 if __name__ == '__main__':

@@ -31,13 +31,10 @@ class SQLInteract:
             print(err)
 
     def sql_add_new_user(self, user_obj):
-        new_user = user_obj
-        if type(user_obj) == dict:
-            new_user = [user_obj[x] for x in user_obj]
         try:
-            new_user[0] = self.search_max_int_field() + 1
+            user_obj[0] = self.search_max_int_field() + 1
             self.cursor_obj.execute(
-                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', new_user)
+                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_obj)
             self.db_connection.commit()
             return True
         except sqlite3.Error as err:
@@ -91,6 +88,7 @@ class SQLInteract:
             row = self.cursor_obj.fetchone()
             if (row is not None) and (row != False):
                 dict_row = self.generate_dict(row)
+                dict_row["tests"] = self.get_all_tests(value=dict_row["tests"], need_value="tests")
                 return dict_row
             else:
                 return False
@@ -103,7 +101,7 @@ class SQLInteract:
             self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
             row = self.cursor_obj.fetchone()
             dict_row = self.generate_dict(row)
-            dict_row["tests"] = self.get_all_tests(value=dict_row["tests"])
+            dict_row["tests"] = self.get_all_tests(user=dict_row)
             return dict_row
         except sqlite3.Error as e:
             print(e)
@@ -144,12 +142,12 @@ class SQLInteract:
         else:
             return max_id[0][0]
 
-    def generate_dict(self, user):
+    def generate_dict(self, user, element_for_transform="tests"):
         values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
             .replace(')', '').replace(' ', '').split(',')
         dict_of_user = []
         for i in range(len(values)):
-            dict_of_user.append([values[i], user[i]])
+            dict_of_user.append((values[i], user[i]))
         dict_of_user = dict(dict_of_user)
         return dict_of_user
 
@@ -174,8 +172,7 @@ class SQLInteract:
 
 if __name__ == '__main__':
     cfg = Config()
-    s = SQLInteract(table_name="testcase", filename_db=cfg.config["path"] + "/db/users.db")
-    print(s.sql_get_user_with_id(4))
+    # s = SQLInteract(table_name="testcase", filename_db=cfg.config["path"] + "/db/users.db")
 
     # s.sql_create_new_table()
     # s.drop_table()
@@ -205,10 +202,15 @@ if __name__ == '__main__':
     test_db = SQLInteract(table_name="tests", filename_db=cfg.config["path"] + "/db/users.db",
                           values_of_this_table="(id, name, theme, max_result, questions)",
                           init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+    user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     # test_db.sql_create_new_table()
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     # test_db.sql_add_new_user(new_test)
-    print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
-    print(test_db.all_tables_name())
-    # print(test_db.get_all_tests(need_value="questions", user=test_db.sql_get_user_with_id(1)))
-    print("except is work")
+    # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
+    # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
+    get_user_test = user_db.sql_get_user_with_namePass(name="QQW", password="qqw")
+    print(get_user_test)
+    # print(user_db.get_all_tests())
+    # print((get_user_test[4]))
+    # ttt = user_db.return_full_table(to_dict=True)
+    # print(ttt)
