@@ -30,11 +30,23 @@ class SQLInteract:
         except sqlite3.Error as err:
             print(err)
 
-    def sql_add_new_user(self, user_obj):
+    def sql_add_new_user(self, user_arr: list):
         try:
-            user_obj[0] = self.search_max_int_field() + 1
+            user_arr[0] = self.search_max_int_field() + 1
             self.cursor_obj.execute(
-                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_obj)
+                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_arr)
+            self.db_connection.commit()
+            return True
+        except sqlite3.Error as err:
+            print(err)
+            return False
+
+    def sql_add_new_user(self, user_dict: dict):
+        try:
+            user_arr = [user_dict[x] for x in user_dict]
+            user_arr[0] = self.search_max_int_field() + 1
+            self.cursor_obj.execute(
+                f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_arr)
             self.db_connection.commit()
             return True
         except sqlite3.Error as err:
@@ -101,7 +113,7 @@ class SQLInteract:
             self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
             row = self.cursor_obj.fetchone()
             dict_row = self.generate_dict(row)
-            dict_row["tests"] = self.get_all_tests(user=dict_row)
+            dict_row["tests"] = self.get_all_tests(dict_row["tests"])
             return dict_row
         except sqlite3.Error as e:
             print(e)
@@ -205,10 +217,12 @@ if __name__ == '__main__':
     user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
     # test_db.sql_create_new_table()
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
+    test_new_user = {"id": 0, "name": 'new', "password": 'pass', "post": 'poor', "tests": "[]"}
     # test_db.sql_add_new_user(new_test)
     # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
     # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
-    get_user_test = user_db.sql_get_user_with_namePass(name="QQW", password="qqw")
+    # user_db.sql_add_new_user(test_new_user)
+    get_user_test = user_db.sql_get_user_with_id(14)
     print(get_user_test)
     # print(user_db.get_all_tests())
     # print((get_user_test[4]))

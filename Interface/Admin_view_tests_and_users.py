@@ -105,8 +105,8 @@ class Admin_view_tests_and_users(QWidget):
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
     def new_user_button_pushed(self):
-        user = self.create_new_user()
-        self.user_view = Admin_user_view(user=user)
+        self.create_new_user()
+
 
     def new_test_button_pushed(self):
         test = self.create_new_test()
@@ -130,7 +130,8 @@ class Admin_view_tests_and_users(QWidget):
             "password": "",
             "post": "", # Example
             "tests": []}
-        return EMPTY_USER
+        self.user_view = Admin_user_view(user={})
+        return True
 
     def get_user_by_id(self, id):
         pass
