@@ -73,11 +73,11 @@ class SQLInteract:
             """if type update_value == str: update_value must be quotes in quotes new_text = "'some text'" """
             if type(update_value) == str:
                 update_value = update_value.replace('"', "'")
-                self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}"'''
+                self.cursor_obj.execute(f'''UPDATE {self.table_name} SET {update_field} = "{update_value}" '''
                                         f'''WHERE id = {search_id}''')
             else:
                 self.cursor_obj.execute(
-                    f'''UPDATE {self.table_name} SET {update_field} = {update_value}'''  # разница в кавычках
+                    f'''UPDATE {self.table_name} SET {update_field} = {update_value} '''  # разница в кавычках
                     f'''WHERE id = {search_id}''')
             self.db_connection.commit()
             return True
@@ -108,12 +108,14 @@ class SQLInteract:
             print(e)
             return False
 
-    def sql_get_user_with_id(self, input_id):
+    def sql_get_user_with_id(self, input_id, element_for_transform="tests"):
+        """Element_for_transform needed to specify which dictionary element to convert to dict"""
         try:
             self.cursor_obj.execute(f'''SELECT * FROM {self.table_name} WHERE id = {input_id}''')
             row = self.cursor_obj.fetchone()
             dict_row = self.generate_dict(row)
-            dict_row["tests"] = self.get_all_tests(dict_row["tests"])
+            if element_for_transform:
+                dict_row[element_for_transform] = self.get_all_tests(dict_row[element_for_transform])
             return dict_row
         except sqlite3.Error as e:
             print(e)
@@ -146,13 +148,17 @@ class SQLInteract:
         return values_str
 
     def search_max_int_field(self, search_name="id"):  # поиск максимального инт значения в дб для создания нового юзера
-        self.cursor_obj.execute(
-            f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max({search_name}) from {self.table_name})")
-        max_id = self.cursor_obj.fetchall()
-        if len(max_id) == 0:
-            return 0
-        else:
-            return max_id[0][0]
+        try:
+            self.cursor_obj.execute(
+                f"SELECT * FROM {self.table_name} WHERE {search_name}=(select max({search_name}) from {self.table_name})")
+            max_id = self.cursor_obj.fetchall()
+            if len(max_id) == 0:
+                return 0
+            else:
+                return max_id[0][0]
+        except sqlite3.Error as err:
+            print(err)
+            return False
 
     def generate_dict(self, user, element_for_transform="tests"):
         values = self.values_of_this_table[1:-1].replace('PRIMARY KEY', '').replace('(', '') \
@@ -215,10 +221,10 @@ if __name__ == '__main__':
                           values_of_this_table="(id, name, theme, max_result, questions)",
                           init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
     user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
-    # test_db.sql_create_new_table()
+
     new_test = [0, "ЕГЭ по математике", "math", 100, "[]"]
     test_new_user = {"id": 0, "name": 'new', "password": 'pass', "post": 'poor', "tests": "[]"}
-    # test_db.sql_add_new_user(new_test)
+    test_db.sql_add_new_user(new_test)
     # print(test_db.return_full_table(to_dict=True, element_for_transform="questions"))
     # print((user_db.return_full_table(to_dict=True)[1]["tests"]))
     # user_db.sql_add_new_user(test_new_user)

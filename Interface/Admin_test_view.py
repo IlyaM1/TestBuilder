@@ -8,6 +8,8 @@ from Custom_Widgets.Deletable_LineEdit_with_explanation import Deletable_LineEdi
 from Custom_Widgets.Question_widget_with_array_of_labels import Question_widget_with_array_of_labels
 from config import Config
 from copy import deepcopy
+from db.user import from_dict_to_str
+from db.sqlite import SQLInteract
 
 
 class Admin_test_view(QMainWindow):
@@ -19,8 +21,15 @@ class Admin_test_view(QMainWindow):
         super().__init__(parent)
         self.EMPTY_QUESTION = {"question": "", "type": 1, "variants_of_answer": [], "answer": "", "balls": 0}
         self.test = test
+        self.is_new_test = False
         if self.test == {}:
-            self.test = {"id": 0, "name": "", "theme": ""}
+            self.is_new_test = True
+            self.test = {
+                        "id": 1,
+                        "name": "",
+                        "theme": "",
+                        "max_result": 0,
+                        "questions": []}
         self.all_widgets_questions = []
         self.init_UI()
 
@@ -174,7 +183,18 @@ class Admin_test_view(QMainWindow):
         self.test["name"] = self.name_test_input.text()
         self.test["theme"] = self.theme_test_input.text()
         self.test["max_result"] = self.count_max_result()
-        print(self.test)
+        self.test["questions"] = from_dict_to_str(self.test["questions"])
+        test_db = SQLInteract(table_name="tests", filename_db=Config().config["path"] + "/db/users.db",
+                              values_of_this_table="(id, name, theme, max_result, questions)",
+                              init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+        if self.is_new_test:
+            test_db.sql_add_new_user(user_dict=self.test)
+        else:
+            test_db.sql_update_one_by_id("name", self.test["name"], self.test["id"])
+            test_db.sql_update_one_by_id("theme", self.test["theme"], self.test["id"])
+            test_db.sql_update_one_by_id("max_result", self.test["max_result"], self.test["id"])
+            test_db.sql_update_one_by_id("questions", self.test["questions"], self.test["id"])
+        # print(self.test)
         print("saved")  # TODO: save test in Database
         self.close()
 
