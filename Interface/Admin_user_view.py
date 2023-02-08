@@ -14,8 +14,10 @@ class Admin_user_view(QMainWindow):
     def __init__(self, user={}, parent=None):
         super(QMainWindow, self).__init__(parent)
         self.user = user
+        self.is_new_user = False
         if self.user == {}:
-            self.user = {"id": 0, "name": '', "password": '', "post": '', "tests": []}
+            self.is_new_user = True
+            self.user = {"id": 0, "name": '', "password": '', "post": '', "tests": "[]"}
         self.init_UI()
 
     def init_UI(self):
@@ -63,7 +65,7 @@ class Admin_user_view(QMainWindow):
         solved_test_widget = QWidget()
         solved_test_layout = QVBoxLayout()
 
-        if tests not in [None, False, []]:
+        if tests not in [None, False, [], "[]"]:
             solved_test_label = QLabel("Решённые тесты: ")
             solved_test_layout.addWidget(solved_test_label)
 
@@ -158,15 +160,21 @@ class Admin_user_view(QMainWindow):
         # input_password = str(hash_password(input_password))
         input_password = str(input_password)
         print(input_password)
+        self.user["name"] = input_name
+        self.user["password"] = input_password
+        self.user["post"] = input_post
 
         cfg = Config()
         user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
-        user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
-        user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])
-        user_db.sql_update_one_by_id(update_field="post", update_value=input_post, search_id=self.user["id"])
+        if self.is_new_user:
+            user_db.sql_add_new_user(self.user)
+        else:
+            user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
+            user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])
+            user_db.sql_update_one_by_id(update_field="post", update_value=input_post, search_id=self.user["id"])
 
         # self.user
-        print('Yay')
+        # print('Yay')
         self.close()
 
 
@@ -183,6 +191,6 @@ if __name__ == '__main__':
     # user["tests"] = None
     for i in range(20):
         user["tests"].append(user["tests"][0])
-    auth_obj = Admin_user_view(user=user)
+    auth_obj = Admin_user_view(user={})
 
     app.exec_()
