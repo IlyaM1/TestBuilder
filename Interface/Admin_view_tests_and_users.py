@@ -105,18 +105,18 @@ class Admin_view_tests_and_users(QWidget):
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
     def new_user_button_pushed(self):
-        user = self.create_new_user()
-        self.user_view = Admin_user_view(user=user)
+        self.create_new_user()
+
 
     def new_test_button_pushed(self):
         test = self.create_new_test()
-        self.test_view = Admin_test_view(test=test)
+        self.test_view = Admin_test_view(test={})
 
     def create_new_test(self):
         # TODO: this func creates new EMPTY test
         EMPTY_TEST = {
-        "name": "",
         "id": 100,
+        "name": "",
         "theme": "",
         "max_result": 0,
         "questions": []} # Example
@@ -130,7 +130,8 @@ class Admin_view_tests_and_users(QWidget):
             "password": "",
             "post": "", # Example
             "tests": []}
-        return EMPTY_USER
+        self.user_view = Admin_user_view(user={})
+        return True
 
     def get_user_by_id(self, id):
         pass
@@ -148,10 +149,15 @@ class Admin_view_tests_and_users(QWidget):
 if __name__ == '__main__':
     cfg = Config()
     app = QApplication([])
-    test = get_all_tests()[0]
-    tests = [test for i in range(50)]
-    user = get_users()[0]
+    # test = get_all_tests()[0]
+
+    # user = get_users()[0]
     user_table = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + "/db/users.db")
+    test_table = SQLInteract(table_name="tests", filename_db=cfg.config["path"] + "/db/users.db",
+                          values_of_this_table="(id, name, theme, max_result, questions)",
+                          init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+
+    tests = test_table.return_full_table(to_dict=True, element_for_transform="questions")
     # user_table.sql_delete_one(need_value_of_name=1)
     # print(user_table.return_full_table())
     users = user_table.return_full_table(to_dict=True)
