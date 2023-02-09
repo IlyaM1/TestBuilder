@@ -22,6 +22,9 @@ class SQLInteract:
         self.cursor_obj = sqlite3.Cursor(self.db_connection)
         self.init_values = init_values
 
+    def __del__(self):
+        self.db_connection.close()
+
     @staticmethod
     def sql_connect(filename_Db):
         try:
