@@ -91,7 +91,12 @@ class Admin_user_view(QMainWindow):
         box_for_wrong_questions = CollapsibleBox(title="Вопросы: ")
         box_for_wrong_questions_layout = QVBoxLayout()
 
-        for question in test["test"]:
+        if "test" in test:
+            all_questions_in_test = test["test"]
+        else:
+            all_questions_in_test = test["questions"]
+            
+        for question in all_questions_in_test:
             if question["answer"] != question["key"] or True:
                 box_for_wrong_questions_layout.addWidget(Admin_user_view.init_question_widget(question))
 
