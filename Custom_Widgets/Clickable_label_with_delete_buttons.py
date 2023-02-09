@@ -76,19 +76,19 @@ class Clickable_label_with_delete_buttons(QLabel):
 
     def delete_button_pressed(self):
         if self.type == "test":
+            test_table = SQLInteract(table_name="tests", filename_db=Config().config["path"] + "/db/users.db",
+                                     values_of_this_table="(id, name, theme, max_result, questions)",
+                                     init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
             self.call_sure_delete_window()
             if self.answer_of_deleting == "OK":
-                print("deleted")
-                # TODO: make deleting of test from BD
+                test_table.sql_delete_one(need_value_of_name=self.dictionary["id"])
             else:
                 print("NOT deleted")
         elif self.type == "user":
+            user_table = SQLInteract(table_name='testcase', filename_db=Config().config["path"] + "/db/users.db")
             self.call_sure_delete_window()
             if self.answer_of_deleting == "OK":
-                user_bd = SQLInteract(table_name='testcase', filename_db=Config().config["path"] + '/db/users.db')
-                # SQLInteract.sql_delete_one(id=self.dictionary["id"])
-                # TODO: make deleting of test from BD
-                print("deleted")
+                user_table.sql_delete_one(need_value_of_name=self.dictionary["id"])
             else:
                 print("NOT deleted")
         return
