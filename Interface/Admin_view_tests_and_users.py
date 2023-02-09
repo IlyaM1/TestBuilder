@@ -113,7 +113,6 @@ class Admin_view_tests_and_users(QWidget):
         self.test_view = Admin_test_view(test={})
 
     def create_new_test(self):
-        # TODO: this func creates new EMPTY test
         EMPTY_TEST = {
         "id": 100,
         "name": "",
@@ -123,7 +122,6 @@ class Admin_view_tests_and_users(QWidget):
         return EMPTY_TEST
 
     def create_new_user(self):
-        # TODO: this func creates new EMPTY user
         EMPTY_USER = {
             "id": 100,
             "name": "",

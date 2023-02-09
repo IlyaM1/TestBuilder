@@ -195,7 +195,7 @@ class Admin_test_view(QMainWindow):
             test_db.sql_update_one_by_id("max_result", self.test["max_result"], self.test["id"])
             test_db.sql_update_one_by_id("questions", self.test["questions"], self.test["id"])
         # print(self.test)
-        print("saved")  # TODO: save test in Database
+        print("saved")
         self.close()
 
     def count_max_result(self):
