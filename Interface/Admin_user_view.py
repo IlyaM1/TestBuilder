@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
 from test_data_funcs import get_users
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from Custom_Widgets.CollapsibleBox import CollapsibleBox
 from db.sqlite import SQLInteract
 from db.hash import hash_password
@@ -11,10 +11,13 @@ class Admin_user_view(QMainWindow):
     """
     Окошко для изменения и создания юзера
     """
+    closed_signal = pyqtSignal()
+
     def __init__(self, user={}, parent=None):
         super(QMainWindow, self).__init__(parent)
         self.user = user
         self.is_new_user = False
+        # self.closed_signal = pyqtSignal()
         if self.user == {}:
             self.is_new_user = True
             self.user = {"id": 0, "name": '', "password": '', "post": '', "tests": "[]"}
@@ -164,7 +167,6 @@ class Admin_user_view(QMainWindow):
         input_post = self.post_input_label.text()
         # input_password = str(hash_password(input_password))
         input_password = str(input_password)
-        print(input_password)
         self.user["name"] = input_name
         self.user["password"] = input_password
         self.user["post"] = input_post
@@ -180,6 +182,7 @@ class Admin_user_view(QMainWindow):
 
         # self.user
         # print('Yay')
+        self.closed_signal.emit()
         self.close()
 
 

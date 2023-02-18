@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, pyqtSignal
 from Custom_Widgets.Clickable_label_with_delete_buttons import Clickable_label_with_delete_buttons
 from test_data_funcs import get_all_tests, get_users
 from functools import partial
@@ -18,6 +18,7 @@ class Admin_view_tests_and_users(QWidget):
         super(QWidget, self).__init__(parent)
         self.tests = tests
         self.users = users
+        self.all_user_labels = []
         self.init_UI()
 
     def init_UI(self):
@@ -50,6 +51,7 @@ class Admin_view_tests_and_users(QWidget):
             user_row = Clickable_label_with_delete_buttons(f'{user["name"]}', user)
             user_row.setFixedSize(self.width() - 60, 50)
             user_row.label.clicked.connect(partial(self.label_user_pushed, user_row))
+            self.all_user_labels.append(user_row)
             self.users_labels_layout.addWidget(user_row)
 
         self.users_labels_layout_widget.setLayout(self.users_labels_layout)
@@ -129,14 +131,28 @@ class Admin_view_tests_and_users(QWidget):
             "post": "", # Example
             "tests": []}
         self.user_view = Admin_user_view(user={})
+        new_user = self.user_view.user
+        self.users.append(new_user)
+        user_row = Clickable_label_with_delete_buttons(f'Пользователь создаётся', new_user)
+        user_row.setFixedSize(self.width() - 60, 50)
+        user_row.label.clicked.connect(partial(self.label_user_pushed, user_row))
+        self.all_user_labels.append(user_row)
+        self.users_labels_layout.addWidget(user_row)
+        self.user_view.closed_signal.connect(partial(self.change_name_of_user_created_label, len(self.all_user_labels) - 1))
         return True
+
+    def change_name_of_user_created_label(self, label_index):
+        user_name = self.users[label_index]["name"]
+        self.all_user_labels[label_index].text = user_name
+        self.all_user_labels[label_index].label.setText(user_name)
+        print("change_name_of_user_created_label")
 
     def get_user_by_id(self, id):
         pass
 
     @staticmethod
     def generate_word_ending(word, number):
-        if number % 100 >= 10 and number % 100 < 20 or number % 10 > 4 or number % 10 == 0:
+        if 10 <= number % 100 < 20 or number % 10 > 4 or number % 10 == 0:
             return word + 'ов'
         elif number % 10 == 1:
             return word + ''
