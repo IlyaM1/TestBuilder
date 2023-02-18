@@ -26,79 +26,89 @@ class Admin_view_tests_and_users(QWidget):
         with open(Config().config["path"] + '\\Interface\\css\\Admin_view_tests_and_users.css') as css:
             self.setStyleSheet(css.read())
 
-        self.container = QVBoxLayout(self)
+        container = QVBoxLayout(self)
 
-        self.tab_widget = QTabWidget()
+        tab_widget = QTabWidget()
 
-        self.user_page = self.init_users_page()
-        self.test_page = self.init_tests_page()
+        user_page = self.init_users_page()
+        test_page = self.init_tests_page()
 
-        self.tab_widget.addTab(self.test_page, "Тесты")
-        self.tab_widget.addTab(self.user_page, "Сотрудники")
+        tab_widget.addTab(test_page, "Тесты")
+        tab_widget.addTab(user_page, "Сотрудники")
 
-        self.container.addWidget(self.tab_widget)
+        container.addWidget(tab_widget)
         self.show()
 
     def init_users_page(self):
-        self.user_page_widget = QWidget()
-        self.user_page_widget_layout = QVBoxLayout()
+        user_page_widget = QWidget()
+        user_page_widget_layout = QVBoxLayout()
 
-        self.user_page_scroll_widget = QScrollArea()
-        self.users_labels_layout_widget = QWidget()
+        users_labels_layout_widget = QWidget()
         self.users_labels_layout = QVBoxLayout()
 
         for user in self.users:
-            user_row = Clickable_label_with_delete_buttons(f'{user["name"]}', user)
-            user_row.setFixedSize(self.width() - 60, 50)
-            user_row.label.clicked.connect(partial(self.label_user_pushed, user_row))
+            user_row = self.create_row(user["name"], user, self.width() - 60, self.label_user_pushed)
             self.all_user_labels.append(user_row)
             self.users_labels_layout.addWidget(user_row)
 
-        self.users_labels_layout_widget.setLayout(self.users_labels_layout)
-        self.user_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.user_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.user_page_scroll_widget.setWidgetResizable(True)
-        self.user_page_scroll_widget.setWidget(self.users_labels_layout_widget)
-        self.user_page_widget_layout.addWidget(self.user_page_scroll_widget)
+        users_labels_layout_widget.setLayout(self.users_labels_layout)
 
-        self.new_user_button = QPushButton("Добавить сотрудника")
-        self.new_user_button.released.connect(self.new_user_button_pushed)
-        self.user_page_widget_layout.addWidget(self.new_user_button)
+        user_page_scroll_widget = self.generate_scroll_widget(users_labels_layout_widget)
+        user_page_widget_layout.addWidget(user_page_scroll_widget)
 
-        self.user_page_widget.setLayout(self.user_page_widget_layout)
+        new_user_button = QPushButton("Добавить сотрудника")
+        new_user_button.released.connect(self.new_user_button_pushed)
+        user_page_widget_layout.addWidget(new_user_button)
 
-        return self.user_page_widget
+        user_page_widget.setLayout(user_page_widget_layout)
+
+        return user_page_widget
 
     def init_tests_page(self):
-        self.test_page_widget = QWidget()
-        self.test_page_widget_layout = QVBoxLayout()
+        test_page_widget = QWidget()
+        test_page_widget_layout = QVBoxLayout()
 
-        self.test_page_scroll_widget = QScrollArea()
-        self.tests_labels_layout_widget = QWidget()
+        tests_labels_layout_widget = QWidget()
         self.tests_labels_layout = QVBoxLayout()
 
         for test in self.tests:
             question_quantity = len(test["questions"])
-            test_row = Clickable_label_with_delete_buttons(f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос",question_quantity)}', test)
-            test_row.setFixedSize(self.width() - 60, 50)
-            test_row.label.clicked.connect(partial(self.label_test_pushed, test_row))
+            test_row_name = f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос", question_quantity)}'
+            test_row = self.create_row(test_row_name, test, self.width() - 60, self.label_test_pushed)
             self.tests_labels_layout.addWidget(test_row)
 
-        self.tests_labels_layout_widget.setLayout(self.tests_labels_layout)
-        self.test_page_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.test_page_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.test_page_scroll_widget.setWidgetResizable(True)
-        self.test_page_scroll_widget.setWidget(self.tests_labels_layout_widget)
-        self.test_page_widget_layout.addWidget(self.test_page_scroll_widget)
+        tests_labels_layout_widget.setLayout(self.tests_labels_layout)
+        test_page_scroll_widget = self.generate_scroll_widget(tests_labels_layout_widget)
+        test_page_widget_layout.addWidget(test_page_scroll_widget)
 
-        self.new_test_button = QPushButton("Добавить тест")
-        self.new_test_button.released.connect(self.new_test_button_pushed)
-        self.test_page_widget_layout.addWidget(self.new_test_button)
-        self.test_page_widget.setLayout(self.test_page_widget_layout)
+        new_test_button = QPushButton("Добавить тест")
+        new_test_button.released.connect(self.new_test_button_pushed)
+        test_page_widget_layout.addWidget(new_test_button)
+        test_page_widget.setLayout(test_page_widget_layout)
 
 
 
-        return self.test_page_widget
+        return test_page_widget
+
+    @staticmethod
+    def generate_scroll_widget(widget_to_set):
+        scroll_widget = QScrollArea()
+
+        scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_widget.setWidgetResizable(True)
+        scroll_widget.setWidget(widget_to_set)
+
+        return scroll_widget
+
+
+    @staticmethod
+    def create_row(name, dictionary, size, slot):
+        row = Clickable_label_with_delete_buttons(name, dictionary)
+        row.setFixedSize(size, 50)
+        row.label.clicked.connect(partial(slot, row))
+
+        return row
 
     def label_user_pushed(self, pushed_label):
         self.user_view = Admin_user_view(user=pushed_label.dictionary)
@@ -108,7 +118,6 @@ class Admin_view_tests_and_users(QWidget):
 
     def new_user_button_pushed(self):
         self.create_new_user()
-
 
     def new_test_button_pushed(self):
         test = self.create_new_test()
@@ -131,13 +140,14 @@ class Admin_view_tests_and_users(QWidget):
             "post": "", # Example
             "tests": []}
         self.user_view = Admin_user_view(user={})
+
         new_user = self.user_view.user
         self.users.append(new_user)
-        user_row = Clickable_label_with_delete_buttons(f'Пользователь создаётся', new_user)
-        user_row.setFixedSize(self.width() - 60, 50)
-        user_row.label.clicked.connect(partial(self.label_user_pushed, user_row))
+
+        user_row = self.create_row(new_user["name"], new_user, self.width() - 60, self.label_user_pushed)
         self.all_user_labels.append(user_row)
         self.users_labels_layout.addWidget(user_row)
+
         self.user_view.closed_signal.connect(partial(self.change_name_of_user_created_label, len(self.all_user_labels) - 1))
         return True
 
@@ -145,7 +155,6 @@ class Admin_view_tests_and_users(QWidget):
         user_name = self.users[label_index]["name"]
         self.all_user_labels[label_index].text = user_name
         self.all_user_labels[label_index].label.setText(user_name)
-        print("change_name_of_user_created_label")
 
     def get_user_by_id(self, id):
         pass
