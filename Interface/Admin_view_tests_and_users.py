@@ -9,11 +9,11 @@ from db.sqlite import SQLInteract
 from config import Config
 
 
-
 class Admin_view_tests_and_users(QWidget):
     """
     Окошко для просмотра всех тестов и юзеров адмном
     """
+
     def __init__(self, tests=[], users=[], parent=None):
         super(QWidget, self).__init__(parent)
         self.tests = tests
@@ -86,8 +86,6 @@ class Admin_view_tests_and_users(QWidget):
         test_page_widget_layout.addWidget(new_test_button)
         test_page_widget.setLayout(test_page_widget_layout)
 
-
-
         return test_page_widget
 
     @staticmethod
@@ -101,7 +99,6 @@ class Admin_view_tests_and_users(QWidget):
 
         return scroll_widget
 
-
     @staticmethod
     def create_row(name, dictionary, size, slot):
         row = Clickable_label_with_delete_buttons(name, dictionary)
@@ -112,6 +109,25 @@ class Admin_view_tests_and_users(QWidget):
 
     def label_user_pushed(self, pushed_label):
         self.user_view = Admin_user_view(user=pushed_label.dictionary)
+        # Change here - edit when user changed (especially name) do as in create_new_user
+        # we get signal from Admin_user_view
+        old_user_id = pushed_label.dictionary["id"]
+        # new_user = self.user_view.user
+        # new_user_row = self.create_row(new_user["name"], new_user, self.width() - 60, self.label_user_pushed)
+
+        old_user_row_index = self.find_user_row_index_with_id(old_user_id)
+        # self.users_labels_layout.removeWidget(self.all_user_labels[old_user_row_index])
+        # self.users_labels_layout.insertWidget(old_user_row_index, new_user_row)
+
+        # - change name after it
+        self.user_view.closed_signal.connect(
+            partial(self.change_name_of_user_created_label, old_user_row_index))
+
+    def find_user_row_index_with_id(self, id):
+        for i in range(len(self.all_user_labels)):
+            if self.all_user_labels[i].dictionary["id"] == id:
+                return i
+        return -1
 
     def label_test_pushed(self, pushed_label):
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
@@ -125,11 +141,11 @@ class Admin_view_tests_and_users(QWidget):
 
     def create_new_test(self):
         EMPTY_TEST = {
-        "id": 100,
-        "name": "",
-        "theme": "",
-        "max_result": 0,
-        "questions": []} # Example
+            "id": 100,
+            "name": "",
+            "theme": "",
+            "max_result": 0,
+            "questions": []}  # Example
         return EMPTY_TEST
 
     def create_new_user(self):
@@ -137,7 +153,7 @@ class Admin_view_tests_and_users(QWidget):
             "id": 100,
             "name": "",
             "password": "",
-            "post": "", # Example
+            "post": "",  # Example
             "tests": []}
         self.user_view = Admin_user_view(user={})
 
@@ -148,7 +164,8 @@ class Admin_view_tests_and_users(QWidget):
         self.all_user_labels.append(user_row)
         self.users_labels_layout.addWidget(user_row)
 
-        self.user_view.closed_signal.connect(partial(self.change_name_of_user_created_label, len(self.all_user_labels) - 1))
+        self.user_view.closed_signal.connect(
+            partial(self.change_name_of_user_created_label, len(self.all_user_labels) - 1))
         return True
 
     def change_name_of_user_created_label(self, label_index):
@@ -177,8 +194,8 @@ if __name__ == '__main__':
     # user = get_users()[0]
     user_table = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + "/db/users.db")
     test_table = SQLInteract(table_name="tests", filename_db=cfg.config["path"] + "/db/users.db",
-                          values_of_this_table="(id, name, theme, max_result, questions)",
-                          init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
+                             values_of_this_table="(id, name, theme, max_result, questions)",
+                             init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
 
     tests = test_table.return_full_table(to_dict=True, element_for_transform="questions")
     # user_table.sql_delete_one(need_value_of_name=1)
