@@ -136,3 +136,8 @@ QLabel#delete_button:hover{
 QLabel#delete_button:active{
     color: #9C27B0;
 }
+
+Clickable_label_with_delete_buttons{
+    min-height: 75px;
+    border: 2px solid;
+}
