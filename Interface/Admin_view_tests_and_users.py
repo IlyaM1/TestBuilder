@@ -48,6 +48,7 @@ class Admin_view_tests_and_users(QWidget):
 
         for user in self.users:
             user_row = self.create_row(user["name"], user, self.width() - 60, self.label_user_pushed)
+            user_row.deleted_signal.connect(partial(self.delete_user_row, user["id"]))
             self.all_user_labels.append(user_row)
             self.users_labels_layout.addWidget(user_row)
 
@@ -153,7 +154,7 @@ class Admin_view_tests_and_users(QWidget):
             "id": 100,
             "name": "",
             "password": "",
-            "post": "",  # Example
+            "post": "",  # ExampleЫ
             "tests": []}
         self.user_view = Admin_user_view(user={})
 
@@ -161,17 +162,26 @@ class Admin_view_tests_and_users(QWidget):
         self.users.append(new_user)
 
         user_row = self.create_row(new_user["name"], new_user, self.width() - 60, self.label_user_pushed)
+        user_row.deleted_signal.connect(partial(self.delete_user_row, new_user["id"]))
         self.all_user_labels.append(user_row)
         self.users_labels_layout.addWidget(user_row)
 
         self.user_view.closed_signal.connect(
-            partial(self.change_name_of_user_created_label, len(self.all_user_labels) - 1))
+            partial(self.change_name_of_user_created_label, self.find_user_row_index_with_id(new_user["id"])))
         return True
 
     def change_name_of_user_created_label(self, label_index):
         user_name = self.users[label_index]["name"]
         self.all_user_labels[label_index].text = user_name
         self.all_user_labels[label_index].label.setText(user_name)
+
+    def delete_user_row(self, id):
+        user_row_index = self.find_user_row_index_with_id(id)
+        print("Deleted: ")
+        self.users_labels_layout.removeWidget(self.all_user_labels[user_row_index])
+        self.all_user_labels[user_row_index].deleteLater()
+        self.all_user_labels.pop(user_row_index)
+
 
     def get_user_by_id(self, id):
         pass

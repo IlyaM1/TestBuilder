@@ -1,3 +1,4 @@
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QPushButton, QApplication, QMessageBox
 from PyQt5.QtGui import QIcon
 from Custom_Widgets.Clickable_label import Clickable_label
@@ -8,6 +9,8 @@ from config import Config
 
 
 class Clickable_label_with_delete_buttons(QLabel):
+
+    deleted_signal = pyqtSignal()
     """
     QLabel на который можно нажать, который хранит в себе dictionary объекта для которого создан, также имеет контекстное меню из трёх действий: посмотреть детальную информацию(?), изменить, удалить
     """
@@ -82,12 +85,14 @@ class Clickable_label_with_delete_buttons(QLabel):
             self.call_sure_delete_window()
             if self.answer_of_deleting == "OK":
                 test_table.sql_delete_one(need_value_of_name=self.dictionary["id"])
+                self.deleted_signal.emit()
             else:
                 print("NOT deleted")
         elif self.type == "user":
             user_table = SQLInteract(table_name='testcase', filename_db=Config().config["path"] + "/db/users.db")
             self.call_sure_delete_window()
             if self.answer_of_deleting == "OK":
+                self.deleted_signal.emit()
                 user_table.sql_delete_one(need_value_of_name=self.dictionary["id"])
             else:
                 print("NOT deleted")
