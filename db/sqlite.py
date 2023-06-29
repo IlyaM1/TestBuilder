@@ -35,26 +35,28 @@ class SQLInteract:
 
     def sql_add_new_user(self, user_arr: list):
         try:
-            user_arr[0] = self.search_max_int_field() + 1
+            id = self.search_max_int_field() + 1
+            user_arr[0] = id
             self.cursor_obj.execute(
                 f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_arr)
             self.db_connection.commit()
-            return True
+            return id
         except sqlite3.Error as err:
             print(err)
-            return False
+            return -1
 
     def sql_add_new_user(self, user_dict: dict):
         try:
             user_arr = [user_dict[x] for x in user_dict]
-            user_arr[0] = self.search_max_int_field() + 1
+            id = self.search_max_int_field() + 1
+            user_arr[0] = id
             self.cursor_obj.execute(
                 f'''INSERT INTO {self.table_name}{self.values_of_this_table} VALUES{self.values}''', user_arr)
             self.db_connection.commit()
-            return True
+            return id
         except sqlite3.Error as err:
             print(err)
-            return False
+            return -1
 
     def sql_create_new_table(self):
         """После инициализации нужно один раз ручками создать таблицу, ну вот надо так.

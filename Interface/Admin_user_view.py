@@ -174,7 +174,8 @@ class Admin_user_view(QMainWindow):
         cfg = Config()
         user_db = SQLInteract(table_name='testcase', filename_db=cfg.config["path"] + '/db/users.db')
         if self.is_new_user:
-            user_db.sql_add_new_user(self.user)
+            new_id = user_db.sql_add_new_user(self.user)
+            self.user["id"] = new_id
         else:
             user_db.sql_update_one_by_id(update_field="name", update_value="" + input_name + "", search_id=self.user["id"])
             user_db.sql_update_one_by_id(update_field="password", update_value=input_password, search_id=self.user["id"])

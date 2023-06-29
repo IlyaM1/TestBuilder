@@ -58,7 +58,7 @@ class Admin_view_tests_and_users(QWidget):
         user_page_widget_layout.addWidget(user_page_scroll_widget)
 
         new_user_button = QPushButton("Добавить сотрудника")
-        new_user_button.released.connect(self.new_user_button_pushed)
+        new_user_button.released.connect(self.create_new_user)
         user_page_widget_layout.addWidget(new_user_button)
 
         user_page_widget.setLayout(user_page_widget_layout)
@@ -110,81 +110,52 @@ class Admin_view_tests_and_users(QWidget):
 
     def label_user_pushed(self, pushed_label):
         self.user_view = Admin_user_view(user=pushed_label.dictionary)
-        # Change here - edit when user changed (especially name) do as in create_new_user
-        # we get signal from Admin_user_view
-        old_user_id = pushed_label.dictionary["id"]
-        # new_user = self.user_view.user
-        # new_user_row = self.create_row(new_user["name"], new_user, self.width() - 60, self.label_user_pushed)
-
-        old_user_row_index = self.find_user_row_index_with_id(old_user_id)
-        # self.users_labels_layout.removeWidget(self.all_user_labels[old_user_row_index])
-        # self.users_labels_layout.insertWidget(old_user_row_index, new_user_row)
-
-        # - change name after it
         self.user_view.closed_signal.connect(
-            partial(self.change_name_of_user_created_label, old_user_row_index))
+            partial(self.change_name_of_user_created_label, self.user_view))
 
     def find_user_row_index_with_id(self, id):
         for i in range(len(self.all_user_labels)):
             if self.all_user_labels[i].dictionary["id"] == id:
                 return i
-        return -1
+        raise Exception("Can't find user_row with that index")
 
     def label_test_pushed(self, pushed_label):
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
-    def new_user_button_pushed(self):
-        self.create_new_user()
-
     def new_test_button_pushed(self):
-        test = self.create_new_test()
         self.test_view = Admin_test_view(test={})
 
-    def create_new_test(self):
-        EMPTY_TEST = {
-            "id": 100,
-            "name": "",
-            "theme": "",
-            "max_result": 0,
-            "questions": []}  # Example
-        return EMPTY_TEST
-
     def create_new_user(self):
-        EMPTY_USER = {
-            "id": 100,
-            "name": "",
-            "password": "",
-            "post": "",  # ExampleЫ
-            "tests": []}
         self.user_view = Admin_user_view(user={})
-
+        # print("Creating: ")
+        # print(list(map(lambda x: x.dictionary, self.all_user_labels)))
         new_user = self.user_view.user
         self.users.append(new_user)
 
         user_row = self.create_row(new_user["name"], new_user, self.width() - 60, self.label_user_pushed)
-        user_row.deleted_signal.connect(partial(self.delete_user_row, new_user["id"]))
         self.all_user_labels.append(user_row)
         self.users_labels_layout.addWidget(user_row)
 
         self.user_view.closed_signal.connect(
-            partial(self.change_name_of_user_created_label, self.find_user_row_index_with_id(new_user["id"])))
+            partial(self.change_name_of_user_created_label, self.user_view))
         return True
 
-    def change_name_of_user_created_label(self, label_index):
-        user_name = self.users[label_index]["name"]
-        self.all_user_labels[label_index].text = user_name
+    def change_name_of_user_created_label(self, user_view):
+        user_id = user_view.user["id"]
+        print(user_view.user)
+        label_index = self.find_user_row_index_with_id(user_id)
+        self.all_user_labels[label_index].deleted_signal.connect(partial(self.delete_user_row, user_id))
+
+        user_name = self.all_user_labels[label_index].dictionary["name"]
         self.all_user_labels[label_index].label.setText(user_name)
 
     def delete_user_row(self, id):
         user_row_index = self.find_user_row_index_with_id(id)
-        print("Deleted: ")
+        # print("Deleting: ")
+        # print(list(map(lambda x: x.dictionary, self.all_user_labels)))
         self.users_labels_layout.removeWidget(self.all_user_labels[user_row_index])
         self.all_user_labels[user_row_index].deleteLater()
         self.all_user_labels.pop(user_row_index)
-
-
-    def get_user_by_id(self, id):
-        pass
 
     @staticmethod
     def generate_word_ending(word, number):
