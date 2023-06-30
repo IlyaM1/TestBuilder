@@ -1,3 +1,5 @@
+import json
+
 from PyQt5.QtWidgets import QWidget, QApplication, QTabWidget, QVBoxLayout, QPushButton, QScrollArea
 from PyQt5.QtCore import QSize, Qt, pyqtSignal
 from Custom_Widgets.Clickable_label_with_delete_buttons import Clickable_label_with_delete_buttons
@@ -112,6 +114,9 @@ class Admin_view_tests_and_users(QWidget):
         return row
 
     def label_user_pushed(self, pushed_label):
+        if isinstance(pushed_label.dictionary["tests"], str):
+            pushed_label.dictionary["tests"] = json.loads(pushed_label.dictionary["tests"])
+        print(pushed_label.dictionary)
         self.user_view = Admin_user_view(user=pushed_label.dictionary)
         self.user_view.closed_signal.connect(
             partial(self.change_name_of_user_created_label, self.user_view))
@@ -129,8 +134,12 @@ class Admin_view_tests_and_users(QWidget):
         raise Exception("Can't find test_row with that index")
 
     def label_test_pushed(self, pushed_label):
-        print(pushed_label.dictionary)
+        if isinstance(pushed_label.dictionary["questions"], str):
+            pushed_label.dictionary["questions"] = json.loads(pushed_label.dictionary["questions"])
+
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
+        self.test_view.closed_signal.connect(
+            partial(self.change_name_of_test_created_label, self.test_view))
 
     def new_test_button_pushed(self):
         self.test_view = Admin_test_view(test={})
