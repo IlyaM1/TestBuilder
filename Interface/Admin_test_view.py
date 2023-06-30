@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QPushButton, QLabel, QLineEdit, QScrollArea, QMainWindow
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from test_data_funcs import get_all_tests
 from Custom_Widgets.LineEdit_with_explanation import LineEdit_with_explanation
 from Custom_Widgets.Button_with_information import Button_with_information
@@ -16,6 +16,7 @@ class Admin_test_view(QMainWindow):
     """
     Окошко для изменения и создания теста
     """
+    closed_signal = pyqtSignal()
 
     def __init__(self, test={}, parent=None):
         super().__init__(parent)
@@ -188,14 +189,15 @@ class Admin_test_view(QMainWindow):
                               values_of_this_table="(id, name, theme, max_result, questions)",
                               init_values="(id int PRIMARY KEY, name text, theme text, max_result int, questions)")
         if self.is_new_test:
-            test_db.sql_add_new_user(user_dict=self.test)
+            new_id = test_db.sql_add_new_user(user_dict=self.test)
+            self.test["id"] = new_id
         else:
             test_db.sql_update_one_by_id("name", self.test["name"], self.test["id"])
             test_db.sql_update_one_by_id("theme", self.test["theme"], self.test["id"])
             test_db.sql_update_one_by_id("max_result", self.test["max_result"], self.test["id"])
             test_db.sql_update_one_by_id("questions", self.test["questions"], self.test["id"])
-        # print(self.test)
-        print("saved")
+
+        self.closed_signal.emit()
         self.close()
 
     def count_max_result(self):
