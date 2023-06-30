@@ -19,6 +19,7 @@ class Admin_view_tests_and_users(QWidget):
         self.tests = tests
         self.users = users
         self.all_user_labels = []
+        self.all_tests_labels = []
         self.init_UI()
 
     def init_UI(self):
@@ -76,6 +77,8 @@ class Admin_view_tests_and_users(QWidget):
             question_quantity = len(test["questions"])
             test_row_name = f'{test["name"]}: {question_quantity} {self.generate_word_ending("вопрос", question_quantity)}'
             test_row = self.create_row(test_row_name, test, self.width() - 60, self.label_test_pushed)
+            test_row.deleted_signal.connect(partial(self.delete_test_row, test["id"]))
+            self.all_tests_labels.append(test_row)
             self.tests_labels_layout.addWidget(test_row)
 
         tests_labels_layout_widget.setLayout(self.tests_labels_layout)
@@ -119,16 +122,35 @@ class Admin_view_tests_and_users(QWidget):
                 return i
         raise Exception("Can't find user_row with that index")
 
+    def find_test_row_index_with_id(self, id):
+        for i in range(len(self.all_tests_labels)):
+            if self.all_tests_labels[i].dictionary["id"] == id:
+                return i
+        raise Exception("Can't find test_row with that index")
+
     def label_test_pushed(self, pushed_label):
+        print(pushed_label.dictionary)
         self.test_view = Admin_test_view(test=pushed_label.dictionary)
 
     def new_test_button_pushed(self):
         self.test_view = Admin_test_view(test={})
 
+        new_test = self.test_view.test
+        self.tests.append(new_test)
+
+        question_quantity = len(new_test["questions"])
+        test_row_name = f'{new_test["name"]}: {question_quantity} {self.generate_word_ending("вопрос", question_quantity)}'
+        test_row = self.create_row(test_row_name, new_test, self.width() - 60, self.label_test_pushed)
+
+        self.all_tests_labels.append(test_row)
+        self.tests_labels_layout.addWidget(test_row)
+
+        self.test_view.closed_signal.connect(
+            partial(self.change_name_of_test_created_label, self.test_view))
+        return True
+
     def create_new_user(self):
         self.user_view = Admin_user_view(user={})
-        # print("Creating: ")
-        # print(list(map(lambda x: x.dictionary, self.all_user_labels)))
         new_user = self.user_view.user
         self.users.append(new_user)
 
@@ -142,20 +164,32 @@ class Admin_view_tests_and_users(QWidget):
 
     def change_name_of_user_created_label(self, user_view):
         user_id = user_view.user["id"]
-        print(user_view.user)
         label_index = self.find_user_row_index_with_id(user_id)
         self.all_user_labels[label_index].deleted_signal.connect(partial(self.delete_user_row, user_id))
 
         user_name = self.all_user_labels[label_index].dictionary["name"]
         self.all_user_labels[label_index].label.setText(user_name)
 
+    def change_name_of_test_created_label(self, test_view):
+        test = test_view.test
+        test_id = test["id"]
+        label_index = self.find_test_row_index_with_id(test_id)
+        self.all_tests_labels[label_index].deleted_signal.connect(partial(self.delete_test_row, test_id))
+        self.all_tests_labels[label_index].label.setText(test["name"])
+
     def delete_user_row(self, id):
         user_row_index = self.find_user_row_index_with_id(id)
-        # print("Deleting: ")
-        # print(list(map(lambda x: x.dictionary, self.all_user_labels)))
+
         self.users_labels_layout.removeWidget(self.all_user_labels[user_row_index])
         self.all_user_labels[user_row_index].deleteLater()
         self.all_user_labels.pop(user_row_index)
+
+    def delete_test_row(self, id):
+        test_row_index = self.find_test_row_index_with_id(id)
+
+        self.tests_labels_layout.removeWidget(self.all_tests_labels[test_row_index])
+        self.all_tests_labels[test_row_index].deleteLater()
+        self.all_tests_labels.pop(test_row_index)
 
     @staticmethod
     def generate_word_ending(word, number):
