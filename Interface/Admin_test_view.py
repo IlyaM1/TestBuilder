@@ -11,7 +11,6 @@ from copy import deepcopy
 from db.user import from_dict_to_str
 from db.sqlite import SQLInteract
 
-
 class Admin_test_view(QMainWindow):
     """
     Окошко для изменения и создания теста
@@ -39,13 +38,14 @@ class Admin_test_view(QMainWindow):
         self.set_css()
 
         self.container = QVBoxLayout(self)
-
+        print(1)
+        print(self.test)
         self.constant_widget, self.name_test_input, self.theme_test_input = self.generate_constant_widget(self.test["name"], self.test["theme"])
         self.container.addWidget(self.constant_widget)
 
         self.question_scroll_area_widget = self.generate_question_widget()
         self.container.addWidget(self.question_scroll_area_widget)
-
+        print(2)
         self.save_test_button = self.generate_button_with_slot("Сохранить", self.save_button_released)
         self.container.addWidget(self.save_test_button)
 
