@@ -116,7 +116,7 @@ class Admin_view_tests_and_users(QWidget):
     def label_user_pushed(self, pushed_label):
         if isinstance(pushed_label.dictionary["tests"], str):
             pushed_label.dictionary["tests"] = json.loads(pushed_label.dictionary["tests"])
-        print(pushed_label.dictionary)
+
         self.user_view = Admin_user_view(user=pushed_label.dictionary)
         self.user_view.closed_signal.connect(
             partial(self.change_name_of_user_created_label, self.user_view))
