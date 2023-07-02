@@ -76,3 +76,10 @@ class AuthorizationView(View):
         error_window.setText(text)
         error_window.setWindowTitle("Ошибка")
         error_window.exec()
+
+
+if __name__ == '__main__':
+    app = QtWidgets.QApplication([])
+    auth = AuthorizationView()
+    auth.show()
+    app.exec()
