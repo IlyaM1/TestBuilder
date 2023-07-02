@@ -12,7 +12,7 @@ class LoginStatus(Enum):
 
 
 class AuthInfo:
-    def __init__(self, name, password):
+    def __init__(self, name: str, password: str):
         self.name = name
         self.password = password
 
@@ -33,7 +33,7 @@ class AuthorizationModel:
             return [LoginStatus.EMPTY_FIELDS]
 
         if auth_info.name == Config.get_instance().config["name"] \
-                and auth_info["password"] == self.cfg.config["password"]:
+                and auth_info.password == Config.get_instance().config["password"]:
             return [LoginStatus.ADMIN]
 
         user = self.__authorization(auth_info)
@@ -42,6 +42,6 @@ class AuthorizationModel:
         else:
             return [LoginStatus.INCORRECT_AUTH_INFO]
 
-    def __authorization(self, auth_info):
+    def __authorization(self, auth_info: AuthInfo):
         sign_obj = Signing(auth_info, self.user_db)
         return sign_obj.authentication()

@@ -16,6 +16,9 @@ class AuthorizationPresenter(Presenter):
         elif status == LoginStatus.INCORRECT_AUTH_INFO:
             self.view.call_error_window("Неправильное имя или пароль пользователя")
         elif status == LoginStatus.ADMIN:
-            pass
+            from window_manager import WindowManager
+            WindowManager.get_instance().open_admin_panel()
         elif status == LoginStatus.USER:
-            pass
+            from window_manager import WindowManager
+            user = login_status_array[1]
+            WindowManager.get_instance().open_test_selection_window(user)

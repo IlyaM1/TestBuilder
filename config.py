@@ -9,7 +9,7 @@ class Config:
             self.config = open("config.json").read()
             self.config = json.loads(self.config)
         else:
-            raise Exception("Config singlton already created")
+            raise Exception("Config instance already created")
 
     @staticmethod
     def get_instance():
