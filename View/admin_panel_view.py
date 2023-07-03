@@ -123,7 +123,7 @@ class AdminPanelView(View):
             widget = layout.itemAt(i).widget()
             if widget.entity.id == entity.id:
                 return widget
-        return -1
+        raise Exception("Can't find widget that contains this entity")
 
 
 class EntityWidget(QtWidgets.QLabel):
