@@ -27,15 +27,12 @@ class AdminPanelView(View):
         super().__init__(AdminPanelSignals())
         self.set_interface_settings()
 
-        tab_widget = QtWidgets.QTabWidget()
-        user_tab = self.create_tab_widget(users, EntityType.USER)
-        test_tab = self.create_tab_widget(tests, EntityType.TEST)
-
-        tab_widget.addTab(user_tab, "Сотрудники")
-        tab_widget.addTab(test_tab, "Тесты")
+        self.tab_widget = QtWidgets.QTabWidget()
+        self.user_tab_layout = self.create_tab_widget(users, EntityType.USER)
+        self.test_tab_layout = self.create_tab_widget(tests, EntityType.TEST)
 
         container = QtWidgets.QVBoxLayout(self)
-        container.addWidget(tab_widget)
+        container.addWidget(self.tab_widget)
 
     def set_interface_settings(self):
         self.setMinimumSize(1280, 720)
@@ -43,6 +40,12 @@ class AdminPanelView(View):
             self.setStyleSheet(css.read())
 
     def create_tab_widget(self, entity_list: list, entity_type: EntityType):
+        """
+        Automatically adds itself in tab_widget
+        :param entity_list: list of entities (users or tests)
+        :param entity_type: type of entities (EntityType.TEST or EntityType.USER)
+        :return: layout that shows all entities from entity_list
+        """
         entities_list_layout = QtWidgets.QVBoxLayout()
 
         for entity in entity_list:
@@ -65,7 +68,9 @@ class AdminPanelView(View):
         final_widget = QtWidgets.QWidget()
         final_widget.setLayout(final_widget_layout)
 
-        return final_widget
+        tab_name = "Тесты" if entity_type == EntityType.TEST else "Сотрудники"
+        self.tab_widget.addTab(final_widget, tab_name)
+        return entities_list_layout
 
     @staticmethod
     def generate_scroll_widget(widget_to_set):
@@ -94,17 +99,31 @@ class AdminPanelView(View):
     def entity_widget_deleting(self, entity):
         self.signals.deleting_clicked.emit(entity)
 
-    def delete_entity_widget(self, en):
-        # TODO: presenter call it after entity is deleted
-        pass
+    def delete_entity_widget(self, entity):
+        layout = self.test_tab_layout if entity.type == EntityType.TEST else self.user_tab_layout
+        entity_widget = self.__find_widget_in_entity_layout(entity)
+        layout.removeWidget(entity_widget)
 
-    def add_new_entity_widget(self):
-        # TODO: presenter call it after new entity created
-        pass
+    def add_new_entity_widget(self, entity: Entity):
+        entity_widget = self.create_entity_widget(entity)
+        if entity.type == EntityType.TEST:
+            self.test_tab_layout.addWidget(entity_widget)
+        elif entity.type == EntityType.USER:
+            self.user_tab_layout.addWidget(entity_widget)
+        else:
+            raise Exception("There are no this entity type")
 
-    def edit_entity_widget(self):
-        # TODO: presenter call it after entity edited
-        pass
+    def edit_entity_widget(self, entity):
+        entity_widget = self.__find_widget_in_entity_layout(entity)
+        entity_widget.setText(entity.name)
+
+    def __find_widget_in_entity_layout(self, entity: Entity):
+        layout = self.test_tab_layout if entity.type == EntityType.TEST else self.user_tab_layout
+        for i in range(layout.count()):
+            widget = layout.itemAt(i).widget()
+            if widget.entity.id == entity.id:
+                return widget
+        return -1
 
 
 class EntityWidget(QtWidgets.QLabel):
@@ -161,5 +180,15 @@ if __name__ == '__main__':
     ]
     app = QtWidgets.QApplication([])
     widget = AdminPanelView(users, tests)
+
+    widget.add_new_entity_widget(Entity(7, "Added", EntityType.USER))
+    widget.add_new_entity_widget(Entity(9, "AddedTest", EntityType.TEST))
+
+    widget.edit_entity_widget(Entity(7, "NewNameOfAddedUser", EntityType.USER))
+    widget.edit_entity_widget(Entity(9, "NewNameOfAddedTest", EntityType.TEST))
+
+    widget.delete_entity_widget(Entity(7, "NewNameOfAddedUser", EntityType.USER))
+    widget.delete_entity_widget(Entity(9, "NewNameOfAddedTest", EntityType.TEST))
+
     widget.show()
     app.exec_()
