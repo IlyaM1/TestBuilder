@@ -22,7 +22,7 @@ class AdminPanelSignals(QtCore.QObject):
     deleting_clicked = QtCore.pyqtSignal(Entity)
 
 
-class AdminPanel(View):
+class AdminPanelView(View):
     def __init__(self, users: list, tests: list):
         super().__init__(AdminPanelSignals())
         self.set_interface_settings()
@@ -39,7 +39,7 @@ class AdminPanel(View):
 
     def set_interface_settings(self):
         self.setMinimumSize(1280, 720)
-        with open(Config.get_path() + '/View/css/admin_panel.css') as css:
+        with open(Config.get_path() + '/View/css/admin_panel_view.css') as css:
             self.setStyleSheet(css.read())
 
     def create_tab_widget(self, entity_list: list, entity_type: EntityType):
@@ -160,6 +160,6 @@ if __name__ == '__main__':
         },
     ]
     app = QtWidgets.QApplication([])
-    widget = AdminPanel(users, tests)
+    widget = AdminPanelView(users, tests)
     widget.show()
     app.exec_()
