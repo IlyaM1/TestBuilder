@@ -1,4 +1,4 @@
-from view import View
+from View.view import View
 from enum import Enum
 from config import Config
 from PyQt5 import QtCore, QtWidgets

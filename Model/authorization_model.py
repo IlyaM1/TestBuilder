@@ -45,3 +45,43 @@ class AuthorizationModel:
     def __authorization(self, auth_info: AuthInfo):
         sign_obj = Signing(auth_info, self.user_db)
         return sign_obj.authentication()
+
+    def get_users(self):
+        """
+        Get all users rows from database
+        :return: list of user's dicts
+        """
+        return [
+            {
+                "id": 0,
+                "name": "Anton"
+            },
+            {
+                "id": 1,
+                "name": "Sergey"
+            },
+            {
+                "id": 2,
+                "name": "Vlad"
+            },
+        ]
+
+    def get_tests(self):
+        """
+        Get all tests rows from database
+        :return: list of test's dicts
+        """
+        return [
+            {
+                "id": 0,
+                "name": "test1"
+            },
+            {
+                "id": 1,
+                "name": "test2"
+            },
+            {
+                "id": 2,
+                "name": "test3"
+            },
+        ]
