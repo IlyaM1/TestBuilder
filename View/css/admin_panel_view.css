@@ -1,4 +1,4 @@
-Admin_view_tests_and_users{
+AdminPanel{
     background-color: #f2f3f7;
 }
 
@@ -66,24 +66,15 @@ QLayout{
     padding: 20px;
 }
 
-QLabel#question_counter {
-    font-size: 20px;
-    max-height: 20px;
-    position: absolute;
-    border-bottom: 3px solid #B7B7B7;
-}
-
-QPushButton#next_button {
-    align: right;
-}
-
 QTabWidget{
     background-color: #f2f3f7;
 }
+
 QTabWidget::pane{
     border: none;
     background-color: white;
 }
+
 QTabBar::tab{
     background-color: #f2f3f7;
     padding: 5px;
@@ -96,48 +87,7 @@ QTabBar::tab:selected{
     border-bottom: none;
 }
 
-QPushButton#new_user_button{
-    background-color: #2ECD70;
-    color: white;
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-QPushButton#new_user_button:hover{
-    background-color: #24A148;
-}
-
-QLabel#user_label{
-    font-size: 18px;
-}
-
-QLabel#user_label:hover{
-    color: #2ECD70;
-    cursor: pointer;
-}
-
-QLabel#user_label:active{
-    color: #24A148;
-}
-
-QLabel#delete_button{
-    font-size: 18px;
-    color: #B7B7B7;
-}
-
-QLabel#delete_button:hover{
-    color: #F44336;
-    cursor: pointer;
-}
-
-QLabel#delete_button:active{
-    color: #9C27B0;
-}
-
-Clickable_label_with_delete_buttons{
+EntityWidget{
     min-height: 75px;
     border: 2px solid;
 }

@@ -1,6 +1,7 @@
 QWidget{
     background-color: white;
 }
+
 QLineEdit {
     height: 36px;
     font: 15pt "MS Shell Dlg 2";
@@ -10,9 +11,11 @@ QLineEdit {
     border-radius: 10px;
     margin: 0 auto;
 }
+
 QLineEdit:hover {
     cursor: default;
 }
+
 QPushButton {
     height: 45px;
     font: 15pt "MS Shell Dlg 2";
@@ -22,6 +25,7 @@ QPushButton {
     margin-left:auto;
     margin-right:auto;
 }
+
 QGroupBox {
     border: none;
 }

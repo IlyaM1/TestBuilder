@@ -10,14 +10,14 @@ class Signing:
     """
     Класс авторизации/регистрации нового юзера
     """
-    def __init__(self, auth_info, SQLInteract_obj):
+    def __init__(self, auth_info, db_object):
         self.auth_info = auth_info
-        self.name = auth_info["name"]
-        self.password = auth_info["password"]
+        self.name = auth_info.name
+        self.password = auth_info.password
         # хэшируем пароль для безопасности
         # self.password = hash_password(self.password)
         # auth_info["password"] = self.password
-        self.s = SQLInteract_obj
+        self.s = db_object
 
     def registration(self):
         """если возвратила False, значит рега не сработала"""
