@@ -2,6 +2,7 @@ from View.view import View
 from enum import Enum
 from config import Config
 from PyQt5 import QtCore, QtWidgets
+from View.ui_utils import UiUtils
 
 
 class EntityType(Enum):
@@ -43,11 +44,11 @@ class AdminPanelView(View):
         else:
             raise Exception("There are no this entity type")
 
-    def edit_entity_widget(self, entity):
+    def edit_entity_widget(self, entity: Entity):
         entity_widget = self.__find_widget_in_entity_layout(entity)
         entity_widget.setText(entity.name)
 
-    def delete_entity_widget(self, entity):
+    def delete_entity_widget(self, entity: Entity):
         layout = self.test_tab_layout if entity.type == EntityType.TEST else self.user_tab_layout
         entity_widget = self.__find_widget_in_entity_layout(entity)
         layout.removeWidget(entity_widget)
@@ -66,14 +67,13 @@ class AdminPanelView(View):
         """
 
         entities_layout = self.__generate_entities_layout(entity_list, entity_type)
-        entities_layout_wrapper = self.__create_wrapper_widget(entities_layout)
-        entities_scroll_widget = self.__generate_scroll_widget(entities_layout_wrapper)
+        entities_layout_wrapper = UiUtils.create_wrapper_widget(entities_layout)
+        entities_scroll_widget = UiUtils.generate_scroll_widget(entities_layout_wrapper)
 
         new_entity_button = self.__generate_new_entity_button(entity_type)
 
-        final_widget_layout = QtWidgets.QVBoxLayout()
-        self.__layout_add_widgets(final_widget_layout, entities_scroll_widget, new_entity_button)
-        final_widget = self.__create_wrapper_widget(final_widget_layout)
+        final_widget_layout = UiUtils.generate_vertical_layout(entities_scroll_widget, new_entity_button)
+        final_widget = UiUtils.create_wrapper_widget(final_widget_layout)
 
         tab_name = self.__get_tab_name(entity_type)
         self.tab_widget.addTab(final_widget, tab_name)
@@ -94,17 +94,6 @@ class AdminPanelView(View):
         new_entity_button = QtWidgets.QPushButton(f"Добавить {button_entity_name}")
         new_entity_button.released.connect(lambda: self.__new_entity_button_released(entity_type))
         return new_entity_button
-
-    @staticmethod
-    def __generate_scroll_widget(widget_to_set: QtWidgets.QWidget):
-        scroll_widget = QtWidgets.QScrollArea()
-
-        scroll_widget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        scroll_widget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        scroll_widget.setWidgetResizable(True)
-        scroll_widget.setWidget(widget_to_set)
-
-        return scroll_widget
 
     def __create_entity_widget(self, entity: Entity):
         widget = EntityWidget(entity)
@@ -129,17 +118,6 @@ class AdminPanelView(View):
             if widget.entity.id == entity.id:
                 return widget
         raise Exception("Can't find widget that contains this entity")
-
-    @staticmethod
-    def __layout_add_widgets(layout: QtWidgets.QLayout, *widgets: QtWidgets.QWidget):
-        for widget in widgets:
-            layout.addWidget(widget)
-
-    @staticmethod
-    def __create_wrapper_widget(layout: QtWidgets.QLayout):
-        wrapper_widget = QtWidgets.QWidget()
-        wrapper_widget.setLayout(layout)
-        return wrapper_widget
 
     @staticmethod
     def __get_button_entity_name(entity_type: EntityType):

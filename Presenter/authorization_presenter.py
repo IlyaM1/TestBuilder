@@ -1,6 +1,6 @@
 from Presenter.presenter import Presenter
 from Model.authorization_model import LoginStatus
-
+from View.ui_utils import UiUtils
 
 class AuthorizationPresenter(Presenter):
     def __init__(self, view, model):
@@ -12,9 +12,9 @@ class AuthorizationPresenter(Presenter):
         login_status_array = self.model.login(auth_info)
         status = login_status_array[0]
         if status == LoginStatus.EMPTY_FIELDS:
-            self.view.call_error_window("Остались пустые поля ввода")
+            UiUtils.call_error_window("Остались пустые поля ввода")
         elif status == LoginStatus.INCORRECT_AUTH_INFO:
-            self.view.call_error_window("Неправильное имя или пароль пользователя")
+            UiUtils.call_error_window("Неправильное имя или пароль пользователя")
         elif status == LoginStatus.ADMIN:
             from window_manager import WindowManager
             WindowManager.get_instance().open_admin_panel(self.model.get_users(), self.model.get_tests())
