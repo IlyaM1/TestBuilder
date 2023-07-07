@@ -1,4 +1,3 @@
-from window_manager import WindowManager
 from Presenter.presenter import Presenter
 from View.admin_panel_view import Entity, EntityType
 
@@ -11,12 +10,14 @@ class AdminPanelPresenter(Presenter):
         self.view.signals.deleting_clicked.connect(self.delete_entity)
 
     def create_new_entity(self, entity_type: EntityType):
+        from window_manager import WindowManager
         manager_instance = WindowManager.get_instance()
         presenter = manager_instance.open_test_editor() if entity_type == EntityType.TEST \
             else manager_instance.open_user_editor()
         presenter.finished.connect(lambda entity_dict: self.entity_creating_ended(entity_dict, entity_type)) # hope ``that will work...
 
     def edit_entity(self, entity: Entity):
+        from window_manager import WindowManager
         manager_instance = WindowManager.get_instance()
         entity_dict = self.model.get_entity_dict(entity)
         presenter = manager_instance.open_test_editor(entity_dict) if entity.type == EntityType.TEST \
