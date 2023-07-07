@@ -1,20 +1,8 @@
 from View.view import View
-from enum import Enum
+from Model.entity import Entity, EntityType
 from config import Config
 from PyQt5 import QtCore, QtWidgets
 from View.ui_utils import UiUtils
-
-
-class EntityType(Enum):
-    USER = 1
-    TEST = 2
-
-
-class Entity:
-    def __init__(self, id: int, name: str, type: EntityType):
-        self.id = id
-        self.name = name
-        self.type = type
 
 
 class AdminPanelSignals(QtCore.QObject):

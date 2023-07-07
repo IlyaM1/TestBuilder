@@ -1,6 +1,7 @@
 from config import Config
 from View.view import View
 from PyQt5 import QtWidgets, QtGui, QtCore
+from Model.entity import Test
 
 
 class TestEditorViewSignals(QtCore.QObject):
@@ -8,18 +9,11 @@ class TestEditorViewSignals(QtCore.QObject):
 
 
 class TestEditorView(View):
-    def __init__(self, test=None):
+    def __init__(self, test: Test = None):
         super().__init__(TestEditorViewSignals())
+        self.test = test
         if test is None:
-            pass
-
-    @staticmethod
-    def generate_empty_test():
-        return {"id": -1,
-                "name": "",
-                "theme": "",
-                "max_result": 0,
-                "questions": []}
+            self.test = Test()
 
 
 if __name__ == '__main__':

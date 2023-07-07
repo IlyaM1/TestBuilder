@@ -1,5 +1,5 @@
 from Presenter.presenter import Presenter
-from View.admin_panel_view import Entity, EntityType
+from Model.entity import Entity, EntityType
 
 
 class AdminPanelPresenter(Presenter):
@@ -19,7 +19,7 @@ class AdminPanelPresenter(Presenter):
     def edit_entity(self, entity: Entity):
         from window_manager import WindowManager
         manager_instance = WindowManager.get_instance()
-        entity_dict = self.model.get_entity_dict(entity)
+        entity_dict = self.model.get_entity(entity)
         presenter = manager_instance.open_test_editor(entity_dict) if entity.type == EntityType.TEST \
             else manager_instance.open_user_editor(entity_dict)
         presenter.finished.connect(
@@ -29,12 +29,12 @@ class AdminPanelPresenter(Presenter):
         self.model.delete_entity(entity)
         self.view.delete_entity_widget(entity)
 
-    def entity_creating_ended(self, entity_dict: dict, entity_type: EntityType):
-        id = self.model.create_new_entity(entity_dict, entity_type)
-        entity = Entity(id, entity_dict["name"], entity_type)
+    def entity_creating_ended(self, entity: Entity, entity_type: EntityType):
+        id = self.model.create_new_entity(entity, entity_type)
+        entity = Entity(id, entity["name"], entity_type)
         self.view.add_new_entity_widget(entity)
 
-    def entity_editing_ended(self, entity_dict: dict, entity_type: EntityType):
-        self.model.edit_entity(entity_dict, entity_type)
-        entity = Entity(entity_dict["id"], entity_dict["name"], entity_type)
+    def entity_editing_ended(self, entity: Entity, entity_type: EntityType):
+        self.model.edit_entity(entity, entity_type)
+        entity = Entity(entity["id"], entity["name"], entity_type)
         self.view.edit_entity_widget(entity)
