@@ -2,6 +2,7 @@ from enum import Enum
 from db.sqlite import SQLInteract
 from db.auth_reg import Signing
 from config import Config
+from Model.entity import User, Test, Entity, EntityType
 
 
 class LoginStatus(Enum):
@@ -48,40 +49,14 @@ class AuthorizationModel:
 
     def get_users(self):
         """
-        Get all users rows from database
-        :return: list of user's dicts
+        Get all users rows from database and convert to objects
+        :return: list of user's objects
         """
-        return [
-            {
-                "id": 0,
-                "name": "Anton"
-            },
-            {
-                "id": 1,
-                "name": "Sergey"
-            },
-            {
-                "id": 2,
-                "name": "Vlad"
-            },
-        ]
+        pass
 
     def get_tests(self):
         """
-        Get all tests rows from database
-        :return: list of test's dicts
+        Get all tests rows from database and convert to objects
+        :return: list of test's objects
         """
-        return [
-            {
-                "id": 0,
-                "name": "test1"
-            },
-            {
-                "id": 1,
-                "name": "test2"
-            },
-            {
-                "id": 2,
-                "name": "test3"
-            },
-        ]
+        pass

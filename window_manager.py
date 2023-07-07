@@ -4,6 +4,7 @@ from Presenter.authorization_presenter import AuthorizationPresenter
 from View.admin_panel_view import AdminPanelView
 from Model.admin_panel_model import AdminPanelModel
 from Presenter.admin_panel_presenter import AdminPanelPresenter
+from Model.entity import User, Test
 
 
 class WindowManager:
@@ -31,20 +32,20 @@ class WindowManager:
 
         self.admin_panel_view.show()
 
-    def open_test_selection_window(self, user: dict, tests: list):
+    def open_test_selection_window(self, user: User, tests: list):
         self.auth_view.close()
         print(f"Opening test selection for {user['name']}")
 
-    def open_test_editor(self, test: dict = None):
+    def open_test_editor(self, test: Test = None):
         """
         :param test: test dict (calls entity_dict in other places)
         :return: TestEditorPresenter instance
         """
         pass
 
-    def open_user_editor(self, user: dict = None):
+    def open_user_editor(self, user: User = None):
         """
-        :param user: user dict (calls entity_dict in other places)
+        :param user: user object (calls entity_dict in other places)
         :return: UserEditorPresenter instance
         """
         pass
