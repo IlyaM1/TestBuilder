@@ -14,9 +14,15 @@ class UiUtils:
             layout.addWidget(widget)
 
     @staticmethod
-    def create_wrapper_widget(layout: QtWidgets.QLayout):
+    def generate_widget_with_layout(layout: QtWidgets.QLayout):
         wrapper_widget = QtWidgets.QWidget()
         wrapper_widget.setLayout(layout)
+        return wrapper_widget
+
+    @staticmethod
+    def generate_wrapper_widget(widget: QtWidgets.QWidget):
+        wrapper_widget = QtWidgets.QWidget()
+        wrapper_widget.setLayout(UiUtils.generate_vertical_layout(widget))
         return wrapper_widget
 
     @staticmethod
@@ -31,11 +37,13 @@ class UiUtils:
         return scroll_widget
 
     @staticmethod
-    def generate_button(text: str, connect_function, position: QtCore.QPoint = None, width: int = 300):
+    def generate_button(text: str, connect_function, position: QtCore.QPoint = None, width: int = None):
         button = QtWidgets.QPushButton(text)
         button.clicked.connect(connect_function)
-        button.setMinimumWidth(width)
-        button.move(position)
+        if position is not None:
+            button.move(position)
+        if width is not None:
+            button.setMinimumWidth(width)
 
         return button
 
@@ -54,3 +62,15 @@ class UiUtils:
         error_window.setText(text)
         error_window.setWindowTitle("Ошибка")
         error_window.exec()
+
+
+class HorizontalLabelWithInput(QtWidgets.QWidget):
+    def __init__(self, label_text: str = "", input_text: str = "", parent=None):
+        super().__init__(parent=parent)
+        self.label = QtWidgets.QLabel(label_text)
+        self.input = QtWidgets.QLineEdit(input_text)
+
+        horizontal_layout = QtWidgets.QHBoxLayout()
+        horizontal_layout.addWidget(self.label)
+        horizontal_layout.addWidget(self.input)
+        self.setLayout(horizontal_layout)

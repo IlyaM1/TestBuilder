@@ -10,15 +10,14 @@ class AuthorizationSignals(QtCore.QObject):
 
 
 class AuthorizationView(View):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(AuthorizationSignals())
 
-        self.__set_window_settings()
-        self.__set_css()
+        self.__set_start_settings()
 
         self.input_label_login = UiUtils.generate_input_label("Фамилия", "input_label_login")
         self.input_label_password = UiUtils.generate_input_label("Пароль", "input_label_password")
-        self.button_login = UiUtils.generate_button("Войти", self.__button_login_pushed, QtCore.QPoint(230, 230))
+        self.button_login = UiUtils.generate_button("Войти", self.__button_login_pushed, QtCore.QPoint(230, 230), 300)
 
         vertical_layout = UiUtils.generate_vertical_layout(self.input_label_login,
                                                            self.input_label_password,
@@ -28,24 +27,28 @@ class AuthorizationView(View):
         self.groupbox = self.__generate_groupbox()
         self.groupbox.setLayout(vertical_layout)
 
-    def get_auth_info(self):
+    def get_auth_info(self) -> AuthInfo:
         name = self.input_label_login.text()
         password = self.input_label_password.text()
         return AuthInfo(name, password)
 
-    def __button_login_pushed(self):
+    def __button_login_pushed(self) -> None:
         self.signals.login_clicked.emit()
 
-    def __set_window_settings(self):
+    def __set_start_settings(self) -> None:
+        self.__set_window_settings()
+        self.__set_css()
+
+    def __set_window_settings(self) -> None:
         self.setMinimumSize(400, 300)
         self.setWindowTitle("Авторизация")
         self.setWindowIcon(QtGui.QIcon(Config.get_path() + "/View/img/authorization.png"))
 
-    def __set_css(self):
+    def __set_css(self) -> None:
         with open(Config.get_path() + '/View/css/authorization_view.css') as f:
             self.setStyleSheet(f.read())
 
-    def __generate_groupbox(self):
+    def __generate_groupbox(self) -> QtWidgets.QGroupBox:
         groupbox = QtWidgets.QGroupBox("", parent=self)
         groupbox.setFlat(True)
         groupbox.resize(400, 300)
