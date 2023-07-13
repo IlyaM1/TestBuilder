@@ -4,11 +4,11 @@ from View.ui_utils import UiUtils
 
 
 class AuthorizationPresenter(Presenter):
-    def __init__(self, view, model):
+    def __init__(self, view, model) -> None:
         super().__init__(view, model)
         self.view.signals.login_clicked.connect(self.login)
 
-    def login(self):
+    def login(self) -> None:
         auth_info = self.view.get_auth_info()
         try:
             login_status = self.model.login(auth_info)
