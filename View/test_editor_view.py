@@ -74,6 +74,8 @@ class TestEditorView(View):
                                                   answer_widget,
                                                   points_widget)
         widget = UiUtils.generate_widget_with_layout(layout)
+        widget.setObjectName("frame")
+        widget.setStyleSheet("#frame { border: 3px solid grey; }")
         return widget
 
     @staticmethod
