@@ -1,7 +1,17 @@
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
+from config import Config
 
 
 class UiUtils:
+    @staticmethod
+    def delete_widget_from_layout(layout: QtWidgets.QBoxLayout, sender: QtWidgets.QWidget):
+        for i in range(layout.count()):
+            widget = layout.itemAt(i).widget()
+            if widget == sender:
+                layout.removeWidget(widget)
+                widget.deleteLater()
+                return
+
     @staticmethod
     def generate_vertical_layout(*widgets: QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
@@ -70,7 +80,28 @@ class HorizontalLabelWithInput(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel(label_text)
         self.input = QtWidgets.QLineEdit(input_text)
 
-        horizontal_layout = QtWidgets.QHBoxLayout()
-        horizontal_layout.addWidget(self.label)
-        horizontal_layout.addWidget(self.input)
-        self.setLayout(horizontal_layout)
+        self.layout = QtWidgets.QHBoxLayout()
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.input)
+        self.setLayout(self.layout)
+
+
+class DeleteButton(QtWidgets.QPushButton):
+    confirmed = QtCore.pyqtSignal()
+
+    def __init__(self, confirmation_text: str = "Вы уверены?", parent: QtWidgets.QWidget = None) -> None:
+        super().__init__(parent)
+        self.confirmation_text = confirmation_text
+        self.__set_icon()
+        self.clicked.connect(self.button_clicked)
+
+    def button_clicked(self) -> None:
+        confirmation = QtWidgets.QMessageBox.question(self, "Confirmation", self.confirmation_text,
+                                                      QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if confirmation == QtWidgets.QMessageBox.Yes:
+            self.confirmed.emit()
+
+    def __set_icon(self) -> None:
+        icon_position = Config.get_path() + '\\View\\img\\delete_button.png'
+        self.setIcon(QtGui.QIcon(icon_position))
+        self.setIconSize(QtCore.QSize(self.sizeHint()))
