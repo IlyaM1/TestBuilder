@@ -1,10 +1,14 @@
-from View.authorization_view import AuthorizationView
 from Model.authorization_model import AuthorizationModel
-from Presenter.authorization_presenter import AuthorizationPresenter
-from View.admin_panel_view import AdminPanelView
 from Model.admin_panel_model import AdminPanelModel
+from Model.entity import User, Test, Question
+
+from View.authorization_view import AuthorizationView
+from View.admin_panel_view import AdminPanelView
+from View.test_editor_view import TestEditorView
+
+from Presenter.authorization_presenter import AuthorizationPresenter
 from Presenter.admin_panel_presenter import AdminPanelPresenter
-from Model.entity import User, Test
+from Presenter.test_editor_presenter import TestEditorPresenter
 
 
 class WindowManager:
@@ -37,11 +41,11 @@ class WindowManager:
         print(f"Opening test selection for {user['name']}")
 
     def open_test_editor(self, test: Test = None):
-        """
-        :param test: test dict (calls entity_dict in other places)
-        :return: TestEditorPresenter instance
-        """
-        pass
+        self.test_editor_view = TestEditorView(test)
+        self.test_editor_presenter = TestEditorPresenter(view=self.test_editor_view)
+        self.test_editor_view.show()
+
+        return self.test_editor_presenter
 
     def open_user_editor(self, user: User = None):
         """
