@@ -28,6 +28,31 @@ class TestEditorView(View):
         container = QtWidgets.QVBoxLayout(self)
         container.addWidget(final_widget)
 
+    def collect_inputs_and_create_test(self) -> Test:
+        name = self.name_widget.input.text()
+        theme = self.theme_widget.input.text()
+        questions = self.__collect_questions()
+        max_result = self.__count_max_result(questions)
+
+        return Test(id=self.test.id, name=name, theme=theme, max_result=max_result, questions=questions)
+
+    def __collect_questions(self) -> list[Question]:
+        questions: list[Question] = []
+        layout = self.questions_list_layout
+        for i in range(layout.count()):
+            widget: QuestionWidget = layout.itemAt(i).widget()
+            question = widget.get_question()
+            questions.append(question)
+
+        return questions
+
+    @staticmethod
+    def __count_max_result(questions: list[Question]) -> int:
+        max_result = 0
+        for question in questions:
+            max_result += question.points
+        return max_result
+
     def __set_start_settings(self) -> None:
         self.__set_window_settings()
         self.__set_css()
@@ -49,14 +74,14 @@ class TestEditorView(View):
     def __generate_questions_widget(self) -> QtWidgets.QWidget:
         question_label = QtWidgets.QLabel("Вопросы: ")
 
-        questions_list_layout = QtWidgets.QVBoxLayout()
+        self.questions_list_layout = QtWidgets.QVBoxLayout()
         for question in self.test.questions:
-            self.__add_question(questions_list_layout, question)
+            self.__add_question(self.questions_list_layout, question)
 
-        questions_list_widget = UiUtils.generate_widget_with_layout(questions_list_layout)
+        questions_list_widget = UiUtils.generate_widget_with_layout(self.questions_list_layout)
 
         add_question_button = QtWidgets.QPushButton("Добавить вопрос")
-        add_question_button.clicked.connect(lambda: self.__add_question(questions_list_layout, Question()))
+        add_question_button.clicked.connect(lambda: self.__add_question(self.questions_list_layout, Question()))
 
         final_layout = UiUtils.generate_vertical_layout(question_label, questions_list_widget, add_question_button)
         final_widget = UiUtils.generate_widget_with_layout(final_layout)
@@ -81,33 +106,55 @@ class QuestionWidget(QtWidgets.QWidget):
     def __init__(self, question: Question, parent: QtWidgets.QWidget = None) -> None:
         super().__init__(parent=parent)
 
-        question_widget = HorizontalLabelWithInput("Вопрос ", question.question)  # TODO: Add deleting question button
+        self.question_widget = HorizontalLabelWithInput("Вопрос ",
+                                                        question.question)  # TODO: Add deleting question button
         delete_question_button = DeleteButton("Вы уверены что хотите удалить этот вопрос?")
         delete_question_button.confirmed.connect(self.__delete_question_clicked)
-        question_widget.layout.addWidget(delete_question_button)
+        self.question_widget.layout.addWidget(delete_question_button)
 
         variants_of_answer_widget = self.__generate_variants_of_answer_widget(question.variants_of_answer)
-        answer_widget = HorizontalLabelWithInput("Ответ ", question.answer)
-        points_widget = HorizontalLabelWithInput("Балл ", str(question.points))
+        self.answer_widget = HorizontalLabelWithInput("Ответ ", question.answer)
+        self.points_widget = HorizontalLabelWithInput("Балл ", str(question.points))
 
-        layout = UiUtils.generate_vertical_layout(question_widget,
+        layout = UiUtils.generate_vertical_layout(self.question_widget,
                                                   variants_of_answer_widget,
-                                                  answer_widget,
-                                                  points_widget)
+                                                  self.answer_widget,
+                                                  self.points_widget)
         self.setLayout(layout)
+
+    def get_question(self) -> Question:
+        question = self.question_widget.input.text()
+        answer = self.answer_widget.input.text()
+        points = self.points_widget.input.text()
+        variants_of_answer = self.__collect_variants_of_answer()
+
+        try:
+            points = int(points)
+        except TypeError:
+            raise TypeError("User entered not number in points input")
+        else:
+            return Question(question=question, answer=answer, points=points, variants_of_answer=variants_of_answer)
+
+    def __collect_variants_of_answer(self) -> list[str]:
+        variants_of_answer = []
+        for i in range(self.variants_of_answer_layout.count()):
+            widget: QuestionWidget.VariantWidget = self.variants_of_answer_layout.itemAt(i).widget()
+            text = widget.get_text()
+            variants_of_answer.append(text)
+        return variants_of_answer
 
     def __generate_variants_of_answer_widget(self, variants_of_answer: list[str]) -> QtWidgets.QWidget:
         label = QtWidgets.QLabel("Варианты ответа")
 
-        variants_of_answer_layout = QtWidgets.QVBoxLayout()
+        self.variants_of_answer_layout = QtWidgets.QVBoxLayout()
         for variant_text in variants_of_answer:
-            self.__add_variant_widget(variants_of_answer_layout, variant_text)
+            self.__add_variant_widget(self.variants_of_answer_layout, variant_text)
 
         add_variant_button = QtWidgets.QPushButton("Добавить вариант ответа")
-        add_variant_button.clicked.connect(lambda: self.__add_variant_widget(variants_of_answer_layout))
+        add_variant_button.clicked.connect(lambda: self.__add_variant_widget(self.variants_of_answer_layout))
 
         layout = UiUtils.generate_vertical_layout(label,
-                                                  UiUtils.generate_widget_with_layout(variants_of_answer_layout),
+                                                  UiUtils.generate_widget_with_layout(self.variants_of_answer_layout),
                                                   add_variant_button)
         return UiUtils.generate_widget_with_layout(layout)
 
@@ -131,6 +178,9 @@ class QuestionWidget(QtWidgets.QWidget):
             self.layout = QtWidgets.QHBoxLayout()
             UiUtils.layout_add_widgets(self.layout, self.input, self.delete_button)
             self.setLayout(self.layout)
+
+        def get_text(self):
+            return self.input.text()
 
         def delete_button_clicked(self):
             self.deleting.emit()

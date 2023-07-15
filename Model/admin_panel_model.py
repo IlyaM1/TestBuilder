@@ -9,14 +9,14 @@ class AdminPanelModel:
         # TODO: Get row from database, it can be done with entity.id and entity.type and transform to Entity
         pass
 
-    def create_new_entity(self, entity: Entity, entity_type: EntityType) -> int:
+    def create_new_entity(self, entity: Entity) -> int:
         """
         TODO: Create new row in database
         :return: new id for this entity
         """
         pass
 
-    def edit_entity(self, entity: Entity, entity_type: EntityType) -> None:
+    def edit_entity(self, entity: Entity) -> None:
         # TODO: Edit existing entity in database
         pass
 

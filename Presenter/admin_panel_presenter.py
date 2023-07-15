@@ -23,18 +23,18 @@ class AdminPanelPresenter(Presenter):
         presenter = manager_instance.open_test_editor(full_entity_object) if entity.type == EntityType.TEST \
             else manager_instance.open_user_editor(full_entity_object)
         presenter.finished.connect(
-            lambda new_entity_object: self.entity_creating_ended(new_entity_object, entity.type))  # hope that will work...
+            lambda new_entity_object: self.entity_creating_ended(new_entity_object))  # hope that will work...
 
     def delete_entity(self, entity: Entity) -> None:
         self.model.delete_entity(entity)
         self.view.delete_entity_widget(entity)
 
-    def entity_creating_ended(self, entity: Entity, entity_type: EntityType) -> None:
-        id = self.model.create_new_entity(entity, entity_type)
-        entity = Entity(id, entity.name, entity_type)
+    def entity_creating_ended(self, entity: Entity) -> None:
+        id = self.model.create_new_entity(entity)
+        entity = Entity(id, entity.name, entity.type)
         self.view.add_new_entity_widget(entity)
 
-    def entity_editing_ended(self, entity: Entity, entity_type: EntityType) -> None:
-        self.model.edit_entity(entity, entity_type)
-        entity = Entity(entity.id, entity.name, entity_type)
+    def entity_editing_ended(self, entity: Entity) -> None:
+        self.model.edit_entity(entity)
+        entity = Entity(entity.id, entity.name, entity.type)
         self.view.edit_entity_widget(entity)
