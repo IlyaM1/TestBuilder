@@ -25,4 +25,5 @@ YOUR_PATH_FOR_FOLDER_WITH_PROJECT looks like: C:\\Some_folder\\TestBuilder
 Run main.py with `venv\Scripts\python.exe main.py`    
 
 Front-end: https://github.com/IlyaM1    
-Back-end: https://github.com/akrisfx    
+Back-end: https://github.com/akrisfx
+Design: https://github.com/MrMondego
