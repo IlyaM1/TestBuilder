@@ -71,4 +71,4 @@ Make changes and commit them.
 Push your changes to your forked repository.
 Open a pull request against the original repository.
 ## License
-The Test Builder application is released under the MIT License. See the LICENSE file for more information.
+The Test Builder application is released under the MIT License. See the [LICENSE](https://github.com/IlyaM1/TestBuilder/blob/main/LICENSE) file for more information.
